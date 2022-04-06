@@ -35,26 +35,26 @@ public class User implements UserDetails {
     @Setter
     @Column(nullable = false)
     private String authority;
-//
-//    @Setter
-//    @Column(nullable = false)
-//    private boolean isEmailVerifiedFlag;
-//
-//    @Setter
-//    @Column(nullable = false)
-//    private boolean isSuspendedFlag;
-//
-//    @Setter
-//    @Column(nullable = false)
-//    private boolean isDeletedFlag;
-//
-//    @CreatedDate
-//    @Column(nullable = false, insertable = false, updatable = false)
-//    private LocalDateTime createdAt;
-//
-//    @LastModifiedDate
-//    @Column(nullable = false, insertable = false, updatable = false)
-//    private LocalDateTime updatedAt;
+
+    @Setter
+    @Column(nullable = false)
+    private boolean isEmailVerifiedFlag;
+
+    @Setter
+    @Column(nullable = false)
+    private boolean isSuspendedFlag;
+
+    @Setter
+    @Column(nullable = false)
+    private boolean isDeletedFlag;
+
+    @CreatedDate
+    @Column(nullable = false, insertable = false, updatable = false)
+    private LocalDateTime createdAt;
+
+    @LastModifiedDate
+    @Column(nullable = false, insertable = false, updatable = false)
+    private LocalDateTime updatedAt;
 
 
 

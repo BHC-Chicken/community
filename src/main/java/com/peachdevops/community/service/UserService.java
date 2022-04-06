@@ -11,9 +11,15 @@ import org.springframework.stereotype.Service;
 public class UserService {
 
     private final UserRepository userRepository;
-//    private final PasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
 
     public User findByUsername(String username) {
         return userRepository.findByUsername(username);
     }
+
+    public User saveUser(User user) {
+        return userRepository.save(user);
+    }
+
+
 }
