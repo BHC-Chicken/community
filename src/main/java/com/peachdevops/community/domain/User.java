@@ -17,7 +17,7 @@ import java.util.Collections;
 @Entity
 @Table
 @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor
 public class User implements UserDetails {
 
     @Id
@@ -33,28 +33,39 @@ public class User implements UserDetails {
     private String password;
 
     @Setter
-    @Column(nullable = false)
+//    @Column(nullable = false)
     private String authority;
 
-    @Setter
-    @Column(nullable = false)
-    private boolean isEmailVerifiedFlag;
+//
+//    @Setter
+//    @Column(nullable = false)
+//    private boolean isEmailVerifiedFlag;
+//
+//    @Setter
+//    @Column(nullable = false)
+//    private boolean isSuspendedFlag;
+//
+//    @Setter
+//    @Column(nullable = false)
+//    private boolean isDeletedFlag;
+//
+//    @CreatedDate
+//    @Column(nullable = false, insertable = false, updatable = false)
+//    private LocalDateTime createdAt;
+//
+//    @LastModifiedDate
+//    @Column(nullable = false, insertable = false, updatable = false)
+//    private LocalDateTime updatedAt;
 
-    @Setter
-    @Column(nullable = false)
-    private boolean isSuspendedFlag;
-
-    @Setter
-    @Column(nullable = false)
-    private boolean isDeletedFlag;
-
-    @CreatedDate
-    @Column(nullable = false, insertable = false, updatable = false)
-    private LocalDateTime createdAt;
-
-    @LastModifiedDate
-    @Column(nullable = false, insertable = false, updatable = false)
-    private LocalDateTime updatedAt;
+    public User(
+            String username,
+            String password,
+            String authority
+    ) {
+        this.username = username;
+        this.password = password;
+        this.authority = authority;
+    }
 
 
 

@@ -17,9 +17,16 @@ public class UserService {
         return userRepository.findByUsername(username);
     }
 
-    public User saveUser(User user) {
-        return userRepository.save(user);
+    public User signup(
+            String username,
+            String password
+    ) {
+        if (userRepository.findByUsername(username) != null) {
+            throw new AlreadyRegisteredUserException();
+        }
+        return userRepository.save(new User(username, passwordEncoder.encode(password), "ROLE_USER"));
     }
+
 
 
 }
