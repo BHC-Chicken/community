@@ -1,6 +1,6 @@
 package com.peachdevops.community.controller;
 
-import com.peachdevops.community.dto.UserRegisterDto;
+import com.peachdevops.community.domain.User;
 import com.peachdevops.community.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -10,20 +10,19 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 @Controller
 @RequiredArgsConstructor
-public class RootController {
-
+public class UserController {
     private final UserService userService;
 
-    @GetMapping("/")
-    public String getRoot() {
+    @GetMapping("/signup")
+    public String getSignUp() {
 
-        return "index";
+        return "signup";
     }
 
-    @GetMapping("/login")
-    public String getLogin() {
-
-        return "login";
+    @PostMapping("/signup")
+    public String signup(@ModelAttribute User user) {
+        userService.signup(user.getUsername(), user.getPassword());
+        // 회원가입 후 로그인 페이지로 이동
+        return "redirect:login";
     }
-
 }

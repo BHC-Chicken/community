@@ -1,6 +1,7 @@
 package com.peachdevops.community.service;
 
 import com.peachdevops.community.domain.User;
+import com.peachdevops.community.dto.UserRegisterDto;
 import com.peachdevops.community.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -17,16 +18,13 @@ public class UserService {
         return userRepository.findByUsername(username);
     }
 
-    public User signup(
+    public void signup(
             String username,
             String password
     ) {
         if (userRepository.findByUsername(username) != null) {
             throw new AlreadyRegisteredUserException();
         }
-        return userRepository.save(new User(username, passwordEncoder.encode(password), "ROLE_USER"));
+        userRepository.save(new User(username, passwordEncoder.encode(password), "ROLE_USER"));
     }
-
-
-
 }
