@@ -37,27 +37,27 @@ public class User implements UserDetails {
 
     @Setter
     @Column(nullable = false)
-    private boolean isEmailVerifiedFlag;
+    private boolean isEmailVerifiedFlag = false;
 
     @Setter
     @Column(nullable = false)
-    private boolean isSuspendedFlag;
+    private boolean isSuspendedFlag = false;
 
     @Setter
     @Column(nullable = false)
-    private boolean isDeletedFlag;
+    private boolean isDeletedFlag = false;
 
     @Setter
     @Column(nullable = false)
     private String verificationCode;
 
     @CreatedDate
-    @Column(nullable = false, insertable = false, updatable = false)
-    private LocalDateTime createdAt;
+    @Column(insertable = false, updatable = false)
+    private final LocalDateTime createdAt = LocalDateTime.now();
 
     @LastModifiedDate
-    @Column(nullable = false, insertable = false, updatable = false)
-    private LocalDateTime updatedAt;
+    @Column(insertable = false, updatable = false)
+    private final LocalDateTime updatedAt = LocalDateTime.now();
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
