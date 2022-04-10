@@ -37,15 +37,15 @@ public class User implements UserDetails {
 
     @Setter
     @Column(nullable = false)
-    private boolean isEmailVerifiedFlag = false;
+    private boolean isEmailVerifiedFlag;
 
     @Setter
     @Column(nullable = false)
-    private boolean isSuspendedFlag = false;
+    private boolean isSuspendedFlag;
 
     @Setter
     @Column(nullable = false)
-    private boolean isDeletedFlag = false;
+    private boolean isDeletedFlag;
 
     @Setter
     @Column(nullable = false)

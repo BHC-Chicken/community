@@ -1,4 +1,4 @@
-package com.peachdevops.community.service;
+package com.peachdevops.community.exception;
 
 /**
  * 유저를 찾을 수 없을 때 발생하는 Exception
