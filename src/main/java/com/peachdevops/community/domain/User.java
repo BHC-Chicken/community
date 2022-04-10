@@ -1,8 +1,6 @@
 package com.peachdevops.community.domain;
 
-import lombok.AccessLevel;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -21,43 +19,39 @@ public class User implements UserDetails {
 
     @Id
     @GeneratedValue(strategy =  GenerationType.IDENTITY)
-    private Long id;
+    protected Long id;
 
     @Setter
     @Column(nullable = false)
-    private String username;
+    protected String username;
 
     @Setter
     @Column(nullable = false)
-    private String password;
+    protected String password;
 
     @Setter
     @Column(nullable = false)
-    private String authority;
+    protected String authority;
 
     @Setter
     @Column(nullable = false)
-    private boolean isEmailVerifiedFlag;
+    protected boolean isEmailVerifiedFlag;
 
     @Setter
     @Column(nullable = false)
-    private boolean isSuspendedFlag;
+    protected boolean isSuspendedFlag;
 
     @Setter
     @Column(nullable = false)
-    private boolean isDeletedFlag;
-
-    @Setter
-    @Column(nullable = false)
-    private String verificationCode;
+    protected boolean isDeletedFlag;
 
     @CreatedDate
     @Column(insertable = false, updatable = false)
-    private final LocalDateTime createdAt = LocalDateTime.now();
+    protected final LocalDateTime createdAt = LocalDateTime.now();
 
     @LastModifiedDate
     @Column(insertable = false, updatable = false)
-    private final LocalDateTime updatedAt = LocalDateTime.now();
+    protected final LocalDateTime updatedAt = LocalDateTime.now();
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

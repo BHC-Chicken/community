@@ -9,6 +9,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import javax.mail.MessagingException;
 
 @Controller
 @RequiredArgsConstructor
@@ -22,16 +25,16 @@ public class UserController {
     }
 
     @PostMapping("/signup")
-    public String signup(@ModelAttribute User user) {
+    public String signup(@ModelAttribute User user) throws MessagingException {
         userService.signup(user.getUsername(), user.getPassword());
         // 회원가입 후 로그인 페이지로 이동
         return "redirect:login";
     }
 
     @GetMapping("/verificationEmail")
-    public String getVerificationEmail() {
+    public String getVerificationEmail(@RequestParam(value = "code") String code) {
 
-        userService.verificationCode();
+        userService.verificationCode(code);
 
         return "verificationEmail";
     }

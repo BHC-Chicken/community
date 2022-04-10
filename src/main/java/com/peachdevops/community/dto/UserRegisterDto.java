@@ -11,30 +11,25 @@ import java.time.LocalDateTime;
  */
 @Getter
 @Setter
-public class UserRegisterDto extends User {
+@Entity
+public class UserRegisterDto {
 
-    @Column
     @Id
-    private Long Id;
-
-    @Column
-    private String verificationCode;
+    @GeneratedValue(strategy =  GenerationType.IDENTITY)
+    private Long id;
 
     @Column
     private String username;
 
     @Column
-    private LocalDateTime createdAt;
-
-    @Column
-    private LocalDateTime expiredAt;
+    private String verificationCode;
 
     @Column
     private boolean expiredFlag;
 
-    public UserRegisterDto(String verificationCode, String username) {
-        this.verificationCode = verificationCode;
+    public UserRegisterDto(String username, String verificationCode) {
         this.username = username;
+        this.verificationCode = verificationCode;
     }
 
     public UserRegisterDto() {
