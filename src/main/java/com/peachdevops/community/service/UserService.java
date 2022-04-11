@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
+import java.time.LocalDateTime;
 
 @Service
 @RequiredArgsConstructor
@@ -47,8 +48,6 @@ public class UserService {
         helper.setText(String.format("<a href=\"http://127.0.0.1/verificationEmail?code=%s\" target=\"_blank\">인증하기</a>", code), true);
 
         this.javaMailSender.send(message);
-
-
     }
 
     public void verificationCode(String code) {
@@ -58,6 +57,11 @@ public class UserService {
 
         if (registerVerificationCodeRepository.findByVerificationCode(code).isExpiredFlag()) {
             throw new VerificationCodeAlreadyUsedException();
+        }
+
+        LocalDateTime expiredAt = registerVerificationCodeRepository.findByVerificationCode(code).getExpiredAt();
+        if (LocalDateTime.now().isAfter(expiredAt)) {
+            throw new VerificationCodeNotFoundException();
         }
 
         String username = registerVerificationCodeRepository.findByVerificationCode(code).getUsername();

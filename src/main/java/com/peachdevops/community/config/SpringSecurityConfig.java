@@ -49,7 +49,10 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
     protected UserDetailsService userDetailsService() {
         return username -> {
             User user = userService.findByUsername(username);
-            if (user ==  null) {
+            if (user == null) {
+                throw new UsernameNotFoundException(username);
+            }
+            if (!user.isEmailVerifiedFlag()) {
                 throw new UsernameNotFoundException(username);
             }
             return user;
