@@ -3,6 +3,7 @@ package com.peachdevops.community.service;
 import com.peachdevops.community.domain.User;
 import com.peachdevops.community.dto.UserRegisterDto;
 import com.peachdevops.community.exception.AlreadyRegisteredUserException;
+import com.peachdevops.community.exception.NotValidationRegExp;
 import com.peachdevops.community.exception.VerificationCodeAlreadyUsedException;
 import com.peachdevops.community.exception.VerificationCodeNotFoundException;
 import com.peachdevops.community.repository.RegisterVerificationCodeRepository;
@@ -20,6 +21,26 @@ import java.time.LocalDateTime;
 @Service
 @RequiredArgsConstructor
 public class UserService {
+    public static class RegExp {
+        public static final String USERNAME = "^(?=.{8,50}$)([0-9a-z_]{4,})@([0-9a-z][0-9a-z\\-]*[0-9a-z]\\.)?([0-9a-z][0-9a-z\\-]*[0-9a-z])\\.([a-z]{2,15})(\\.[a-z]{2})?$";
+        public static final String PASSWORD = "^([0-9a-zA-Z`~!@#$%^&*()\\-_=+\\[{\\]}\\\\|;:'\",<.>/?]{8,50})$";
+        public static final String NICKNAME = "^([0-9a-zA-Z가-힣]{1,10})$";
+        private RegExp() {
+
+        }
+    }
+
+    public static boolean checkUsername(String s) {
+        return s != null && s.matches(RegExp.USERNAME);
+    }
+
+    public static boolean checkPassword(String s) {
+        return s != null && s.matches(RegExp.PASSWORD);
+    }
+
+    public static boolean checkNickname(String s) {
+        return s != null && s.matches(RegExp.NICKNAME);
+    }
 
     private final UserRepository userRepository;
     private final RegisterVerificationCodeRepository registerVerificationCodeRepository;
@@ -36,6 +57,12 @@ public class UserService {
     ) throws MessagingException {
         if (userRepository.findByUsername(username) != null) {
             throw new AlreadyRegisteredUserException();
+        }
+        if (!checkUsername(username)) {
+            throw new NotValidationRegExp();
+        }
+        if (!checkPassword(password)) {
+            throw new NotValidationRegExp();
         }
         userRepository.save(new User(username, passwordEncoder.encode(password), "ROLE_USER"));
         String code = passwordEncoder.encode(username);
