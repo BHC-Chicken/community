@@ -26,7 +26,12 @@ public class UserController {
 
     @PostMapping("/signup")
     public String signup(@ModelAttribute User user) throws MessagingException {
-        userService.signup(user.getUsername(), user.getPassword());
+
+        try {
+            userService.signup(user.getUsername(), user.getPassword());
+        } catch (Exception e) {
+            return "redirect:signup";
+        }
         // 회원가입 후 로그인 페이지로 이동
         return "redirect:login";
     }
