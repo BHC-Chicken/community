@@ -53,18 +53,19 @@ public class UserService {
 
     public void signup(
             String username,
-            String password
+            String password,
+            String nickname
     ) throws MessagingException {
-        if (userRepository.findByUsername(username) != null) {
-            throw new AlreadyRegisteredUserException();
-        }
         if (!checkUsername(username)) {
             throw new NotValidationRegExp();
         }
         if (!checkPassword(password)) {
             throw new NotValidationRegExp();
         }
-        userRepository.save(new User(username, passwordEncoder.encode(password), "ROLE_USER"));
+        if (!checkNickname(nickname)) {
+            throw new NotValidationRegExp();
+        }
+        userRepository.save(new User(username, passwordEncoder.encode(password), nickname,"ROLE_USER"));
         String code = passwordEncoder.encode(username);
         registerVerificationCodeRepository.save(new UserRegisterDto(username, code));
 
@@ -100,6 +101,13 @@ public class UserService {
 
         registerVerificationCodeRepository.save(userRegisterDto);
         userRepository.save(user);
+    }
+
+    public int checkInfo(String username) {
+        if (userRepository.findByUsername(username) != null) {
+            return 0;
+        }
+        return 1;
     }
 
 }

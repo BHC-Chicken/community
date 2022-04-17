@@ -1,0 +1,14 @@
+body.container .input-message {
+    display: none;
+    margin-left: 0.5rem;
+}
+
+body.container .input-message.good {
+    color: #77a518;
+    display: inline;
+}
+
+body.container .input-message.warning {
+    color: #c91e1e;
+    display: inline;
+}

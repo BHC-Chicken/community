@@ -31,6 +31,10 @@ public class User implements UserDetails {
 
     @Setter
     @Column(nullable = false)
+    protected String nickname;
+
+    @Setter
+    @Column(nullable = false)
     protected String authority;
 
     @Setter
@@ -58,9 +62,10 @@ public class User implements UserDetails {
         return Collections.singleton((GrantedAuthority) () -> authority);
     }
 
-    public User(String username, String password, String authority) {
+    public User(String username, String password, String nickname,String authority) {
         this.username = username;
         this.password = password;
+        this.nickname = nickname;
         this.authority = authority;
     }
 
