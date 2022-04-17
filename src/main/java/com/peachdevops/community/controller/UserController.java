@@ -35,11 +35,18 @@ public class UserController {
         return "redirect:login";
     }
 
-    @PostMapping("/signup/check")
+    @PostMapping("/signup/check-username")
     @ResponseBody
-    public int check(@ModelAttribute User user) {
-        int check = userService.checkInfo(user.getUsername());
-        System.out.println(check);
+    public int checkUsername(@ModelAttribute User user) {
+        int check = userService.checkInfoUsername(user.getUsername());
+
+        return check;
+    }
+
+    @PostMapping("/signup/check-nickname")
+    @ResponseBody
+    public int checkNickname(@ModelAttribute User user) {
+        int check = userService.checkInfoNickname(user.getNickname());
 
         return check;
     }

@@ -103,8 +103,15 @@ public class UserService {
         userRepository.save(user);
     }
 
-    public int checkInfo(String username) {
+    public int checkInfoUsername(String username) {
         if (userRepository.findByUsername(username) != null) {
+            return 0;
+        }
+        return 1;
+    }
+
+    public int checkInfoNickname(String nickname) {
+        if (userRepository.findByNickname(nickname) != null) {
             return 0;
         }
         return 1;

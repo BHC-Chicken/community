@@ -13,17 +13,28 @@
     <form class="form-signin" method="post" th:action="@{/signup}" rel="form-signup">
         <h2 class="form-signin-heading">회원가입</h2>
         <p>
-            <label for="username" class="sr-only">Username</label>
-            <input type="text" id="username" name="username" class="form-control" placeholder="Username" required autofocus>
-            <span class="input-message " rel="email-message"></span>
+            <label for="username" class="sr-only"></label>
+            <input type="text" id="username" name="username" class="form-control"
+                   placeholder="Username" required autofocus>
+            <span class="input-message" rel="email-message"></span>
         </p>
         <p>
-            <label for="password" class="sr-only">Password</label>
-            <input type="password" id="password" name="password" class="form-control" placeholder="Password" required>
+            <label for="password" class="sr-only"></label>
+            <input type="password" id="password" class="form-control password" rel="password"
+                   placeholder="Password" required>
+            <span class="input-message" rel="password-message"></span>
         </p>
         <p>
-            <label for="nickname" class="sr-only">Nickname</label>
-            <input type="text" id="nickname" name="nickname" class="form-control" placeholder="Nickname" required>
+            <label for="passwordCheck" class="sr-only"></label>
+            <input type="password" id="passwordCheck" name="password" class="form-control" rel="password-check"
+                   placeholder="Password" required>
+            <span class="input-message" rel="password-check-message"></span>
+        </p>
+        <p>
+            <label for="nickname" class="sr-only"></label>
+            <input type="text" id="nickname" name="nickname" class="form-control"
+                   placeholder="Nickname" required>
+            <span class="input-message" rel="nickname-message"></span>
         </p>
         <input class="btn btn-lg btn-primary btn-block" type="submit" value="회원가입"/>
     </form>
