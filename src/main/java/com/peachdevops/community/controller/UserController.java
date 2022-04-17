@@ -1,21 +1,22 @@
 package com.peachdevops.community.controller;
 
 import com.peachdevops.community.domain.User;
-import com.peachdevops.community.dto.UserRegisterDto;
-import com.peachdevops.community.exception.AlreadyRegisteredUserException;
+import com.peachdevops.community.service.DetectText;
 import com.peachdevops.community.service.UserService;
 import lombok.RequiredArgsConstructor;
-import net.minidev.json.JSONObject;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.mail.MessagingException;
+import java.io.IOException;
+
+import static com.peachdevops.community.service.DetectText.detectText;
 
 @Controller
 @RequiredArgsConstructor
 public class UserController {
     private final UserService userService;
+    private final DetectText detectText;
 
     @GetMapping("/signup")
     public String getSignUp() {
@@ -59,6 +60,9 @@ public class UserController {
         return "verificationEmail";
     }
 
-
+    @GetMapping("/detectText")
+    public void detectTextFuck(@RequestParam(value = "img") String img) throws IOException {
+        detectText(img);
+    }
 
 }
