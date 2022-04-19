@@ -2,7 +2,6 @@ package com.peachdevops.community.service;
 
 import com.peachdevops.community.domain.User;
 import com.peachdevops.community.dto.UserRegisterDto;
-import com.peachdevops.community.exception.AlreadyRegisteredUserException;
 import com.peachdevops.community.exception.NotValidationRegExp;
 import com.peachdevops.community.exception.VerificationCodeAlreadyUsedException;
 import com.peachdevops.community.exception.VerificationCodeNotFoundException;
@@ -13,9 +12,12 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
+import java.io.File;
+import java.io.IOException;
 import java.time.LocalDateTime;
 
 @Service
@@ -115,6 +117,10 @@ public class UserService {
             return 0;
         }
         return 1;
+    }
+
+    public void uploadImage(MultipartFile file) throws IOException {
+
     }
 
 }

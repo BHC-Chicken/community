@@ -6,6 +6,7 @@ import com.peachdevops.community.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.mail.MessagingException;
 import java.io.IOException;
@@ -61,8 +62,13 @@ public class UserController {
     }
 
     @GetMapping("/detectText")
-    public void detectTextFuck(@RequestParam(value = "img") String img) throws IOException {
+    public void detectTextFuck(@RequestParam(value = "img", required = false) String img) throws IOException {
         detectText(img);
+    }
+
+    @PostMapping("/upload")
+    public void uploadImage(@RequestPart(value = "file") MultipartFile file) throws IOException {
+        userService.uploadImage(file);
     }
 
 }

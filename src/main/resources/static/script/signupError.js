@@ -10,12 +10,12 @@ const nickname = formSignUp.querySelector('[name="nickname"]');
 
 username.addEventListener('focusout', () => {
     const usernameMessage = window.document.body.querySelector('[rel="email-message"]');
-    usernameMessage.innerText='';
+    usernameMessage.innerText = '';
     usernameMessage.classList.remove('good');
     usernameMessage.classList.remove('warning');
 
     if (!username.value.match(USERNAME)) {
-        usernameMessage.innerText="올바른 이메일 형식이 아닙니다.";
+        usernameMessage.innerText = "올바른 이메일 형식이 아닙니다.";
         usernameMessage.classList.add('warning');
         return false;
     }
@@ -39,15 +39,15 @@ username.addEventListener('focusout', () => {
 
 password.addEventListener('focusout', () => {
     const passwordMessage = window.document.body.querySelector('[rel="password-message"]');
-    passwordMessage.innerText='';
+    passwordMessage.innerText = '';
     passwordMessage.classList.remove('good');
     passwordMessage.classList.remove('warning');
 
     if (!password.value.match(PASSWORD)) {
-        passwordMessage.innerText="올바른 비밀번호 형식이 아닙니다.";
+        passwordMessage.innerText = "올바른 비밀번호 형식이 아닙니다.";
         passwordMessage.classList.add('warning');
     } else {
-        passwordMessage.innerText="사용 가능한 비밀번호입니다.";
+        passwordMessage.innerText = "사용 가능한 비밀번호입니다.";
         passwordMessage.classList.add('good');
     }
 });
@@ -55,7 +55,7 @@ password.addEventListener('focusout', () => {
 passwordCheck.addEventListener('focusout', () => {
     const passwordMessage = window.document.body.querySelector('[rel="password-check-message"]');
 
-    passwordMessage.innerText='';
+    passwordMessage.innerText = '';
     passwordMessage.classList.remove('good');
     passwordMessage.classList.remove('warning');
 
@@ -65,7 +65,7 @@ passwordCheck.addEventListener('focusout', () => {
     console.log(password2);
 
     if (password2 === '') {
-        passwordMessage.innerText="비밀번호를 확인해주세요.";
+        passwordMessage.innerText = "비밀번호를 확인해주세요.";
         passwordMessage.classList.add('warning');
         return false;
     }
@@ -78,21 +78,21 @@ passwordCheck.addEventListener('focusout', () => {
     }
 })
 
-nickname.addEventListener('focusout',() => {
+nickname.addEventListener('focusout', () => {
     const nickname = window.document.body.querySelector('[name="nickname"]').value;
     const nicknameMessage = window.document.body.querySelector('[rel="nickname-message"]');
 
-    nicknameMessage.innerText='';
+    nicknameMessage.innerText = '';
     nicknameMessage.classList.remove('good');
     nicknameMessage.classList.remove('warning');
 
     if (nickname === '') {
-        nicknameMessage.innerText="닉네임을 입력해주세요.";
+        nicknameMessage.innerText = "닉네임을 입력해주세요.";
         nicknameMessage.classList.add('warning');
         return false;
     }
     if (!nickname.match(NICKNAME)) {
-        nicknameMessage.innerText="올바른 닉네임 형식이 아닙니다.";
+        nicknameMessage.innerText = "올바른 닉네임 형식이 아닙니다.";
         nicknameMessage.classList.add('warning');
         return false;
     }
@@ -119,15 +119,24 @@ formSignUp.onsubmit = () => {
     if (!username.match(USERNAME)) {
         console.log(username)
         alert('올바른 아이디를 입력해주세요.')
+        formSignUp['username'].focus();
+        formSignUp['username'].select();
+        return false;
     }
 
     const password = document.getElementById('password').value;
     if (!password.match(PASSWORD)) {
         alert('올바른 비밀번호를 입력해주세요.')
+        formSignUp['password'].focus();
+        formSignUp['password'].select();
+        return false;
     }
 
     const nickname = document.getElementById('nickname').value;
-    if (!password.match(NICKNAME)) {
+    if (!nickname.match(NICKNAME)) {
         alert('올바른 별명을 입력해주세요.')
+        formSignUp['nickname'].focus();
+        formSignUp['nickname'].select();
+        return false;
     }
 }
