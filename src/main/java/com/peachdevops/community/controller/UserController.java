@@ -10,6 +10,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.mail.MessagingException;
 import java.io.IOException;
+import java.util.Arrays;
 
 import static com.peachdevops.community.service.DetectText.detectText;
 
@@ -58,17 +59,13 @@ public class UserController {
 
         userService.verificationCode(code);
 
-        return "verificationEmail";
+        return "orcSignup";
     }
 
-    @GetMapping("/detectText")
-    public void detectTextFuck(@RequestParam(value = "img", required = false) String img) throws IOException {
-        detectText(img);
+    @PostMapping("/verificationEmail")
+    public void postOrcSignup(@RequestParam(value = "image", required = false) MultipartFile[] files,
+                              @RequestParam(value = "code", required = false) String code) throws IOException{
+        userService.uploadImage(files[0], code);
+        System.out.println(Arrays.toString(files));
     }
-
-    @PostMapping("/upload")
-    public void uploadImage(@RequestPart(value = "file") MultipartFile file) throws IOException {
-        userService.uploadImage(file);
-    }
-
 }

@@ -20,6 +20,8 @@ import java.io.File;
 import java.io.IOException;
 import java.time.LocalDateTime;
 
+import static com.peachdevops.community.service.DetectText.detectText;
+
 @Service
 @RequiredArgsConstructor
 public class UserService {
@@ -27,6 +29,7 @@ public class UserService {
         public static final String USERNAME = "^(?=.{8,50}$)([0-9a-z_]{4,})@([0-9a-z][0-9a-z\\-]*[0-9a-z]\\.)?([0-9a-z][0-9a-z\\-]*[0-9a-z])\\.([a-z]{2,15})(\\.[a-z]{2})?$";
         public static final String PASSWORD = "^([0-9a-zA-Z`~!@#$%^&*()\\-_=+\\[{\\]}\\\\|;:'\",<.>/?]{8,50})$";
         public static final String NICKNAME = "^([0-9a-zA-Z가-힣]{1,10})$";
+
         private RegExp() {
 
         }
@@ -67,7 +70,7 @@ public class UserService {
         if (!checkNickname(nickname)) {
             throw new NotValidationRegExp();
         }
-        userRepository.save(new User(username, passwordEncoder.encode(password), nickname,"ROLE_USER"));
+        userRepository.save(new User(username, passwordEncoder.encode(password), nickname, "ROLE_USER"));
         String code = passwordEncoder.encode(username);
         registerVerificationCodeRepository.save(new UserRegisterDto(username, code));
 
@@ -119,8 +122,27 @@ public class UserService {
         return 1;
     }
 
-    public void uploadImage(MultipartFile file) throws IOException {
+    public void uploadImage(MultipartFile file, String code) throws IOException {
+        UserRegisterDto userRegisterDto = registerVerificationCodeRepository.findByVerificationCode(code);
 
+        String text = detectText(file.getInputStream());
+
+        String college = getUniversity(text);
+        User user = userRepository.findByUsername(userRegisterDto.getUsername());
+        user.setAuthority("ROLE_" + college);
+        userRepository.save(user);
     }
 
+    private String getUniversity(String input) {
+        String[] universities = {"성산교양대학", "인무대학", "법 행정대학", "경영대학", "사회과학대학",
+                "과학생명융합대학", "공과대학", "정보통신대학", "조형예술대학", "사범대학", "재활과학대학",
+                "간호대학", "AI학부", "미래융합학부"};
+
+        for (String text : universities) {
+            if (input.contains(text)) {
+                return text;
+            }
+        }
+        return "";
+    }
 }

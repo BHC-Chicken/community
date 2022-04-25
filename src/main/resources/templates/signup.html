@@ -10,12 +10,6 @@
 <body>
 <header th:insert="fragments.html::nav"></header>
 <div class="container">
-    <form method="post" th:action="@{/upload}" enctype="multipart/form-data">
-        <label for="image-file"></label>
-        <input id="image-file" type="file" name="upload" multiple
-               accept="image/*">
-        <input class="btn btn-lg btn-primary btn-block" type="submit" value="업로드">
-    </form>
     <form class="form-signin" method="post" th:action="@{/signup}" rel="form-signup">
         <h2 class="form-signin-heading">회원가입</h2>
         <p>

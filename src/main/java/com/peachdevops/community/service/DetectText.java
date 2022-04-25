@@ -10,8 +10,8 @@ import com.google.cloud.vision.v1.ImageAnnotatorClient;
 import com.google.protobuf.ByteString;
 import org.springframework.context.annotation.Configuration;
 
-import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,10 +20,10 @@ import java.util.List;
 public class DetectText {
 
     // Detects text in the specified image.
-    public static void detectText(String filePath) throws IOException {
+    public static String detectText(InputStream filePath) throws IOException {
         List<AnnotateImageRequest> requests = new ArrayList<>();
 
-        ByteString imgBytes = ByteString.readFrom(new FileInputStream(filePath));
+        ByteString imgBytes = ByteString.readFrom(filePath);
 
         Image img = Image.newBuilder().setContent(imgBytes).build();
         Feature feat = Feature.newBuilder().setType(Feature.Type.TEXT_DETECTION).build();
@@ -41,15 +41,18 @@ public class DetectText {
             for (AnnotateImageResponse res : responses) {
                 if (res.hasError()) {
                     System.out.format("Error: %s%n", res.getError().getMessage());
-                    return;
+                    return "";
                 }
 
                 // For full list of available annotations, see http://g.co/cloud/vision/docs
                 for (EntityAnnotation annotation : res.getTextAnnotationsList()) {
                     System.out.format("Text: %s%n", annotation.getDescription());
                     System.out.format("Position : %s%n", annotation.getBoundingPoly());
+
+                    return annotation.getDescription();
                 }
             }
         }
+        return "";
     }
 }

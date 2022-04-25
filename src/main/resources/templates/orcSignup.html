@@ -11,6 +11,7 @@
     <label for="image-file"></label>
     <input id="image-file" type="file" name="upload" multiple
            accept="image/*" rel="upload">
+    <input type="hidden" th:value="${param.code}" rel="hiddenCode">
 </form>
 </body>
 </html>
