@@ -2,6 +2,7 @@ package com.peachdevops.community.service;
 
 import com.peachdevops.community.domain.User;
 import com.peachdevops.community.dto.UserRegisterDto;
+import com.peachdevops.community.exception.NonExistentCollegeException;
 import com.peachdevops.community.exception.NotValidationRegExp;
 import com.peachdevops.community.exception.VerificationCodeAlreadyUsedException;
 import com.peachdevops.community.exception.VerificationCodeNotFoundException;
@@ -16,7 +17,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
-import java.io.File;
 import java.io.IOException;
 import java.time.LocalDateTime;
 
@@ -131,10 +131,11 @@ public class UserService {
         User user = userRepository.findByUsername(userRegisterDto.getUsername());
         user.setAuthority("ROLE_" + college);
         userRepository.save(user);
+
     }
 
     private String getUniversity(String input) {
-        String[] universities = {"성산교양대학", "인무대학", "법 행정대학", "경영대학", "사회과학대학",
+        String[] universities = {"성산교양대학", "인문대학", "법 행정대학", "경영대학", "사회과학대학",
                 "과학생명융합대학", "공과대학", "정보통신대학", "조형예술대학", "사범대학", "재활과학대학",
                 "간호대학", "AI학부", "미래융합학부"};
 
@@ -143,6 +144,6 @@ public class UserService {
                 return text;
             }
         }
-        return "";
+        throw new NonExistentCollegeException();
     }
 }

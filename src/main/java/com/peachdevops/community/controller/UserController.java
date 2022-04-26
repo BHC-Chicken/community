@@ -12,13 +12,10 @@ import javax.mail.MessagingException;
 import java.io.IOException;
 import java.util.Arrays;
 
-import static com.peachdevops.community.service.DetectText.detectText;
-
 @Controller
 @RequiredArgsConstructor
 public class UserController {
     private final UserService userService;
-    private final DetectText detectText;
 
     @GetMapping("/signup")
     public String getSignUp() {
@@ -57,8 +54,11 @@ public class UserController {
     @GetMapping("/verificationEmail")
     public String getVerificationEmail(@RequestParam(value = "code") String code) {
 
-        userService.verificationCode(code);
+        try {
+            userService.verificationCode(code);
+        } catch (Exception e) {
 
+        }
         return "orcSignup";
     }
 
