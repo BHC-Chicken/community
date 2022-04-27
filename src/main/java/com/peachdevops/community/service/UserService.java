@@ -96,16 +96,6 @@ public class UserService {
         if (LocalDateTime.now().isAfter(expiredAt)) {
             throw new VerificationCodeNotFoundException();
         }
-
-        String username = registerVerificationCodeRepository.findByVerificationCode(code).getUsername();
-        System.out.println(username);
-        User user = userRepository.findByUsername(username);
-        user.setEmailVerifiedFlag(true);
-        UserRegisterDto userRegisterDto = registerVerificationCodeRepository.findByVerificationCode(code);
-        userRegisterDto.setExpiredFlag(true);
-
-        registerVerificationCodeRepository.save(userRegisterDto);
-        userRepository.save(user);
     }
 
     public int checkInfoUsername(String username) {
@@ -126,12 +116,14 @@ public class UserService {
         UserRegisterDto userRegisterDto = registerVerificationCodeRepository.findByVerificationCode(code);
 
         String text = detectText(file.getInputStream());
-
         String college = getUniversity(text);
+        System.out.println(college);
         User user = userRepository.findByUsername(userRegisterDto.getUsername());
         user.setAuthority("ROLE_" + college);
+        user.setEmailVerifiedFlag(true);
+        userRegisterDto.setExpiredFlag(true);
+        registerVerificationCodeRepository.save(userRegisterDto);
         userRepository.save(user);
-
     }
 
     private String getUniversity(String input) {
@@ -141,7 +133,23 @@ public class UserService {
 
         for (String text : universities) {
             if (input.contains(text)) {
-                return text;
+                return switch (text) {
+                    case "성산교양대학" -> "CULTURE";
+                    case "인문대학" -> "HUMAN";
+                    case "법 행정대학" -> "ROW";
+                    case "경영대학" -> "OPERATION";
+                    case "사회과학대학" -> "SOCIETY";
+                    case "과학생명융합대학" -> "SCIENCE";
+                    case "공과대학" -> "ENGINE";
+                    case "정보통신대학" -> "COMPUTER";
+                    case "조형예술대학" -> "ART";
+                    case "사범대학" -> "MASTER";
+                    case "재활과학대학" -> "REHAB";
+                    case "간호대학" -> "NURSE";
+                    case "AI학부" -> "AI";
+                    case "미래융합학부" -> "FUSION";
+                    default -> "USER";
+                };
             }
         }
         throw new NonExistentCollegeException();

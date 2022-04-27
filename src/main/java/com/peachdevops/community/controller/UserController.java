@@ -57,7 +57,7 @@ public class UserController {
         try {
             userService.verificationCode(code);
         } catch (Exception e) {
-
+            return "index";
         }
         return "orcSignup";
     }
