@@ -6,6 +6,6 @@ public class NonExistentCollegeException extends RuntimeException {
     }
 
     public NonExistentCollegeException() {
-        super("존재하지 않는 대학");
+        super("NonExistentCollege");
     }
 }

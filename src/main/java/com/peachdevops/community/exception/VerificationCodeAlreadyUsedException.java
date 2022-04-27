@@ -6,6 +6,6 @@ public class VerificationCodeAlreadyUsedException extends RuntimeException {
     }
 
     public VerificationCodeAlreadyUsedException() {
-        super("이미 인증된 코드");
+        super("AlreadyUsed");
     }
 }

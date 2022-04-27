@@ -9,6 +9,6 @@ public class VerificationCodeNotFoundException extends RuntimeException {
     }
 
     public VerificationCodeNotFoundException() {
-        super("알수없는 코드");
+        super("CodeNotFound");
     }
 }
