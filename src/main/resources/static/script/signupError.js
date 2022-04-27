@@ -8,6 +8,8 @@ const password = formSignUp.querySelector('[rel="password"]');
 const passwordCheck = formSignUp.querySelector('[name="password"]');
 const nickname = formSignUp.querySelector('[name="nickname"]');
 
+const csrfToken = formSignUp.querySelector('[name="_csrf"]').value;
+
 username.addEventListener('focusout', () => {
     const usernameMessage = window.document.body.querySelector('[rel="email-message"]');
     usernameMessage.innerText = '';
@@ -22,7 +24,8 @@ username.addEventListener('focusout', () => {
     $.ajax({
         url: '/signup/check-username',
         data: {
-            username: formSignUp['username'].value
+            username: formSignUp['username'].value,
+            _csrf: csrfToken
         },
         method: 'POST',
         success: function (check) {
@@ -99,7 +102,8 @@ nickname.addEventListener('focusout', () => {
     $.ajax({
         url: '/signup/check-nickname',
         data: {
-            nickname: formSignUp['nickname'].value
+            nickname: formSignUp['nickname'].value,
+            _csrf: csrfToken
         },
         method: 'POST',
         success: function (check) {

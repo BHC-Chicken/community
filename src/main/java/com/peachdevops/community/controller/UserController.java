@@ -3,6 +3,7 @@ package com.peachdevops.community.controller;
 import com.peachdevops.community.domain.User;
 import com.peachdevops.community.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -55,6 +56,7 @@ public class UserController {
 
     @GetMapping("/verificationEmail")
     public String getVerificationEmail(@RequestParam(value = "code") String code, Model model) {
+
         try {
             userService.verificationCode(code);
         } catch (Exception e) {
@@ -68,7 +70,7 @@ public class UserController {
 
     @PostMapping("/verificationEmail")
     public void postOrcSignup(@RequestParam(value = "image", required = false) MultipartFile[] files,
-                              @RequestParam(value = "code", required = false) String code) throws IOException{
+                              @RequestParam(value = "code", required = false) String code) throws Exception {
         userService.uploadImage(files[0], code);
         System.out.println(Arrays.toString(files));
     }

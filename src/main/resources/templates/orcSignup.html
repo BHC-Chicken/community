@@ -1,7 +1,5 @@
 <!DOCTYPE html>
-<html lang="en"
-      xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html lang="ko">
 <head>
     <meta charset="UTF-8">
     <script defer src="script/orcSignup.js"></script>
@@ -9,7 +7,7 @@
     <title>Title</title>
 </head>
 <body>
-<form method="post" enctype="multipart/form-data" rel="form-orc">
+<form method="post" enctype="multipart/form-data" rel="form-orc" th:action="@{#}">
     <label for="image-file"></label>
     <input id="image-file" type="file" name="upload" multiple
            accept="image/*" rel="upload">
