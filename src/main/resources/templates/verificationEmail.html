@@ -1,9 +1,19 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+>
 <head>
     <meta charset="UTF-8">
     <script defer src="script/orcSignup.js"></script>
     <script defer src="script/jquery-3.6.0.min.js"></script>
+    <script>
+        /*<![CDATA[*/
+        let exception = "[[${exception}]]";
+        /*]]>*/
+        alert(exception);
+        window.close();
+    </script>
     <title>Title</title>
 </head>
 <body>

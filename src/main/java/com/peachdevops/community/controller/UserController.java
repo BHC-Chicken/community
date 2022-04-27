@@ -61,7 +61,7 @@ public class UserController {
             model.addAttribute("exception", e.getMessage());
             System.out.println(e.getMessage());
 
-            return "index";
+            return "verificationEmail";
         }
         return "orcSignup";
     }

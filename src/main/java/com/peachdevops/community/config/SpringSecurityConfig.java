@@ -25,7 +25,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
 
         http.httpBasic().disable();
-        http.csrf().disable();
+        http.csrf();
         http.rememberMe().disable();
         http.authorizeRequests()
                 .antMatchers("/", "/signup", "/login").permitAll();

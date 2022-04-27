@@ -5,6 +5,16 @@
     <link rel="stylesheet" type="text/css" href="css/signup.css">
     <script defer src="script/signupError.js"></script>
     <script defer src="script/jquery-3.6.0.min.js"></script>
+    <script>
+        /*<![CDATA[*/
+        let exception = "[[${exception}]]";
+        console.log(exception);
+        /*]]>*/
+        if (exception === null) {
+            alert(exception);
+            window.history.back();
+        }
+    </script>
     <head th:insert="fragments.html::header"></head>
 </head>
 <body>
