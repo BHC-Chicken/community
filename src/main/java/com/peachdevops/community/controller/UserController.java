@@ -1,10 +1,10 @@
 package com.peachdevops.community.controller;
 
 import com.peachdevops.community.domain.User;
-import com.peachdevops.community.service.DetectText;
 import com.peachdevops.community.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -24,11 +24,13 @@ public class UserController {
     }
 
     @PostMapping("/signup")
-    public String signup(@ModelAttribute User user) throws MessagingException {
+    public String signup(@ModelAttribute User user, Model model) throws MessagingException {
 
         try {
             userService.signup(user.getUsername(), user.getPassword(), user.getNickname());
         } catch (Exception e) {
+            model.addAttribute("exception", e.getMessage());
+            System.out.println(e.getMessage());
             return "redirect:signup";
         }
         // 회원가입 후 로그인 페이지로 이동
@@ -52,11 +54,13 @@ public class UserController {
     }
 
     @GetMapping("/verificationEmail")
-    public String getVerificationEmail(@RequestParam(value = "code") String code) {
-
+    public String getVerificationEmail(@RequestParam(value = "code") String code, Model model) {
         try {
             userService.verificationCode(code);
         } catch (Exception e) {
+            model.addAttribute("exception", e.getMessage());
+            System.out.println(e.getMessage());
+
             return "index";
         }
         return "orcSignup";

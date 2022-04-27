@@ -1,6 +1,9 @@
 const detectText = window.document.body.querySelector('[rel = "upload"]');
 const hidden = window.document.body.querySelector('[rel="hiddenCode"]');
 
+let exception = "${exception.value}";
+console.log(exception);
+
 detectText.addEventListener('change', () => {
     let formData = new FormData();
     formData.append("code", hidden.value);
