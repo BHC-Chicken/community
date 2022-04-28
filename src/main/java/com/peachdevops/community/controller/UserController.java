@@ -65,13 +65,27 @@ public class UserController {
 
             return "verificationEmail";
         }
+        return "index";
+    }
+
+    @GetMapping("/orcSignup")
+    public String getOrcSignup() {
+
         return "orcSignup";
     }
 
-    @PostMapping("/verificationEmail")
-    public void postOrcSignup(@RequestParam(value = "image", required = false) MultipartFile[] files,
-                              @RequestParam(value = "code", required = false) String code) throws Exception {
-        userService.uploadImage(files[0], code);
-        System.out.println(Arrays.toString(files));
+    @PostMapping("/orcSignup")
+    public String postOrcSignup(@SessionAttribute(value = "user", required = false) User user,
+                                @RequestParam(value = "image", required = false) MultipartFile[] files,
+                                @RequestParam(value = "code", required = false) String code,
+                                Model model) throws IOException {
+        try {
+            userService.uploadImage(files[0], user);
+            System.out.println(Arrays.toString(files));
+        } catch (Exception e) {
+            model.addAttribute("exception", e.getMessage());
+            System.out.println(e.getMessage());
+        }
+        return "index";
     }
 }

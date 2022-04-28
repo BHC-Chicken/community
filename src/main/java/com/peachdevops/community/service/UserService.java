@@ -96,6 +96,14 @@ public class UserService {
         if (LocalDateTime.now().isAfter(expiredAt)) {
             throw new VerificationCodeNotFoundException();
         }
+
+        UserRegisterDto userRegisterDto = registerVerificationCodeRepository.findByVerificationCode(code);
+        User user = userRepository.findByUsername(userRegisterDto.getUsername());
+
+        user.setEmailVerifiedFlag(true);
+        userRegisterDto.setExpiredFlag(true);
+        registerVerificationCodeRepository.save(userRegisterDto);
+        userRepository.save(user);
     }
 
     public int checkInfoUsername(String username) {
@@ -112,17 +120,13 @@ public class UserService {
         return 1;
     }
 
-    public void uploadImage(MultipartFile file, String code) throws IOException {
-        UserRegisterDto userRegisterDto = registerVerificationCodeRepository.findByVerificationCode(code);
+    public void uploadImage(MultipartFile file, User user) throws IOException {
 
         String text = detectText(file.getInputStream());
         String college = getUniversity(text);
         System.out.println(college);
-        User user = userRepository.findByUsername(userRegisterDto.getUsername());
         user.setAuthority("ROLE_" + college);
-        user.setEmailVerifiedFlag(true);
-        userRegisterDto.setExpiredFlag(true);
-        registerVerificationCodeRepository.save(userRegisterDto);
+        user.setStdCardVerifiedFlag(true);
         userRepository.save(user);
     }
 
@@ -169,4 +173,6 @@ public class UserService {
         }
         throw new NonExistentCollegeException();
     }
+
+
 }

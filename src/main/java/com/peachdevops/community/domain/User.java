@@ -49,6 +49,10 @@ public class User implements UserDetails {
     @Column(nullable = false)
     protected boolean isDeletedFlag;
 
+    @Setter
+    @Column(nullable = false)
+    protected boolean isStdCardVerifiedFlag;
+
     @CreatedDate
     @Column(insertable = false, updatable = false)
     protected final LocalDateTime createdAt = LocalDateTime.now();
