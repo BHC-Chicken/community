@@ -81,6 +81,15 @@
                         <a
                                 class="nav-link active"
                                 sec:authorize="isAuthenticated()"
+                                th:href="@{/orcSignup}"
+                        >
+                            학생증 인증
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a
+                                class="nav-link active"
+                                sec:authorize="isAuthenticated()"
                                 th:href="@{/logout}"
                         >
                             로그아웃
