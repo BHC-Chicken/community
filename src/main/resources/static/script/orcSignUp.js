@@ -18,7 +18,7 @@ detectText.addEventListener('change', () => {
     }
 
     $.ajax({
-        url:"/verificationEmail",
+        url:"/orcSignup",
         data: formData,
         method:'POST',
         processData:false,
@@ -26,9 +26,12 @@ detectText.addEventListener('change', () => {
         cache:false,
         success:function (data) {
             alert("성공");
+            window.history.back();
         },
         error:function (e) {
             alert("실패");
         }
     })
+
+
 })

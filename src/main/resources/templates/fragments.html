@@ -80,7 +80,7 @@
                     <li class="nav-item">
                         <a
                                 class="nav-link active"
-                                sec:authorize="isAuthenticated()"
+                                sec:authorize="hasRole('ROLE_USER')"
                                 th:href="@{/orcSignup}"
                         >
                             학생증 인증

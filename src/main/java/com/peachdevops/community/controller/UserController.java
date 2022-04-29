@@ -11,6 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.mail.MessagingException;
 import java.io.IOException;
+import java.security.Principal;
 import java.util.Arrays;
 
 @Controller
@@ -70,17 +71,17 @@ public class UserController {
 
     @GetMapping("/orcSignup")
     public String getOrcSignup() {
-
         return "orcSignup";
     }
 
     @PostMapping("/orcSignup")
-    public String postOrcSignup(@SessionAttribute(value = "user", required = false) User user,
-                                @RequestParam(value = "image", required = false) MultipartFile[] files,
-                                @RequestParam(value = "code", required = false) String code,
+    public String postOrcSignup(
+            @RequestParam(value = "image", required = false) MultipartFile[] files,
+                                Principal principal,
                                 Model model) throws IOException {
+        System.out.println(principal.getName());
         try {
-            userService.uploadImage(files[0], user);
+            userService.uploadImage(files[0], principal);
             System.out.println(Arrays.toString(files));
         } catch (Exception e) {
             model.addAttribute("exception", e.getMessage());

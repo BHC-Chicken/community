@@ -11,6 +11,11 @@ import com.peachdevops.community.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -18,7 +23,10 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import java.io.IOException;
+import java.security.Principal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import static com.peachdevops.community.service.DetectText.detectText;
 
@@ -120,11 +128,23 @@ public class UserService {
         return 1;
     }
 
-    public void uploadImage(MultipartFile file, User user) throws IOException {
+    public void uploadImage(MultipartFile file, Principal principal) throws IOException {
 
+        String name = principal.getName();
         String text = detectText(file.getInputStream());
         String college = getUniversity(text);
         System.out.println(college);
+        User user = userRepository.findByUsername(name);
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
+        List<GrantedAuthority> updateAuthorities = new ArrayList<>();
+
+        updateAuthorities.add(new SimpleGrantedAuthority("ROLE_" + college));
+
+        Authentication newAuth = new UsernamePasswordAuthenticationToken(auth.getPrincipal(), auth.getCredentials(), updateAuthorities);
+
+        SecurityContextHolder.getContext().setAuthentication(newAuth);
+
         user.setAuthority("ROLE_" + college);
         user.setStdCardVerifiedFlag(true);
         userRepository.save(user);
