@@ -25,8 +25,15 @@ detectText.addEventListener('change', () => {
         contentType: false,
         cache:false,
         success:function (data) {
+
             alert("성공");
             window.history.back();
+        },
+        beforeSend:function () {
+            $('.wrap-loading').removeClass('display-none');
+        },
+        complete:function() {
+            $('.wrap-loading').addClass('display-none');
         },
         error:function (e) {
             alert("실패");
