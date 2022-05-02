@@ -9,6 +9,7 @@ public record ArticleResponse(
         String nickname,
         String title,
         String content,
+        String boardCode,
         LocalDateTime writeAt,
         LocalDateTime modifyAt,
         Integer view
@@ -19,6 +20,7 @@ public record ArticleResponse(
             String nickname,
             String title,
             String content,
+            String boardCode,
             LocalDateTime writeAt,
             LocalDateTime modifyAt,
             Integer view
@@ -28,6 +30,7 @@ public record ArticleResponse(
                 nickname,
                 title,
                 content,
+                boardCode,
                 writeAt,
                 modifyAt,
                 view);
@@ -42,6 +45,7 @@ public record ArticleResponse(
                 articleDto.nickname(),
                 articleDto.title(),
                 articleDto.content(),
+                articleDto.boardCode(),
                 articleDto.writeAt(),
                 articleDto.modifyAt(),
                 articleDto.view()

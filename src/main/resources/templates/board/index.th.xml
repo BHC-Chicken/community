@@ -4,12 +4,11 @@
     <attr sel="#articlesTable">
         <attr sel="tbody">
             <attr sel="tr[0]" th:each="article : ${articles}">
-                <attr sel="td.id" th:text="${article.id}"/>
                 <attr sel="td.title" th:text="${article.title}"/>
                 <attr sel="td.nickname" th:text="${article.nickname}"/>
                 <attr sel="td.modifyAt" th:text="${article.modifyAt}"/>
                 <attr sel="td.view" th:text="${article.view}"/>
-                <attr sel="td/a" th:text="'상세'" th:href="@{'/{boardCode}/{articleId}' + ${article.id}}"/>
+                <attr sel="td/a" th:text="'상세'" th:href="@{/board/{boardCode}/{id}(boardCode=${article.boardCode}, id=${article.id})}"/>
             </attr>
         </attr>
     </attr>

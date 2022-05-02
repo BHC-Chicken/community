@@ -8,5 +8,5 @@
     <attr sel="#modifyAt" th:text="*{modifyAt} ?: _" />
     <attr sel="#view" th:text="*{view} ?: _" />
   </attr>
-  <attr sel="#backToArticles" th:href="@{#}" />
+  <attr sel="#backToArticles" th:href="@{/board/{boardCode} (boardCode =${article.boardCode})}" />
 </thlogic>

@@ -35,6 +35,7 @@ public class BoardController {
                 .map(ArticleResponse::from)
                 .toList();
         map.put("articles", articleList);
+        System.out.println(articleList);
 
         return new ModelAndView("board/index", map);
     }

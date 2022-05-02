@@ -24,28 +24,6 @@ public class ArticleRepositoryCustomImpl extends QuerydslRepositorySupport imple
     }
 
     @Override
-    public List<ArticleDto> findByBoardCode(String boardCode, Pageable pageable) {
-        QArticle article = QArticle.article;
-
-        JPQLQuery<ArticleDto> query = from(article)
-                .select(Projections.constructor(
-                        ArticleDto.class,
-                        article.id,
-                        article.nickname,
-                        article.boardCode,
-                        article.title,
-                        article.content,
-                        article.modifyAt,
-                        article.view
-                ));
-
-        List<ArticleDto> articleDtoList = Optional.ofNullable(getQuerydsl())
-                .orElseThrow(DataAccessErrorException::new)
-                .applyPagination(pageable, query).fetch();
-        return new ArrayList<>(articleDtoList);
-    }
-
-    @Override
     public Page<ArticleViewResponse> findArticleViewPageBySearchParams(
             Long id,
             String title,
