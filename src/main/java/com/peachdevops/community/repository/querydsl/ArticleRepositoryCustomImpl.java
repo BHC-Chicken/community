@@ -13,6 +13,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,13 +24,25 @@ public class ArticleRepositoryCustomImpl extends QuerydslRepositorySupport imple
     }
 
     @Override
-    public Optional<ArticleDto> findArticleByBoardCode(String boardCode, Long articleId) {
-        return Optional.empty();
-    }
+    public List<ArticleDto> findByBoardCode(String boardCode, Pageable pageable) {
+        QArticle article = QArticle.article;
 
-    @Override
-    public Optional<ArticleDto> findByBoardCode(String boardCode) {
-        return Optional.empty();
+        JPQLQuery<ArticleDto> query = from(article)
+                .select(Projections.constructor(
+                        ArticleDto.class,
+                        article.id,
+                        article.nickname,
+                        article.boardCode,
+                        article.title,
+                        article.content,
+                        article.modifyAt,
+                        article.view
+                ));
+
+        List<ArticleDto> articleDtoList = Optional.ofNullable(getQuerydsl())
+                .orElseThrow(DataAccessErrorException::new)
+                .applyPagination(pageable, query).fetch();
+        return new ArrayList<>(articleDtoList);
     }
 
     @Override
@@ -47,14 +60,14 @@ public class ArticleRepositoryCustomImpl extends QuerydslRepositorySupport imple
                          ArticleViewResponse.class,
                          article.id,
                          article.title,
-                         article.username
+                         article.nickname
                  ));
 
          if (title != null && !title.isBlank()) {
              query.where(article.title.contains(title));
          }
          if (user.getNickname() != null && !user.getNickname().isBlank()) {
-             query.where(article.username.contains(user.getNickname()));
+             query.where(article.nickname.contains(user.getNickname()));
          }
 
          List<ArticleViewResponse> articles = Optional.ofNullable(getQuerydsl())

@@ -23,19 +23,21 @@ import static com.peachdevops.community.domain.QArticle.article;
 public class BoardService {
     private final ArticleRepository articleRepository;
 
-    public List<ArticleDto> getArticles(Predicate predicate) {
+    public List<ArticleDto> getArticles(Predicate predicate, String boardCode) {
         try {
             return StreamSupport.stream(articleRepository.findAll(predicate).spliterator(), false)
                     .map(ArticleDto::of)
+                    .filter(articleDto -> articleDto.boardCode().equals(boardCode))
                     .toList();
         } catch (Exception e) {
             throw new DataAccessErrorException();
         }
     }
 
-    public Optional<ArticleDto> getArticle(Long articleId) {
+    public Optional<ArticleDto> getArticle(Long articleId, String boardCode) {
         try {
-            return articleRepository.findById(articleId).map(ArticleDto::of);
+            return articleRepository.findById(articleId).map(ArticleDto::of)
+                    .filter(articleDto -> articleDto.boardCode().equals(boardCode));
         } catch (Exception e) {
             throw new DataAccessErrorException();
         }

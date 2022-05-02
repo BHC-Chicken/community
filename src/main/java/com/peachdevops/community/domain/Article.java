@@ -17,7 +17,7 @@ public class Article {
     @Id
     private Long id;
 
-    private String username;
+    private String nickname;
 
     @Setter
     private String boardCode;
@@ -29,7 +29,7 @@ public class Article {
     private String content;
 
     @Setter
-    private LocalDateTime createdAt;
+    private LocalDateTime writeAt;
 
     @Setter
     private LocalDateTime modifyAt;
@@ -43,41 +43,45 @@ public class Article {
     protected Article() {}
 
     protected Article(
-            String username,
+            Long id,
+            String nickname,
             String boardCode,
             String title,
             String content,
-            LocalDateTime createdAt,
+            LocalDateTime writeAt,
             LocalDateTime modifyAt,
             Integer view,
             Boolean isDeleted
     ) {
-        this.username = username;
+        this.id = id;
+        this.nickname = nickname;
         this.boardCode = boardCode;
         this.title = title;
         this.content = content;
-        this.createdAt = createdAt;
+        this.writeAt = writeAt;
         this.modifyAt = modifyAt;
         this.view = view;
         this.isDeleted = isDeleted;
     }
 
     public static Article of(
-            String username,
+            Long id,
+            String nickname,
             String boardCode,
             String title,
             String content,
-            LocalDateTime createdAt,
+            LocalDateTime writeAt,
             LocalDateTime modifyAt,
             Integer view,
             Boolean isDeleted
     ) {
         return new Article(
-                username,
+                id,
+                nickname,
                 boardCode,
                 title,
                 content,
-                createdAt,
+                writeAt,
                 modifyAt,
                 view,
                 isDeleted
@@ -94,6 +98,6 @@ public class Article {
 
     @Override
     public int hashCode() {
-        return Objects.hash(username, boardCode, title, content, createdAt, modifyAt, view, isDeleted);
+        return Objects.hash(id, nickname, boardCode, title, content, writeAt, modifyAt, view, isDeleted);
     }
 }

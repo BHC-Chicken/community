@@ -3,29 +3,29 @@ package com.peachdevops.community.dto;
 import com.peachdevops.community.domain.User;
 
 public record ArticleRequest(
-        Long Id,
+        Long id,
         String title,
         String content,
-        User user
+        String nickname
 ) {
     public static ArticleRequest of(
-            Long Id,
+            Long id,
             String title,
             String content,
-            User user
+            String nickname
     ) {
         return new ArticleRequest(
-                Id,
+                id,
                 title,
                 content,
-                user
+                nickname
         );
     }
 
     public ArticleDto toDto() {
         return ArticleDto.of(
                 null,
-                this.user(),
+                nickname,
                 null,
                 this.title(),
                 this.content(),

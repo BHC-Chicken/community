@@ -6,17 +6,17 @@ public record ArticleViewResponse(
         Long id,
         String title,
         String content,
-        LocalDateTime writeTime,
-        LocalDateTime modifyTime,
+        LocalDateTime writeAt,
+        LocalDateTime modifyAt,
         Integer view,
         Boolean isDeleted
 ) {
-    public ArticleViewResponse(Long id, String title, String content, LocalDateTime writeTime, LocalDateTime modifyTime, Integer view, Boolean isDeleted) {
+    public ArticleViewResponse(Long id, String title, String content, LocalDateTime writeAt, LocalDateTime modifyAt, Integer view, Boolean isDeleted) {
         this.id = id;
         this.title = title;
         this.content = content;
-        this.writeTime = writeTime;
-        this.modifyTime = modifyTime;
+        this.writeAt = writeAt;
+        this.modifyAt = modifyAt;
         this.view = view;
         this.isDeleted = isDeleted;
     }
@@ -25,8 +25,8 @@ public record ArticleViewResponse(
             Long id,
             String title,
             String content,
-            LocalDateTime writeTime,
-            LocalDateTime modifyTime,
+            LocalDateTime writeAt,
+            LocalDateTime modifyAt,
             Integer view,
             Boolean isDeleted
     ) {
@@ -34,8 +34,8 @@ public record ArticleViewResponse(
                 id,
                 title,
                 content,
-                writeTime,
-                modifyTime,
+                writeAt,
+                modifyAt,
                 view,
                 isDeleted
         );
@@ -49,8 +49,8 @@ public record ArticleViewResponse(
                 articleDto.id(),
                 articleDto.title(),
                 articleDto.content(),
-                articleDto.writeTime(),
-                articleDto.modifyTime(),
+                articleDto.writeAt(),
+                articleDto.modifyAt(),
                 articleDto.view(),
                 articleDto.isDeleted()
         );

@@ -6,6 +6,7 @@ import com.peachdevops.community.dto.ArticleViewResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface ArticleRepositoryCustom {
@@ -15,15 +16,5 @@ public interface ArticleRepositoryCustom {
             User user,
             Pageable pageable
     );
-
-    Optional<ArticleDto> findArticleByBoardCode(
-            String boardCode,
-            Long articleId
-    );
-
-    Optional<ArticleDto> findByBoardCode(
-            String boardCode
-    );
-
 
 }

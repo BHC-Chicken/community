@@ -6,30 +6,30 @@ import java.time.LocalDateTime;
 
 public record ArticleResponse(
         Long id,
-        User user,
+        String nickname,
         String title,
         String content,
-        LocalDateTime writeTime,
-        LocalDateTime modifyTime,
+        LocalDateTime writeAt,
+        LocalDateTime modifyAt,
         Integer view
 ) {
 
     public static ArticleResponse of(
             Long id,
-            User user,
+            String nickname,
             String title,
             String content,
-            LocalDateTime writeTime,
-            LocalDateTime modifyTime,
+            LocalDateTime writeAt,
+            LocalDateTime modifyAt,
             Integer view
     ) {
         return new ArticleResponse(
                 id,
-                user,
+                nickname,
                 title,
                 content,
-                writeTime,
-                modifyTime,
+                writeAt,
+                modifyAt,
                 view);
     }
 
@@ -39,11 +39,11 @@ public record ArticleResponse(
         }
         return ArticleResponse.of(
                 articleDto.id(),
-                new User(),
+                articleDto.nickname(),
                 articleDto.title(),
                 articleDto.content(),
-                articleDto.writeTime(),
-                articleDto.modifyTime(),
+                articleDto.writeAt(),
+                articleDto.modifyAt(),
                 articleDto.view()
         );
     }

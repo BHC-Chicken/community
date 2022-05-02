@@ -7,34 +7,34 @@ import java.time.LocalDateTime;
 
 public record ArticleDto(
         Long id,
-        User user,
+        String nickname,
         String boardCode,
         String title,
         String content,
-        LocalDateTime writeTime,
-        LocalDateTime modifyTime,
+        LocalDateTime writeAt,
+        LocalDateTime modifyAt,
         Integer view,
         Boolean isDeleted
 ) {
     public static ArticleDto of(
             Long id,
-            User user,
+            String nickname,
             String boardCode,
             String title,
             String content,
-            LocalDateTime writeTime,
-            LocalDateTime modifyTime,
+            LocalDateTime writeAt,
+            LocalDateTime modifyAt,
             Integer view,
             Boolean isDeleted
     ) {
         return new ArticleDto(
                 id,
-                user,
+                nickname,
                 boardCode,
                 title,
                 content,
-                writeTime,
-                modifyTime,
+                writeAt,
+                modifyAt,
                 view,
                 isDeleted
         );
@@ -43,11 +43,11 @@ public record ArticleDto(
     public static ArticleDto of(Article article) {
         return new ArticleDto(
                 article.getId(),
-                new User(),
+                article.getNickname(),
                 article.getBoardCode(),
                 article.getTitle(),
                 article.getContent(),
-                article.getCreatedAt(),
+                article.getWriteAt(),
                 article.getModifyAt(),
                 article.getView(),
                 article.getIsDeleted()
@@ -56,12 +56,13 @@ public record ArticleDto(
 
     public Article toEntity(Article article) {
         return Article.of(
-                user.getUsername(),
+                id,
+                nickname,
                 boardCode,
                 title,
                 content,
-                writeTime,
-                modifyTime,
+                writeAt,
+                modifyAt,
                 view,
                 isDeleted
         );

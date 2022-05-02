@@ -1,15 +1,12 @@
 <?xml version="1.0"?>
 <thlogic>
-  <attr sel="#eventTitle" th:text="'이벤트 상세'" />
-  <attr sel="#eventTable" th:object="${event}">
-    <attr sel="#placeName" th:text="*{placeName} ?: _" />
-    <attr sel="#eventName" th:text="*{eventName} ?: _" />
-    <attr sel="#eventStatus" th:text="*{eventStatus} ?: _" />
-    <attr sel="#eventStartDatetime" th:text="*{eventStartDatetime} ?: _" />
-    <attr sel="#eventEndDatetime" th:text="*{eventEndDatetime} ?: _" />
-    <attr sel="#currentNumberOfPeople" th:text="*{currentNumberOfPeople} ?: _" />
-    <attr sel="#capacity" th:text="*{capacity} ?: _" />
-    <attr sel="#memo" th:text="*{memo} ?: _" />
+  <attr sel="#articleTitle" th:text="'게시글 상세'" />
+  <attr sel="#articleTable" th:object="${article}">
+    <attr sel="#title" th:text="*{title} ?: _" />
+    <attr sel="#nickname" th:text="*{nickname} ?: _" />
+    <attr sel="#content" th:text="*{content} ?: _" />
+    <attr sel="#modifyAt" th:text="*{modifyAt} ?: _" />
+    <attr sel="#view" th:text="*{view} ?: _" />
   </attr>
-  <attr sel="#backToEvents" th:href="@{/events}" />
+  <attr sel="#backToArticles" th:href="@{#}" />
 </thlogic>

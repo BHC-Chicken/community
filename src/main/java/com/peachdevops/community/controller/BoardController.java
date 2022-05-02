@@ -24,20 +24,19 @@ import java.util.Map;
 public class BoardController {
 
     private final BoardService boardService;
-    private Predicate predicate;
 
     @GetMapping("/{boardCode}")
     public ModelAndView articleList(@PathVariable(name = "boardCode") String boardCode,
                                     @QuerydslPredicate(root = Article.class) Predicate predicate
     ) {
         Map<String, Object> map = new HashMap<>();
-        List<ArticleResponse> articleList = boardService.getArticles(predicate)
+        List<ArticleResponse> articleList = boardService.getArticles(predicate, boardCode)
                 .stream()
                 .map(ArticleResponse::from)
                 .toList();
         map.put("articles", articleList);
 
-        return new ModelAndView("/index", map);
+        return new ModelAndView("board/index", map);
     }
 
     @GetMapping("/{boardCode}/{articleId}")
@@ -45,12 +44,12 @@ public class BoardController {
                                       @PathVariable(name = "articleId") Long articleId)
     {
         Map<String, Object> map = new HashMap<>();
-        ArticleResponse article = boardService.getArticle(articleId)
+        ArticleResponse article = boardService.getArticle(articleId, boardCode)
                 .map(ArticleResponse::from)
                 .orElseThrow(DataAccessErrorException::new);
 
         map.put("article", article);
 
-        return new ModelAndView("/detail",map);
+        return new ModelAndView("board/detail",map);
     }
 }
