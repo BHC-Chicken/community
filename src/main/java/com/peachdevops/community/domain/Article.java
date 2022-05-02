@@ -14,15 +14,11 @@ import java.util.Objects;
 @ToString
 @Entity
 public class Article {
-
     @Id
     private Long id;
-    @ManyToOne
-    private User user;
 
-    public void setUser(User user) {
-        this.user = user;
-    }
+    private String username;
+
     @Setter
     private String boardCode;
 
@@ -33,10 +29,10 @@ public class Article {
     private String content;
 
     @Setter
-    private LocalDateTime writeTime;
+    private LocalDateTime createdAt;
 
     @Setter
-    private LocalDateTime modifyTime;
+    private LocalDateTime modifyAt;
 
     @Setter
     private Integer view;
@@ -47,42 +43,42 @@ public class Article {
     protected Article() {}
 
     protected Article(
-            User user,
+            String username,
             String boardCode,
             String title,
             String content,
-            LocalDateTime writeTime,
-            LocalDateTime modifyTime,
+            LocalDateTime createdAt,
+            LocalDateTime modifyAt,
             Integer view,
             Boolean isDeleted
     ) {
-        this.user = user;
+        this.username = username;
         this.boardCode = boardCode;
         this.title = title;
         this.content = content;
-        this.writeTime = writeTime;
-        this.modifyTime = modifyTime;
+        this.createdAt = createdAt;
+        this.modifyAt = modifyAt;
         this.view = view;
         this.isDeleted = isDeleted;
     }
 
     public static Article of(
-            User user,
+            String username,
             String boardCode,
             String title,
             String content,
-            LocalDateTime writeTime,
-            LocalDateTime modifyTime,
+            LocalDateTime createdAt,
+            LocalDateTime modifyAt,
             Integer view,
             Boolean isDeleted
     ) {
         return new Article(
-                user,
+                username,
                 boardCode,
                 title,
                 content,
-                writeTime,
-                modifyTime,
+                createdAt,
+                modifyAt,
                 view,
                 isDeleted
         );
@@ -98,6 +94,6 @@ public class Article {
 
     @Override
     public int hashCode() {
-        return Objects.hash(user, boardCode, title, content, writeTime, modifyTime, view, isDeleted);
+        return Objects.hash(username, boardCode, title, content, createdAt, modifyAt, view, isDeleted);
     }
 }

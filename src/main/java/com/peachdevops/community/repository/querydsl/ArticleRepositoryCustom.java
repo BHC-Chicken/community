@@ -24,4 +24,6 @@ public interface ArticleRepositoryCustom {
     Optional<ArticleDto> findByBoardCode(
             String boardCode
     );
+
+
 }

@@ -24,7 +24,7 @@ public class ArticleRepositoryCustomImpl extends QuerydslRepositorySupport imple
 
     @Override
     public Optional<ArticleDto> findArticleByBoardCode(String boardCode, Long articleId) {
-        return
+        return Optional.empty();
     }
 
     @Override
@@ -47,14 +47,14 @@ public class ArticleRepositoryCustomImpl extends QuerydslRepositorySupport imple
                          ArticleViewResponse.class,
                          article.id,
                          article.title,
-                         article.user.nickname
+                         article.username
                  ));
 
          if (title != null && !title.isBlank()) {
              query.where(article.title.contains(title));
          }
          if (user.getNickname() != null && !user.getNickname().isBlank()) {
-             query.where(article.user.nickname.contains(user.getNickname()));
+             query.where(article.username.contains(user.getNickname()));
          }
 
          List<ArticleViewResponse> articles = Optional.ofNullable(getQuerydsl())

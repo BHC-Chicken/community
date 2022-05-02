@@ -1,6 +1,7 @@
 package com.peachdevops.community.controller;
 
 import com.peachdevops.community.domain.Article;
+import com.peachdevops.community.dto.ArticleDto;
 import com.peachdevops.community.dto.ArticleResponse;
 import com.peachdevops.community.exception.DataAccessErrorException;
 import com.peachdevops.community.service.BoardService;
@@ -23,13 +24,14 @@ import java.util.Map;
 public class BoardController {
 
     private final BoardService boardService;
+    private Predicate predicate;
 
     @GetMapping("/{boardCode}")
     public ModelAndView articleList(@PathVariable(name = "boardCode") String boardCode,
                                     @QuerydslPredicate(root = Article.class) Predicate predicate
     ) {
         Map<String, Object> map = new HashMap<>();
-        List<ArticleResponse> articleList = boardService.getArticles(predicate, boardCode)
+        List<ArticleResponse> articleList = boardService.getArticles(predicate)
                 .stream()
                 .map(ArticleResponse::from)
                 .toList();
@@ -43,7 +45,7 @@ public class BoardController {
                                       @PathVariable(name = "articleId") Long articleId)
     {
         Map<String, Object> map = new HashMap<>();
-        ArticleResponse article = boardService.getArticle(boardCode, articleId)
+        ArticleResponse article = boardService.getArticle(articleId)
                 .map(ArticleResponse::from)
                 .orElseThrow(DataAccessErrorException::new);
 

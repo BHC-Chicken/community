@@ -47,8 +47,8 @@ public record ArticleDto(
                 article.getBoardCode(),
                 article.getTitle(),
                 article.getContent(),
-                article.getWriteTime(),
-                article.getModifyTime(),
+                article.getCreatedAt(),
+                article.getModifyAt(),
                 article.getView(),
                 article.getIsDeleted()
         );
@@ -56,7 +56,7 @@ public record ArticleDto(
 
     public Article toEntity(Article article) {
         return Article.of(
-                user,
+                user.getUsername(),
                 boardCode,
                 title,
                 content,
