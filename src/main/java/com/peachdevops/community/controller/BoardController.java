@@ -1,6 +1,8 @@
 package com.peachdevops.community.controller;
 
 import com.peachdevops.community.domain.Article;
+import com.peachdevops.community.domain.User;
+import com.peachdevops.community.dto.article.ArticleDto;
 import com.peachdevops.community.dto.article.ArticleResponse;
 import com.peachdevops.community.exception.DataAccessErrorException;
 import com.peachdevops.community.service.BoardService;
@@ -8,9 +10,8 @@ import com.querydsl.core.types.Predicate;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.querydsl.binding.QuerydslPredicate;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.HashMap;
@@ -23,6 +24,25 @@ import java.util.Map;
 public class BoardController {
 
     private final BoardService boardService;
+
+    @GetMapping("/write/{boardCode}")
+    public String createArticleGet(@PathVariable(name = "boardCode") String boardCode) {
+
+        return "board/write";
+    }
+
+    @PostMapping("/post/{boardCode}")
+    public String createArticle(@PathVariable(name = "boardCode") String boardCode,
+                                @SessionAttribute(name = "user") User user,
+                                Article article,
+                                Model model
+    ) {
+        article.setBoardCode(boardCode);
+
+        boardService.createArticle(article, user);
+        model.addAttribute("article", article);
+        return "board/index";
+    }
 
     @GetMapping("/{boardCode}")
     public ModelAndView articleList(@PathVariable(name = "boardCode") String boardCode,
@@ -42,8 +62,7 @@ public class BoardController {
 
     @GetMapping("/{boardCode}/{articleId}")
     public ModelAndView articleDetail(@PathVariable(name = "boardCode") String boardCode,
-                                      @PathVariable(name = "articleId") Long articleId)
-    {
+                                      @PathVariable(name = "articleId") Long articleId) {
         Map<String, Object> map = new HashMap<>();
         ArticleResponse article = boardService.getArticle(articleId, boardCode)
                 .map(ArticleResponse::from)
@@ -51,6 +70,6 @@ public class BoardController {
 
         map.put("article", article);
 
-        return new ModelAndView("board/detail",map);
+        return new ModelAndView("board/detail", map);
     }
 }

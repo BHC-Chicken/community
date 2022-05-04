@@ -14,6 +14,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
+import javax.servlet.http.HttpSession;
+
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
@@ -45,10 +47,10 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Bean
-    @Override
-    protected UserDetailsService userDetailsService() {
+    protected UserDetailsService userDetailsService(HttpSession session) {
         return username -> {
             User user = userService.findByUsername(username);
+            session.setAttribute("user", user);
             if (user == null) {
                 throw new UsernameNotFoundException(username);
             }

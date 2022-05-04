@@ -55,18 +55,19 @@ public class BoardService {
         }
     }
 
-    public boolean createArticle(ArticleDto articleDto) {
-        try {
-            if (articleDto == null) {
-                return false;
-            }
-            Article article = articleRepository.findById(articleDto.id())
-                            .orElseThrow(DataAccessErrorException::new);
-            articleRepository.save(articleDto.toEntity(article));
-            return true;
-        } catch (Exception e) {
-            throw new DataAccessErrorException();
+    public boolean createArticle(Article article, User user) {
+
+        if (article == null) {
+            return false;
         }
+
+        article.setNickname(user.getNickname());
+        System.out.println(article);
+
+        articleRepository.save(article);
+        return true;
+
+
     }
 
     public boolean modifyArticle(Long articleId, ArticleDto articleDto) {
