@@ -1,4 +1,4 @@
-package com.peachdevops.community.dto;
+package com.peachdevops.community.dto.article;
 
 import java.time.LocalDateTime;
 

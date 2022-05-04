@@ -1,8 +1,7 @@
 package com.peachdevops.community.controller;
 
 import com.peachdevops.community.domain.Article;
-import com.peachdevops.community.dto.ArticleDto;
-import com.peachdevops.community.dto.ArticleResponse;
+import com.peachdevops.community.dto.article.ArticleResponse;
 import com.peachdevops.community.exception.DataAccessErrorException;
 import com.peachdevops.community.service.BoardService;
 import com.querydsl.core.types.Predicate;
@@ -29,6 +28,7 @@ public class BoardController {
     public ModelAndView articleList(@PathVariable(name = "boardCode") String boardCode,
                                     @QuerydslPredicate(root = Article.class) Predicate predicate
     ) {
+        //TODO : 존재하지 않는 게시판에 접근시 예외처리 해야함. boardService 에 getBoard 메서드 작성.
         Map<String, Object> map = new HashMap<>();
         List<ArticleResponse> articleList = boardService.getArticles(predicate, boardCode)
                 .stream()

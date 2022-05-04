@@ -2,8 +2,8 @@ package com.peachdevops.community.service;
 
 import com.peachdevops.community.domain.Article;
 import com.peachdevops.community.domain.User;
-import com.peachdevops.community.dto.ArticleDto;
-import com.peachdevops.community.dto.ArticleViewResponse;
+import com.peachdevops.community.dto.article.ArticleDto;
+import com.peachdevops.community.dto.article.ArticleViewResponse;
 import com.peachdevops.community.exception.DataAccessErrorException;
 import com.peachdevops.community.repository.ArticleRepository;
 import com.querydsl.core.types.Predicate;
@@ -15,8 +15,6 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.StreamSupport;
-
-import static com.peachdevops.community.domain.QArticle.article;
 
 @Service
 @RequiredArgsConstructor

@@ -1,6 +1,4 @@
-package com.peachdevops.community.dto;
-
-import com.peachdevops.community.domain.User;
+package com.peachdevops.community.dto.article;
 
 import java.time.LocalDateTime;
 
