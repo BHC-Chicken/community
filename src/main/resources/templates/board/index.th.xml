@@ -1,6 +1,5 @@
 <?xml version="1.0"?>
 <thlogic>
-    <attr sel="#articlesTitle" th:text="'게시글 목록'"/>
     <attr sel="#articlesTable">
         <attr sel="tbody">
             <attr sel="tr[0]" th:each="article : ${articles}">
@@ -11,5 +10,8 @@
                 <attr sel="td/a" th:text="'상세'" th:href="@{/board/{boardCode}/{id}(boardCode=${article.boardCode}, id=${article.id})}"/>
             </attr>
         </attr>
+    </attr>
+    <attr sel="#writeArticle">
+        <attr sel="a.write" th:text="'글쓰기'" th:href="@{/board/write/{boardCode} (boardCode=${boardCode})}"/>
     </attr>
 </thlogic>

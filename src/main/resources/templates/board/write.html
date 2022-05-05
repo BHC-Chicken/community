@@ -1,11 +1,12 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
 </head>
-<body>
-<form method="post" th:action="@{/board/post/computer}">
+<body id="writeArticle">
+<form method="post" th:action="@{/board/post/{boardCode} (boardCode=${boardCode})}">
     <label for="title"></label>
     <input type="text" name="title" id="title">
     <label for="inputText"></label>

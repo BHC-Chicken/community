@@ -111,4 +111,8 @@ public class Article {
     public int hashCode() {
         return Objects.hash(id, nickname, boardCode, title, content, writeAt, modifyAt, view, isDeleted);
     }
+
+    public void increaseViewCount() {
+        this.view++;
+    }
 }

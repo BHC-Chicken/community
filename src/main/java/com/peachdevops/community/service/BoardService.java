@@ -26,16 +26,23 @@ public class BoardService {
             return StreamSupport.stream(articleRepository.findAll(predicate).spliterator(), false)
                     .map(ArticleDto::of)
                     .filter(articleDto -> articleDto.boardCode().equals(boardCode))
+                    .filter(articleDto -> articleDto.isDeleted().equals(false))
                     .toList();
         } catch (Exception e) {
             throw new DataAccessErrorException();
         }
     }
 
-    public Optional<ArticleDto> getArticle(Long articleId, String boardCode) {
+    public Optional<ArticleDto> getArticle(Long articleId) {
         try {
-            return articleRepository.findById(articleId).map(ArticleDto::of)
-                    .filter(articleDto -> articleDto.boardCode().equals(boardCode));
+            Optional<Article> article = articleRepository.findById(articleId);
+            if (article.isPresent()) {
+                Article article1 = article.get();
+                article1.increaseViewCount();
+                articleRepository.save(article1);
+            }
+
+            return articleRepository.findById(articleId).map(ArticleDto::of);
         } catch (Exception e) {
             throw new DataAccessErrorException();
         }

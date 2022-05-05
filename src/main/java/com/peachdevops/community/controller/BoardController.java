@@ -41,12 +41,13 @@ public class BoardController {
 
         boardService.createArticle(article, user);
         model.addAttribute("article", article);
-        return "board/index";
+        return "redirect:/board/" + boardCode;
     }
 
     @GetMapping("/{boardCode}")
     public ModelAndView articleList(@PathVariable(name = "boardCode") String boardCode,
-                                    @QuerydslPredicate(root = Article.class) Predicate predicate
+                                    @QuerydslPredicate(root = Article.class) Predicate predicate,
+                                    Model model
     ) {
         //TODO : 존재하지 않는 게시판에 접근시 예외처리 해야함. boardService 에 getBoard 메서드 작성.
         Map<String, Object> map = new HashMap<>();
@@ -55,6 +56,7 @@ public class BoardController {
                 .map(ArticleResponse::from)
                 .toList();
         map.put("articles", articleList);
+        map.put("boardCode", boardCode);
         System.out.println(articleList);
 
         return new ModelAndView("board/index", map);
@@ -64,7 +66,7 @@ public class BoardController {
     public ModelAndView articleDetail(@PathVariable(name = "boardCode") String boardCode,
                                       @PathVariable(name = "articleId") Long articleId) {
         Map<String, Object> map = new HashMap<>();
-        ArticleResponse article = boardService.getArticle(articleId, boardCode)
+        ArticleResponse article = boardService.getArticle(articleId)
                 .map(ArticleResponse::from)
                 .orElseThrow(DataAccessErrorException::new);
 
