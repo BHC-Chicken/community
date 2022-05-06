@@ -3,9 +3,10 @@ package com.peachdevops.community.domain;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
@@ -15,25 +16,32 @@ import java.util.Objects;
 public class Comment {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Setter
+    @Column(nullable = false)
     private String nickname;
 
     @Setter
+    @Column(nullable = false)
     private String content;
 
     @Setter
+    @Column(nullable = false)
     private Long articleId;
 
-    @Setter
-    private LocalDateTime writeAt;
+    @CreatedDate
+    @Column(insertable = false, updatable = false)
+    private LocalDateTime writeAt = LocalDateTime.now();
+
+    @LastModifiedDate
+    @Column(insertable = false, updatable = false)
+    private LocalDateTime modifyAt = LocalDateTime.now();
 
     @Setter
-    private LocalDateTime modifyAt;
-
-    @Setter
-    private Boolean isDeleted;
+    @Column(nullable = false)
+    private Boolean isDeleted = false;
 
     protected Comment(
             Long id,

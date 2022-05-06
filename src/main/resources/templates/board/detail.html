@@ -1,37 +1,54 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org">
 <head>
-  <meta charset="UTF-8">
-  <title>게시글</title>
+    <meta charset="UTF-8">
+    <title>게시글</title>
 </head>
 <body>
 <p>
-  <span id="articleTitle">This is article page.</span>
+    <span id="articleTitle">This is article page.</span>
 </p>
 <table id="articleTable">
-  <tbody>
+    <tbody>
     <tr>
-      <td>제목</td>
-      <td><span id="title">?</span></td>
+        <td>제목</td>
+        <td><span id="title">?</span></td>
     </tr>
     <tr>
-      <td>작성자</td>
-      <td><span id="nickname">?</span></td>
+        <td>작성자</td>
+        <td><span id="nickname">?</span></td>
     </tr>
     <tr>
-      <td>내용</td>
-      <td><span id="content">?</span></td>
+        <td>내용</td>
+        <td><span id="content">?</span></td>
     </tr>
     <tr>
-      <td>작성 일시</td>
-      <td><span id="modifyAt">?</span></td>
+        <td>작성 일시</td>
+        <td><span id="modifyAt">?</span></td>
     </tr>
     <tr>
-      <td>조회수</td>
-      <td><span id="view">?</span></td>
+        <td>조회수</td>
+        <td><span id="view">?</span></td>
     </tr>
-  </tbody>
+    </tbody>
 </table>
 <a id="backToArticles" type="button">취소</a>
+<div>
+    <form method="post" th:action="@{/board/{boardCode}/{articleId} (boardCode=${boardCode}, articleId=${articleId})}">
+        <label for="commentContent"></label>
+        <textarea type="text" name="content" id="commentContent"></textarea>
+        <input type="submit">
+    </form>
+    <table id="commentTable">
+        <tbody>
+        <tr>
+            <td class="commentNickname"></td>
+            <td class="commentContent"></td>
+        </tr>
+        </tbody>
+    </table>
+    <a id="deleteComment" type="button">삭제</a>
+</div>
 </body>
 </html>

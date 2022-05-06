@@ -1,12 +1,20 @@
 <?xml version="1.0"?>
 <thlogic>
-  <attr sel="#articleTitle" th:text="'게시글 상세'" />
-  <attr sel="#articleTable" th:object="${article}">
-    <attr sel="#title" th:text="*{title} ?: _" />
-    <attr sel="#nickname" th:text="*{nickname} ?: _" />
-    <attr sel="#content" th:text="*{content} ?: _" />
-    <attr sel="#modifyAt" th:text="*{modifyAt} ?: _" />
-    <attr sel="#view" th:text="*{view} ?: _" />
-  </attr>
-  <attr sel="#backToArticles" th:href="@{/board/{boardCode} (boardCode =${article.boardCode})}" />
+    <attr sel="#articleTitle" th:text="'게시글 상세'"/>
+    <attr sel="#articleTable" th:object="${article}">
+        <attr sel="#title" th:text="*{title} ?: _"/>
+        <attr sel="#nickname" th:text="*{nickname} ?: _"/>
+        <attr sel="#content" th:text="*{content} ?: _"/>
+        <attr sel="#modifyAt" th:text="*{modifyAt} ?: _"/>
+        <attr sel="#view" th:text="*{view} ?: _"/>
+    </attr>
+    <attr sel="#backToArticles" th:href="@{/board/{boardCode} (boardCode =${article.boardCode})}"/>
+    <attr sel="#commentTable">
+        <attr sel="tbody">
+            <attr sel="tr[0]" th:each="comment : ${comments}">
+                <attr sel="td.commentNickname" th:text="${comment.nickname}"/>
+                <attr sel="td.commentContent" th:text="${comment.content}"/>
+            </attr>
+        </attr>
+    </attr>
 </thlogic>
