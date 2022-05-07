@@ -13,6 +13,7 @@ import com.querydsl.core.types.Predicate;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -25,16 +26,12 @@ public class BoardService {
     private final ArticleRepository articleRepository;
     private final CommentRepository commentRepository;
 
-    public List<ArticleDto> getArticles(Predicate predicate, String boardCode) {
-        try {
-            return StreamSupport.stream(articleRepository.findAll(predicate).spliterator(), false)
-                    .map(ArticleDto::of)
-                    .filter(articleDto -> articleDto.boardCode().equals(boardCode))
-                    .filter(articleDto -> articleDto.isDeleted().equals(false))
-                    .toList();
-        } catch (Exception e) {
-            throw new DataAccessErrorException();
-        }
+    public List<ArticleDto> getArticles(String boardCode, Pageable pageable) {
+        return articleRepository.findAllByBoardCodeAndIsDeleted(boardCode, false, pageable);
+    }
+
+    public int getTotalArticles(String boardCode) {
+        return articleRepository.countArticleByBoardCode(boardCode);
     }
 
     public Optional<ArticleDto> getArticle(Long articleId) {
@@ -43,6 +40,7 @@ public class BoardService {
             if (article.isPresent()) {
                 Article article1 = article.get();
                 article1.increaseViewCount();
+                System.out.println(article1.getView());
                 articleRepository.save(article1);
             }
 
@@ -52,12 +50,9 @@ public class BoardService {
         }
     }
 
-    public List<CommentDto> getComments(Predicate predicate, Long articleId) {
-        return StreamSupport.stream(commentRepository.findAll(predicate).spliterator(), false)
-                .map(CommentDto::of)
-                .filter(commentDto -> commentDto.articleId().equals(articleId))
-                .filter(commentDto -> commentDto.isDeleted().equals(false))
-                .toList();
+    public List<CommentDto> getComments(Long articleId, Pageable pageable) {
+        Sort sort = Sort.by(Sort.Direction.DESC, "id");
+        return commentRepository.findAllByArticleIdAndIsDeleted(articleId, false, sort);
     }
 
     public Page<ArticleViewResponse> getArticleViewResponse(
@@ -86,56 +81,73 @@ public class BoardService {
         return true;
     }
 
-    public boolean modifyArticle(Long articleId, ArticleDto articleDto) {
-        try {
-            if (articleId == null || articleDto == null)
-                return false;
+    public boolean modifyArticle(Long articleId, Article article, User user) {
+        if (articleId == null || article == null)
+            return false;
 
-            articleRepository.findById(articleId)
-                    .ifPresent(article -> articleRepository.save(articleDto.updateEntity(article)));
-
-            return true;
-        } catch (Exception e) {
-            throw new DataAccessErrorException();
-        }
-    }
-
-    public boolean removeArticle(Long articleId) {
-        try {
-            if (articleId == null) {
-                return false;
+        Optional<Article> article1 = articleRepository.findById(articleId);
+        if (article1.isPresent()) {
+            Article article2 = article1.get();
+            if (!article2.getNickname().equals(user.getNickname())) {
+                throw new RuntimeException();
             }
+            if (article2.getIsDeleted().equals(true)) {
+                throw new RuntimeException();
+            }
+            article2.setTitle(article.getTitle());
+            article2.setContent(article.getContent());
 
-            articleRepository.deleteById(articleId);
-            return true;
-        } catch (Exception e) {
-            throw new DataAccessErrorException();
+            articleRepository.save(article2);
         }
+        return true;
     }
 
-    public boolean deleteComment(Long commentId, User user) {
+    public boolean deleteArticle(Long articleId, User user) {
+        Optional<Article> article = articleRepository.findById(articleId);
+        if (article.isPresent()) {
+            Article article1 = article.get();
+            if (!article1.getNickname().equals(user.getNickname())) {
+                throw new RuntimeException();
+            }
+            article1.setIsDeleted(true);
+            articleRepository.save(article1);
+        }
+        return true;
+    }
+
+    public void deleteComment(Long commentId, User user) {
+
         Optional<Comment> comment = commentRepository.findById(commentId);
         if (comment.isPresent()) {
             Comment comment1 = comment.get();
             if (!comment1.getNickname().equals(user.getNickname())) {
-                return false;
+                throw new RuntimeException();
             }
             comment1.setIsDeleted(true);
             commentRepository.save(comment1);
-            return true;
         }
-        return false;
     }
 
 
     public boolean putComment(Comment comment) {
-        if (comment == null) {
+        if (comment.getContent() == null) {
             return false;
         }
-
         commentRepository.save(comment);
 
         return true;
+    }
+
+    public void modifyComment(Long commentId, Comment comment) {
+        Optional<Comment> commentOptional = commentRepository.findById(commentId);
+        if (commentOptional.isPresent()) {
+            Comment comment1 = commentOptional.get();
+            if (!comment1.getNickname().equals(comment.getNickname())) {
+                throw new DataAccessErrorException();
+            }
+            comment1.setContent(comment.getContent());
+            commentRepository.save(comment1);
+        }
     }
 
 }

@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body id="writeArticle">
+<form method="post" th:action="@{/board/modify/{boardCode}/{articleId} (boardCode=${boardCode}, articleId=${article.id})}">
+    <label for="title"></label>
+    <input type="text" name="title" id="title" th:value="${article.title()}">
+    <label for="inputText"></label>
+    <textarea id="inputText" name="content" th:text="${article.content()}"></textarea>
+    <input type="submit">
+</form>
+</body>
+</html>

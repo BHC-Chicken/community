@@ -16,7 +16,6 @@ detectText.addEventListener('change', () => {
     if (csrfToken) {
         formData.append("_csrf", csrfToken)
     }
-
     $.ajax({
         url:"/orcSignup",
         data: formData,
@@ -39,6 +38,4 @@ detectText.addEventListener('change', () => {
             alert("실패");
         }
     })
-
-
 })

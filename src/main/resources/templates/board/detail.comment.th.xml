@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<thlogic>
+    <attr sel="#commentTable">
+        <attr sel="tbody">
+            <attr sel="tr[0]" th:each="comment : ${comments}">
+                <attr sel="td.commentNickname" th:text="${comment.nickname}"/>
+                <attr sel="td.commentContent" th:text="${comment.content}"/>
+                <attr sel="a.deleteComment"
+                      th:href="@{/board/delete/{boardCode}/{articleId}/{commentId}
+          (articleId=${comment.articleId}, boardCode=${boardCode},commentId=${comment.id})}"/>
+            </attr>
+        </attr>
+    </attr>
+</thlogic>

@@ -8,9 +8,9 @@
 <body id="writeArticle">
 <form method="post" th:action="@{/board/post/{boardCode} (boardCode=${boardCode})}">
     <label for="title"></label>
-    <input type="text" name="title" id="title">
+    <input type="text" name="title" id="title" placeholder="제목">
     <label for="inputText"></label>
-    <textarea id="inputText" name="content"></textarea>
+    <textarea id="inputText" name="content" placeholder="내용"></textarea>
     <input type="submit">
 </form>
 </body>

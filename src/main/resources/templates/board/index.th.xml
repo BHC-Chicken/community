@@ -7,11 +7,20 @@
                 <attr sel="td.nickname" th:text="${article.nickname}"/>
                 <attr sel="td.modifyAt" th:text="${article.modifyAt}"/>
                 <attr sel="td.view" th:text="${article.view}"/>
-                <attr sel="td/a" th:text="'상세'" th:href="@{/board/{boardCode}/{id}(boardCode=${article.boardCode}, id=${article.id})}"/>
+                <attr sel="a.detail" th:text="'상세'"
+                      th:href="@{/board/{boardCode}/{id}(boardCode=${article.boardCode}, id=${article.id})}"/>
+                <attr sel="a.modify" th:text="'수정'"
+                      th:href="@{/board/modify/{boardCode}/{id}(boardCode=${article.boardCode}, id=${article.id})}"/>
+                <attr sel="a.delete" th:text="'삭제'"
+                      th:href="@{/board/delete/{boardCode}/{id}(boardCode=${article.boardCode}, id=${article.id})}"/>
             </attr>
         </attr>
     </attr>
     <attr sel="#writeArticle">
         <attr sel="a.write" th:text="'글쓰기'" th:href="@{/board/write/{boardCode} (boardCode=${boardCode})}"/>
+    </attr>
+    <attr sel="#page[0]" th:each="nowPage : ${maxPage}">
+        <attr sel="a.page-link" th:href="@{/board/{boardCode}?page={page} (boardCode=${boardCode}, page=${nowPage})}" th:text="1">
+        </attr>
     </attr>
 </thlogic>

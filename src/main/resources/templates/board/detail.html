@@ -4,6 +4,11 @@
 <head>
     <meta charset="UTF-8">
     <title>게시글</title>
+    <script defer src="/script/comment.js"></script>
+    <script defer src="/script/jquery-3.6.0.min.js"></script>
+    <script>
+
+    </script>
 </head>
 <body>
 <p>
@@ -34,21 +39,16 @@
     </tbody>
 </table>
 <a id="backToArticles" type="button">취소</a>
+<form method="post" th:action="@{#}">
+    <label>
+        <textarea type="text" name="content" class="commentContent" placeholder="내용"></textarea>
+    </label>
+    <button rel="createComment">작성</button>
+</form>
 <div>
-    <form method="post" th:action="@{/board/{boardCode}/{articleId} (boardCode=${boardCode}, articleId=${articleId})}">
-        <label for="commentContent"></label>
-        <textarea type="text" name="content" id="commentContent"></textarea>
-        <input type="submit">
-    </form>
-    <table id="commentTable">
-        <tbody>
-        <tr>
-            <td class="commentNickname"></td>
-            <td class="commentContent"></td>
-        </tr>
-        </tbody>
-    </table>
-    <a id="deleteComment" type="button">삭제</a>
+    <div class="commentList">
+
+    </div>
 </div>
 </body>
 </html>

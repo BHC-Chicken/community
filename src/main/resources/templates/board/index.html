@@ -2,10 +2,13 @@
 <html
         lang="ko"
         xmlns:th="http://www.thymeleaf.org"
+        xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
 >
 <head>
     <meta charset="UTF-8">
     <title>게시글 목록</title>
+    <script defer src="/script/articleList.js"></script>
+    <script defer src="/script/jquery-3.6.0.min.js"></script>
 </head>
 <body>
 <p>
@@ -20,18 +23,23 @@
         <th>조회수</th>
     </tr>
     </thead>
-    <tbody>
+    <tbody th:data-csrfToken="${_csrf.token}">
     <tr>
         <td class="title">test</td>
         <td class="nickname">nickname</td>
         <td class="modifyAt">test</td>
         <td class="view">0</td>
-        <td><a>상세</a></td>
+        <td><a class="detail">상세</a></td>
+        <td><a class="modify">수정</a></td>
+        <td><a class="delete">삭제</a></td>
     </tr>
     </tbody>
 </table>
 <div id="writeArticle">
     <a class="write"></a>
 </div>
+<span id="page">
+    <a class="page-link"></a>
+</span>
 </body>
 </html>
