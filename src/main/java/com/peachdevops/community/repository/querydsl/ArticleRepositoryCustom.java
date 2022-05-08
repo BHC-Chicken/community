@@ -7,9 +7,9 @@ import org.springframework.data.domain.Pageable;
 
 public interface ArticleRepositoryCustom {
     Page<ArticleViewResponse> findArticleViewPageBySearchParams(
-            Long id,
-            String title,
-            User user,
+            String[] title,
+            String[] content,
+            String nickname,
             Pageable pageable
     );
 

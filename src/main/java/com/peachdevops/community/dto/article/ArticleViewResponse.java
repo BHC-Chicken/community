@@ -4,16 +4,20 @@ import java.time.LocalDateTime;
 
 public record ArticleViewResponse(
         Long id,
+        String boardCode,
         String title,
+        String nickname,
         String content,
         LocalDateTime writeAt,
         LocalDateTime modifyAt,
         Integer view,
         Boolean isDeleted
 ) {
-    public ArticleViewResponse(Long id, String title, String content, LocalDateTime writeAt, LocalDateTime modifyAt, Integer view, Boolean isDeleted) {
+    public ArticleViewResponse(Long id, String boardCode,String title, String nickname,  String content, LocalDateTime writeAt, LocalDateTime modifyAt, Integer view, Boolean isDeleted) {
         this.id = id;
+        this.boardCode = boardCode;
         this.title = title;
+        this.nickname = nickname;
         this.content = content;
         this.writeAt = writeAt;
         this.modifyAt = modifyAt;
@@ -23,7 +27,9 @@ public record ArticleViewResponse(
 
     public static ArticleViewResponse of(
             Long id,
+            String boardCode,
             String title,
+            String nickname,
             String content,
             LocalDateTime writeAt,
             LocalDateTime modifyAt,
@@ -32,7 +38,9 @@ public record ArticleViewResponse(
     ) {
         return new ArticleViewResponse(
                 id,
+                boardCode,
                 title,
+                nickname,
                 content,
                 writeAt,
                 modifyAt,
@@ -47,7 +55,9 @@ public record ArticleViewResponse(
         }
         return ArticleViewResponse.of(
                 articleDto.id(),
+                articleDto.boardCode(),
                 articleDto.title(),
+                articleDto.nickname(),
                 articleDto.content(),
                 articleDto.writeAt(),
                 articleDto.modifyAt(),

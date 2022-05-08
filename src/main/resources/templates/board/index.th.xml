@@ -19,8 +19,4 @@
     <attr sel="#writeArticle">
         <attr sel="a.write" th:text="'글쓰기'" th:href="@{/board/write/{boardCode} (boardCode=${boardCode})}"/>
     </attr>
-    <attr sel="#page[0]" th:each="nowPage : ${maxPage}">
-        <attr sel="a.page-link" th:href="@{/board/{boardCode}?page={page} (boardCode=${boardCode}, page=${nowPage})}" th:text="1">
-        </attr>
-    </attr>
 </thlogic>

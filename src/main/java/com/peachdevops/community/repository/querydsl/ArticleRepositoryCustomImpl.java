@@ -23,9 +23,9 @@ public class ArticleRepositoryCustomImpl extends QuerydslRepositorySupport imple
 
     @Override
     public Page<ArticleViewResponse> findArticleViewPageBySearchParams(
-            Long id,
-            String title,
-            User user,
+            String [] title,
+            String [] content,
+            String nickname,
             Pageable pageable
     )
      {
@@ -35,15 +35,28 @@ public class ArticleRepositoryCustomImpl extends QuerydslRepositorySupport imple
                  .select(Projections.constructor(
                          ArticleViewResponse.class,
                          article.id,
+                         article.boardCode,
                          article.title,
-                         article.nickname
+                         article.nickname,
+                         article.content,
+                         article.writeAt,
+                         article.modifyAt,
+                         article.view,
+                         article.isDeleted
                  ));
 
-         if (title != null && !title.isBlank()) {
-             query.where(article.title.contains(title));
+         if (title != null) {
+             for (String word:title) {
+                 query.where(article.title.contains(word));
+             }
          }
-         if (user.getNickname() != null && !user.getNickname().isBlank()) {
-             query.where(article.nickname.contains(user.getNickname()));
+         if (content != null) {
+             for (String word:content) {
+                 query.where(article.content.contains(word));
+             }
+         }
+         if (nickname != null && !nickname.isBlank()) {
+             query.where(article.nickname.contains(nickname));
          }
 
          List<ArticleViewResponse> articles = Optional.ofNullable(getQuerydsl())

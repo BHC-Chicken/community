@@ -35,10 +35,12 @@ public class Article {
     private String content;
 
     @CreatedDate
+    @Setter
     @Column(insertable = false, updatable = false)
     private LocalDateTime writeAt = LocalDateTime.now();
 
     @LastModifiedDate
+    @Setter
     @Column(insertable = false, updatable = false)
     private LocalDateTime modifyAt = LocalDateTime.now();
 

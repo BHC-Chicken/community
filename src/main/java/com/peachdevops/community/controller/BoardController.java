@@ -5,11 +5,15 @@ import com.peachdevops.community.domain.Comment;
 import com.peachdevops.community.domain.User;
 import com.peachdevops.community.dto.article.ArticleDto;
 import com.peachdevops.community.dto.article.ArticleResponse;
+import com.peachdevops.community.dto.article.ArticleViewResponse;
 import com.peachdevops.community.dto.comment.CommentResponse;
 import com.peachdevops.community.exception.DataAccessErrorException;
 import com.peachdevops.community.service.BoardService;
 import com.querydsl.core.types.Predicate;
 import lombok.RequiredArgsConstructor;
+import org.commonmark.node.Node;
+import org.commonmark.parser.Parser;
+import org.commonmark.renderer.html.HtmlRenderer;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -20,9 +24,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
-import com.querydsl.jpa.impl.JPAQueryFactory;
 
-import javax.persistence.EntityManager;
+import javax.validation.constraints.Size;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -47,11 +50,9 @@ public class BoardController {
                                 Article article,
                                 Model model
     ) {
-        try {
-            boardService.createArticle(article, user);
-        } catch (Exception e) {
 
-        }
+        boardService.createArticle(article, user);
+
         model.addAttribute("article", article);
         return "redirect:/board/" + boardCode;
     }
@@ -98,7 +99,8 @@ public class BoardController {
 
     @GetMapping("/{boardCode}")
     public ModelAndView articleList(@PathVariable(name = "boardCode") String boardCode,
-                                    @RequestParam(name = "page") Optional<Integer> parameterPage
+                                    @RequestParam(name = "page") Optional<Integer> parameterPage,
+                                    Model model
     ) {
         int page = parameterPage.orElse(1);
         if (page > 0) {
@@ -112,12 +114,92 @@ public class BoardController {
                 .stream()
                 .map(ArticleResponse::from)
                 .toList();
-        double totalArticles = boardService.getTotalArticles(boardCode);
-        int maxPage = (int) (Math.ceil(totalArticles / articleCount));
-        System.out.println(maxPage);
-        map.put("maxPage", maxPage);
+
+        Page<ArticleDto> articleDtoPage = boardService.getTotalArticles(boardCode, pageable);
+
+        double pageNumber = articleDtoPage.getPageable().getPageNumber();
+        double pageSize = articleDtoPage.getPageable().getPageSize();
+        int totalPages = articleDtoPage.getTotalPages();
+        int startPage = (int) (pageNumber - pageNumber % 10) + 1;
+        int tempEndPage = startPage + 9;
+        int endPage = Math.min(tempEndPage, totalPages);
+        int maxPage = (int) Math.ceil(articleDtoPage.getTotalElements() / 20.0) - 1;
+
+        if (page > maxPage) {
+            throw new RuntimeException();
+        }
+
+        model.addAttribute("pageNumber", pageNumber);
+        model.addAttribute("pageSize", pageSize);
+        model.addAttribute("totalPages", totalPages);
+        model.addAttribute("startPage", startPage);
+        model.addAttribute("tempEndPage", tempEndPage);
+        model.addAttribute("endPage", endPage);
+
+        map.put("articlePage", articleDtoPage);
         map.put("articles", articleList);
         map.put("boardCode", boardCode);
+
+        return new ModelAndView("board/index", map);
+    }
+
+    @GetMapping("/{boardCode}/search")
+    public ModelAndView searchParam(@PathVariable(name = "boardCode") String boardCode,
+                                    @RequestParam(name = "page") Optional<Integer> parameterPage,
+                                    @Size(min = 1) String title,
+                                    @Size(min = 1) String content,
+                                    @Size(min = 1) String nickname,
+                                    Model model
+    ) {
+        int page = parameterPage.orElse(1);
+        if (page > 0) {
+            page = page - 1;
+        }
+        final int articleCount = 20;
+        Pageable pageable = PageRequest.of(page, articleCount, Sort.by("id").descending());
+
+        String[] contentParam = null;
+        if (content != null) {
+            contentParam = content.split("\\s+");
+        }
+
+        String[] titleParam = null;
+        if (title != null) {
+            titleParam = title.split("\\s+");
+        }
+
+        Map<String, Object> map = new HashMap<>();
+        Page<ArticleViewResponse> articles = boardService.getArticleViewResponse(
+                titleParam,
+                nickname,
+                contentParam,
+                pageable
+        );
+
+        double pageNumber = articles.getPageable().getPageNumber();
+        double pageSize = articles.getPageable().getPageSize();
+        int totalPages = articles.getTotalPages();
+        int startPage = (int) (pageNumber - pageNumber % 10) + 1;
+        int tempEndPage = startPage + 9;
+        int endPage = Math.min(tempEndPage, totalPages);
+        int maxPage = (int) Math.ceil(articles.getTotalElements() / 20.0) - 1;
+
+        if (maxPage < 0) {
+            maxPage = 0;
+        }
+        if (page > maxPage) {
+            throw new RuntimeException();
+        }
+
+        model.addAttribute("pageNumber", pageNumber);
+        model.addAttribute("pageSize", pageSize);
+        model.addAttribute("totalPages", totalPages);
+        model.addAttribute("startPage", startPage);
+        model.addAttribute("tempEndPage", tempEndPage);
+        model.addAttribute("endPage", endPage);
+
+        map.put("articles", articles);
+        map.put("articlePage", articles);
 
         return new ModelAndView("board/index", map);
     }
@@ -130,8 +212,20 @@ public class BoardController {
         ArticleResponse article = boardService.getArticle(articleId)
                 .map(ArticleResponse::from)
                 .orElseThrow(DataAccessErrorException::new);
+        Article article1 = new Article();
 
-        map.put("article", article);
+        Parser parser = Parser.builder().build();
+        Node document = parser.parse(article.content());
+        HtmlRenderer renderer = HtmlRenderer.builder().build();
+
+        article1.setTitle(article.title());
+        article1.setNickname(article.nickname());
+        article1.setContent(renderer.render(document));
+        article1.setModifyAt(article.modifyAt());
+        article1.setView(article.view());
+        article1.setBoardCode(article.boardCode());
+
+        map.put("article", article1);
 
         return new ModelAndView("board/detail", map);
     }

@@ -9,7 +9,6 @@ import com.peachdevops.community.dto.comment.CommentDto;
 import com.peachdevops.community.exception.DataAccessErrorException;
 import com.peachdevops.community.repository.ArticleRepository;
 import com.peachdevops.community.repository.CommentRepository;
-import com.querydsl.core.types.Predicate;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -18,7 +17,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.StreamSupport;
 
 @Service
 @RequiredArgsConstructor
@@ -30,8 +28,8 @@ public class BoardService {
         return articleRepository.findAllByBoardCodeAndIsDeleted(boardCode, false, pageable);
     }
 
-    public int getTotalArticles(String boardCode) {
-        return articleRepository.countArticleByBoardCode(boardCode);
+    public Page<ArticleDto> getTotalArticles(String boardCode, Pageable pageable) {
+        return articleRepository.findByBoardCodeAndIsDeleted(boardCode, false, pageable);
     }
 
     public Optional<ArticleDto> getArticle(Long articleId) {
@@ -56,17 +54,15 @@ public class BoardService {
     }
 
     public Page<ArticleViewResponse> getArticleViewResponse(
-            Long id,
-            String title,
-            User user,
+            String [] title,
+            String nickname,
+            String [] content,
             Pageable pageable
     ) {
-        try {
-            return articleRepository.findArticleViewPageBySearchParams(
-                    id, title, user, pageable);
-        } catch (Exception e) {
-            throw new DataAccessErrorException();
-        }
+
+        return articleRepository.findArticleViewPageBySearchParams(
+                title, content, nickname, pageable);
+
     }
 
     public boolean createArticle(Article article, User user) {

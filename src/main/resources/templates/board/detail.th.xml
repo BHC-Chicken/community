@@ -4,7 +4,7 @@
     <attr sel="#articleTable" th:object="${article}">
         <attr sel="#title" th:text="*{title} ?: _"/>
         <attr sel="#nickname" th:text="*{nickname} ?: _"/>
-        <attr sel="#content" th:text="*{content} ?: _"/>
+        <attr sel="#content" th:utext="*{content} ?: _"/>
         <attr sel="#modifyAt" th:text="*{modifyAt} ?: _"/>
         <attr sel="#view" th:text="*{view} ?: _"/>
     </attr>
