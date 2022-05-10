@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.mail.MessagingException;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.security.Principal;
 import java.util.Arrays;
@@ -78,14 +79,15 @@ public class UserController {
     public String postOrcSignup(
             @RequestParam(value = "image", required = false) MultipartFile[] files,
                                 Principal principal,
+                                HttpSession session,
+                                User user,
                                 Model model) throws IOException {
         System.out.println(principal.getName());
         try {
             userService.uploadImage(files[0], principal);
-            System.out.println(Arrays.toString(files));
+            session.invalidate();
         } catch (Exception e) {
             model.addAttribute("exception", e.getMessage());
-            System.out.println(e.getMessage());
         }
         return "index";
     }

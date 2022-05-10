@@ -19,90 +19,96 @@
     >
 </head>
 <body>
-<p>
-    <span id="articlesTitle">This is articles page.</span>
-</p>
-<table id="articlesTable">
-    <thead>
-    <tr>
-        <th>제목</th>
-        <th>작성자</th>
-        <th>시간</th>
-        <th>조회수</th>
-    </tr>
-    </thead>
-    <tbody th:data-csrfToken="${_csrf.token}">
-    <tr>
-        <td class="title">test</td>
-        <td class="nickname">nickname</td>
-        <td class="modifyAt">test</td>
-        <td class="view">0</td>
-        <td><a class="detail">상세</a></td>
-        <td><a class="modify">수정</a></td>
-        <td><a class="delete">삭제</a></td>
-    </tr>
-    </tbody>
-</table>
-<div id="writeArticle">
-    <a class="write"></a>
-</div>
-<div>
-    <label>
-        <select id="search-keyword">
-            <option value="title">제목</option>
-            <option value="content">내용</option>
-            <option value="nickname">닉네임</option>
-        </select>
-    </label>
-    <label>
-        <input type="text" placeholder="검색" id="search-input">
-        <input type="hidden" th:value="${boardCode}" id="hidden-boardCode">
-        <button type="submit" id="search-button">검색</button>
-    </label>
-</div>
-<div>
-    <nav>
-        <div th:if="${!articlePage.isEmpty()}" id="paging">
-            <ul class="pagination ">
-                <li th:classappend="${articlePage.getPageable().getPageNumber() <= 9} ? 'disabled'" class="page-item">
-                    <a class="page-link" th:href="@{/board/{boardCode} (boardCode=${boardCode})}">
-                        <span>&laquo;</span>
-                        <span class="sr-only">First</span>
-                    </a>
-                </li>
+<a class="btn btn-outline-primary">HOME</a>
+<div class="container">
+    <p>
+        <span id="articlesTitle"></span>
+    </p>
+    <table class="table table-hover" id="articlesTable">
+        <thead>
+        <tr>
+            <th>제목</th>
+            <th>작성자</th>
+            <th>시간</th>
+            <th>조회수</th>
+        </tr>
+        </thead>
+        <tbody th:data-csrfToken="${_csrf.token}">
+        <tr>
+            <td class="title">test</td>
+            <td class="nickname">nickname</td>
+            <td class="modifyAt">test</td>
+            <td class="view">0</td>
+            <td><a class="detail">상세</a></td>
+            <td><a class="modify">수정</a></td>
+            <td><a class="delete">삭제</a></td>
+        </tr>
+        </tbody>
+    </table>
+    <div id="writeArticle">
+        <a class="write btn btn-secondary"></a>
+    </div>
+    <div>
+        <label>
+            <select id="search-keyword">
+                <option value="title">제목</option>
+                <option value="content">내용</option>
+                <option value="nickname">닉네임</option>
+            </select>
+        </label>
+        <label>
+            <input type="text" placeholder="검색" id="search-input">
+            <input type="hidden" th:value="${boardCode}" id="hidden-boardCode">
+            <button type="submit" id="search-button">검색</button>
+        </label>
+    </div>
+    <div>
+        <nav>
+            <div th:if="${!articlePage.isEmpty()}" id="paging">
+                <ul class="pagination ">
+                    <li th:classappend="${articlePage.getPageable().getPageNumber() <= 9} ? 'disabled'"
+                        class="page-item">
+                        <a class="page-link" th:href="@{/board/{boardCode} (boardCode=${boardCode})}">
+                            <span>&laquo;</span>
+                            <span class="sr-only">First</span>
+                        </a>
+                    </li>
 
-                <li th:classappend="${articlePage.first} ? 'disabled'" class="page-item">
-                    <a class="page-link"
-                       th:href="${articlePage.first} ? '#' : @{/board/{boardCode}(page=${#numbers.formatDecimal(pageNumber, 0, -1)}, boardCode=${boardCode}) }"
-                       aria-label="Previous">
-                        <span aria-hidden="true">&lt;</span>
-                        <span class="sr-only">Previous</span>
-                    </a>
-                </li>
+                    <li th:classappend="${articlePage.first} ? 'disabled'" class="page-item">
+                        <a class="page-link"
+                           th:href="${articlePage.first} ? '#' : @{/board/{boardCode}(page=${#numbers.formatDecimal(pageNumber, 0, -1)}, boardCode=${boardCode}) }"
+                           aria-label="Previous">
+                            <span aria-hidden="true">&lt;</span>
+                            <span class="sr-only">Previous</span>
+                        </a>
+                    </li>
 
-                <li th:each="page: ${#numbers.sequence(startPage, endPage)}"
-                    th:classappend="${page == pageNumber + 1} ? 'active'" class="page-item">
-                    <a th:text="${page}" class="page-link"
-                       th:href="@{/board/{boardCode}(page=${page}, boardCode=${boardCode})}"></a>
-                </li>
+                    <li th:each="page: ${#numbers.sequence(startPage, endPage)}"
+                        th:classappend="${page == pageNumber + 1} ? 'active'" class="page-item">
+                        <a th:text="${page}" class="page-link"
+                           th:href="@{/board/{boardCode}(page=${page}, boardCode=${boardCode})}"></a>
+                    </li>
 
-                <li th:classappend="${articlePage.last} ? 'disabled'" class="page-item">
-                    <a class="page-link"
-                       th:href="${articlePage.last} ? '#' : @{/board/{boardCode}(page=${#numbers.formatDecimal(pageNumber + 2, 0, -1)}, boardCode=${boardCode})}"
-                       aria-label="Next">
-                        <span aria-hidden="true">&gt;</span>
-                        <span class="sr-only">Next</span>
-                    </a>
-                </li>
-                <li th:classappend="${articlePage.getPageable().getPageNumber() >= 10} ? 'disabled'" class="page-item">
-                    <a class="page-link" th:href="@{/board/{boardCode}(page=${totalPages}, boardCode=${boardCode}) }">
-                        <span>&raquo;</span>
-                        <span class="sr-only">Last</span>
-                    </a>
-                </li>
-            </ul>
-        </div>
-    </nav>
+                    <li th:classappend="${articlePage.last} ? 'disabled'" class="page-item">
+                        <a class="page-link"
+                           th:href="${articlePage.last} ? '#' : @{/board/{boardCode}(page=${#numbers.formatDecimal(pageNumber + 2, 0, -1)}, boardCode=${boardCode})}"
+                           aria-label="Next">
+                            <span aria-hidden="true">&gt;</span>
+                            <span class="sr-only">Next</span>
+                        </a>
+                    </li>
+                    <li th:classappend="${articlePage.getPageable().getPageNumber() >= 10} ? 'disabled'"
+                        class="page-item">
+                        <a class="page-link"
+                           th:href="@{/board/{boardCode}(page=${totalPages}, boardCode=${boardCode}) }">
+                            <span>&raquo;</span>
+                            <span class="sr-only">Last</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+    </div>
 </div>
 </body>
 </html>

@@ -23,6 +23,8 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import java.io.IOException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.security.Principal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -81,12 +83,12 @@ public class UserService {
         userRepository.save(new User(username, passwordEncoder.encode(password), nickname, "ROLE_USER"));
         String code = passwordEncoder.encode(username);
         registerVerificationCodeRepository.save(new UserRegisterDto(username, code));
-
+        String Code = URLEncoder.encode(code, StandardCharsets.UTF_8);
         MimeMessage message = this.javaMailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message);
         helper.setTo(username);
         helper.setSubject("인증");
-        helper.setText(String.format("<a href=\"http://127.0.0.1/verificationEmail?code=%s\" target=\"_blank\">인증하기</a>", code), true);
+        helper.setText(String.format("<a href=\"https://community.peachdevops.com/verificationEmail?code=%s\" target=\"_blank\">인증하기</a>", Code), true);
 
         this.javaMailSender.send(message);
     }

@@ -3,15 +3,25 @@
       xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <link
+            rel="stylesheet"
+            href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+    >
+    <link
+            rel="stylesheet"
+            href="https://use.fontawesome.com/releases/v5.0.6/css/all.css"
+    >
+    <title>글쓰기</title>
 </head>
 <body id="writeArticle">
-<form method="post" th:action="@{/board/post/{boardCode} (boardCode=${boardCode})}">
-    <label for="title"></label>
-    <input type="text" name="title" id="title" placeholder="제목">
-    <label for="inputText"></label>
-    <textarea id="inputText" name="content" placeholder="내용"></textarea>
-    <input type="submit">
-</form>
+<div class="container">
+    <form method="post" th:action="@{/board/post/{boardCode} (boardCode=${boardCode})}">
+        <label for="title"></label>
+        <input type="text" class="form-control mt-4 mb-2" name="title" id="title" placeholder="제목">
+        <label for="inputText"></label>
+        <textarea class="form-control" rows="10" id="inputText" name="content" placeholder="내용"></textarea>
+        <input  class="btn btn-secondary mb-3" type="submit">
+    </form>
+</div>
 </body>
 </html>

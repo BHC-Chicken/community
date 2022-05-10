@@ -7,8 +7,7 @@ plugins {
 
 group = 'com.peachdevops'
 version = '0.0.1-SNAPSHOT'
-sourceCompatibility = '17'
-apply plugin: 'war'
+sourceCompatibility = '18'
 
 configurations {
     compileOnly {
@@ -19,9 +18,6 @@ configurations {
 bootWar {
     archivesBaseName = "community"
 }
-
-bootWar.enabled = false
-war.enabled = true
 
 repositories {
     mavenCentral()
@@ -39,7 +35,7 @@ dependencies {
     implementation 'org.springframework.data:spring-data-rest-hal-explorer'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.springframework.boot:spring-boot-starter-web'
-    providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'
+    providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat:2.6.6'
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
     implementation 'org.springframework.boot:spring-boot-starter-mail'
     runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'

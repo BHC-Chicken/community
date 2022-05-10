@@ -6,15 +6,19 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.annotation.web.configurers.ExpressionUrlAuthorizationConfigurer;
+import org.springframework.security.config.annotation.web.configurers.ExpressionUrlAuthorizationConfigurer.ExpressionInterceptUrlRegistry;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import javax.servlet.http.HttpSession;
+import java.util.Locale;
 
 @Configuration
 @EnableWebSecurity
@@ -25,7 +29,6 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-
         http.httpBasic().disable();
         http.csrf();
         http.rememberMe().disable();
@@ -38,7 +41,9 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 
         http.logout()
                 .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
-                .logoutSuccessUrl("/");
+                .logoutSuccessUrl("/")
+                .invalidateHttpSession(true)
+                .deleteCookies("JSESSIONID");
     }
 
     @Override
@@ -50,13 +55,13 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
     protected UserDetailsService userDetailsService(HttpSession session) {
         return username -> {
             User user = userService.findByUsername(username);
-            session.setAttribute("user", user);
             if (user == null) {
                 throw new UsernameNotFoundException(username);
             }
             if (!user.isEmailVerifiedFlag()) {
                 throw new UsernameNotFoundException(username);
             }
+            session.setAttribute("user", user);
             return user;
         };
     }

@@ -3,15 +3,27 @@
       xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
+    <link
+            rel="stylesheet"
+            href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+    >
+    <link
+            rel="stylesheet"
+            href="https://use.fontawesome.com/releases/v5.0.6/css/all.css"
+    >
     <title>Title</title>
 </head>
 <body id="writeArticle">
-<form method="post" th:action="@{/board/modify/{boardCode}/{articleId} (boardCode=${boardCode}, articleId=${article.id})}">
-    <label for="title"></label>
-    <input type="text" name="title" id="title" th:value="${article.title()}">
-    <label for="inputText"></label>
-    <textarea id="inputText" name="content" th:text="${article.content()}"></textarea>
-    <input type="submit">
-</form>
+<div class="container">
+    <form method="post"
+          th:action="@{/board/modify/{boardCode}/{articleId} (boardCode=${boardCode}, articleId=${article.id})}">
+        <label for="title"></label>
+        <input type="text" name="title" id="title" class="form-control mt-4 mb-2" th:value="${article.title()}">
+        <label for="inputText"></label>
+        <textarea id="inputText" class="form-control" rows="10" name="content"
+                  th:text="${article.content()}"></textarea>
+        <input type="submit">
+    </form>
+</div>
 </body>
 </html>

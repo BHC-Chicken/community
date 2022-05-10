@@ -4,50 +4,59 @@
 <head>
     <meta charset="UTF-8">
     <title>게시글</title>
+    <link
+            rel="stylesheet"
+            href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+    >
+    <link
+            rel="stylesheet"
+            href="https://use.fontawesome.com/releases/v5.0.6/css/all.css"
+    >
     <script defer src="/script/comment.js"></script>
     <script defer src="/script/jquery-3.6.0.min.js"></script>
-    <script>
-
-    </script>
 </head>
 <body>
-<p>
-    <span id="articleTitle">This is article page.</span>
-</p>
-<table id="articleTable">
-    <tbody>
-    <tr>
-        <td>제목</td>
-        <td><span id="title">?</span></td>
-    </tr>
-    <tr>
-        <td>작성자</td>
-        <td><span id="nickname">?</span></td>
-    </tr>
-    <tr>
-        <td><div>내용</div></td>
-        <td><div id="content">?</div></td>
-    </tr>
-    <tr>
-        <td>작성 일시</td>
-        <td><span id="modifyAt">?</span></td>
-    </tr>
-    <tr>
-        <td>조회수</td>
-        <td><span id="view">?</span></td>
-    </tr>
-    </tbody>
-</table>
-<a id="backToArticles" type="button">취소</a>
-<form method="post" th:action="@{#}">
-    <label>
-        <textarea type="text" name="content" class="commentContent" placeholder="내용"></textarea>
-    </label>
-    <button rel="createComment">작성</button>
-</form>
-<div>
-    <div class="commentList">
+<div class="container my-1">
+    <p>
+        <span id="articleTitle"></span>
+    </p>
+    <table id="articleTable" class="table">
+        <tbody>
+        <tr class="table-active">
+            <td>제목</td>
+            <td><span id="title">?</span></td>
+        </tr>
+        <tr>
+            <td>작성자</td>
+            <td><span id="nickname">?</span></td>
+        </tr>
+        <tr>
+            <td><div>내용</div></td>
+            <td><div id="content">?</div></td>
+        </tr>
+        <tr>
+            <td>작성 일시</td>
+            <td><span id="modifyAt">?</span></td>
+        </tr>
+        <tr>
+            <td>조회수</td>
+            <td><span id="view">?</span></td>
+        </tr>
+        </tbody>
+    </table>
+    <a id="backToArticles" type="button">취소</a>
+    <form method="post" th:action="@{#}">
+        <label>
+            <textarea type="text" style="resize: none" name="content" class="form-control commentContent " placeholder="댓글" cols="50"></textarea>
+        </label>
+        <div>
+            <button class="btn btn-secondary" rel="createComment">작성</button>
+        </div>
+    </form>
+    <div>
+        <div class="commentList">
 
+        </div>
     </div>
 </div>
 </body>

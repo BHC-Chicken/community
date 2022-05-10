@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <thlogic>
-    <attr sel="#articleTitle" th:text="'게시글 상세'"/>
+    <attr sel="#articleTitle"/>
     <attr sel="#articleTable" th:object="${article}">
         <attr sel="#title" th:text="*{title} ?: _"/>
         <attr sel="#nickname" th:text="*{nickname} ?: _"/>

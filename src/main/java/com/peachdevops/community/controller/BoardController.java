@@ -38,9 +38,16 @@ public class BoardController {
 
     private final BoardService boardService;
 
-    @GetMapping("/write/{boardCode}")
-    public String createArticleGet(@PathVariable(name = "boardCode") String boardCode) {
+    private boolean checkRole(User user, String boardCode) {
+        return user.getAuthorities().stream().noneMatch(r -> r.getAuthority().equals("ROLE_" + boardCode.toUpperCase()));
+    }
 
+    @GetMapping("/write/{boardCode}")
+    public String createArticleGet(@PathVariable(name = "boardCode") String boardCode,
+                                   @SessionAttribute(name = "user") User user) {
+        if (checkRole(user, boardCode)) {
+            return "redirect:/board/" + boardCode;
+        }
         return "board/write";
     }
 
@@ -50,9 +57,7 @@ public class BoardController {
                                 Article article,
                                 Model model
     ) {
-
         boardService.createArticle(article, user);
-
         model.addAttribute("article", article);
         return "redirect:/board/" + boardCode;
     }
@@ -62,6 +67,9 @@ public class BoardController {
                                 @PathVariable(name = "articleId") Long articleId,
                                 @SessionAttribute(name = "user") User user,
                                 Model model) {
+        if (checkRole(user, boardCode)) {
+            return "redirect:/board/" + boardCode + "/" + articleId;
+        }
         Optional<ArticleDto> article = boardService.getArticle(articleId);
         if (article.isPresent()) {
             ArticleDto article1 = article.get();
@@ -124,6 +132,9 @@ public class BoardController {
         int tempEndPage = startPage + 9;
         int endPage = Math.min(tempEndPage, totalPages);
         int maxPage = (int) Math.ceil(articleDtoPage.getTotalElements() / 20.0) - 1;
+        if (maxPage < 0) {
+            maxPage = 0;
+        }
 
         if (page > maxPage) {
             throw new RuntimeException();
@@ -252,6 +263,9 @@ public class BoardController {
                               @SessionAttribute(name = "user") User user,
                               Comment comment,
                               Model model) {
+        if (checkRole(user, boardCode)) {
+            return;
+        }
         comment.setArticleId(articleId);
         comment.setNickname(user.getNickname());
 

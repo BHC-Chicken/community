@@ -1,14 +1,94 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+>
 <head>
-    <head th:insert="fragments.html::header"></head>
     <title>login</title>
+    <link rel="stylesheet" href="/css/main.css">
 </head>
 <body>
-<header th:insert="fragments.html::nav"></header>
-<main style="align-items: center; display: flex; flex-direction: column; justify-content: flex-start;">
-    <a href="/board/computer">정보통시게시판</a>
-    <a href="/board/human">인문대학게시판</a>
-</main>
+<div>
+    <header>
+
+        <div class="header-center">
+            <div>전국단대익명커뮤니티</div>
+        </div>
+
+
+        <div class="header-right">
+            <ul>
+                <li class="nav-item">
+                    <a
+                            class="nav-link active"
+                            sec:authorize="!isAuthenticated()"
+                            th:href="@{/login}"
+                    >
+                        로그인
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a
+                            class="nav-link active"
+                            sec:authorize="!isAuthenticated()"
+                            th:href="@{/signup}"
+                    >
+                        회원가입
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a
+                            class="nav-link active"
+                            sec:authorize="hasRole('ROLE_USER')"
+                            th:href="@{/orcSignup}"
+                    >
+                        학생증 인증
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a
+                            class="nav-link active"
+                            sec:authorize="isAuthenticated()"
+                            th:href="@{/logout}"
+                    >
+                        로그아웃
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+    </header>
+</div>
+
+<div class="menu-bar">
+    <ul class="dep1">
+        <li>
+            <a style="cursor: none" href=""> <i class="fa-solid fa-align-left"></i>단대별게시판</a>
+            <ul class="dep2">
+                <li><a href="/board/ai">AI학부</a></li>
+                <li><a href="/board/art">조형예술대학</a></li>
+                <li><a href="/board/culture">성산교육대학</a></li>
+                <li><a href="/board/computer">정보통신대학</a></li>
+                <li><a href="/board/engine">공과대학</a></li>
+                <li><a href="/board/nurse">간호대학</a></li>
+                <li><a href="/board/operation">경영대학</a></li>
+                <li><a href="/board/human">인문대학</a></li>
+                <li><a href="/board/master">사범대학</a></li>
+                <li><a href="/board/fusion">미래융합학부</a></li>
+                <li><a href="/board/society">사회과학대학</a></li>
+                <li><a href="/board/science">과학생명융합대학</a></li>
+                <li><a href="/board/rehab">재활과학대학</a></li>
+                <li><a href="/board/law">법.행정대학</a></li>
+            </ul>
+        </li>
+        <li>
+            <a href="admboard.html"> <i class="fa-solid fa-comments "></i>공지사항</a>
+            <a href="/board/free"> <i class="fa-solid fa-chalkboard-user "></i>자유게시판</a>
+            <a href="infoboard.html"><i class="fa-solid fa-book-open "></i>정보게시판</a>
+            <a href="calendar.html"><i class="fa-solid fa-address-card "></i> 캘린더</a>
+        </li>
+        </li>
+    </ul>
+</div>
 </body>
 </html>
