@@ -8,6 +8,7 @@ import com.peachdevops.community.dto.article.ArticleResponse;
 import com.peachdevops.community.dto.article.ArticleViewResponse;
 import com.peachdevops.community.dto.comment.CommentResponse;
 import com.peachdevops.community.exception.DataAccessErrorException;
+import com.peachdevops.community.exception.NotFoundBoard;
 import com.peachdevops.community.service.BoardService;
 import com.querydsl.core.types.Predicate;
 import lombok.RequiredArgsConstructor;
@@ -110,6 +111,10 @@ public class BoardController {
                                     @RequestParam(name = "page") Optional<Integer> parameterPage,
                                     Model model
     ) {
+        if (!boardService.getBoards(boardCode)) {
+            throw new NotFoundBoard();
+        }
+
         int page = parameterPage.orElse(1);
         if (page > 0) {
             page = page - 1;
@@ -151,7 +156,7 @@ public class BoardController {
         map.put("articles", articleList);
         map.put("boardCode", boardCode);
 
-        return new ModelAndView("board/index", map);
+        return new ModelAndView("board/list", map);
     }
 
     @GetMapping("/{boardCode}/search")
@@ -212,7 +217,7 @@ public class BoardController {
         map.put("articles", articles);
         map.put("articlePage", articles);
 
-        return new ModelAndView("board/index", map);
+        return new ModelAndView("board/list", map);
     }
 
     @GetMapping("/{boardCode}/{articleId}")

@@ -1,6 +1,7 @@
 package com.peachdevops.community.service;
 
 import com.peachdevops.community.domain.Article;
+import com.peachdevops.community.domain.Boards;
 import com.peachdevops.community.domain.Comment;
 import com.peachdevops.community.domain.User;
 import com.peachdevops.community.dto.article.ArticleDto;
@@ -8,6 +9,7 @@ import com.peachdevops.community.dto.article.ArticleViewResponse;
 import com.peachdevops.community.dto.comment.CommentDto;
 import com.peachdevops.community.exception.DataAccessErrorException;
 import com.peachdevops.community.repository.ArticleRepository;
+import com.peachdevops.community.repository.BoardsRepository;
 import com.peachdevops.community.repository.CommentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -15,6 +17,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,6 +26,7 @@ import java.util.Optional;
 public class BoardService {
     private final ArticleRepository articleRepository;
     private final CommentRepository commentRepository;
+    private final BoardsRepository boardsRepository;
 
     public List<ArticleDto> getArticles(String boardCode, Pageable pageable) {
         return articleRepository.findAllByBoardCodeAndIsDeleted(boardCode, false, pageable);
@@ -144,6 +148,12 @@ public class BoardService {
             comment1.setContent(comment.getContent());
             commentRepository.save(comment1);
         }
+    }
+
+    public boolean getBoards(String boardCode) {
+
+        Boards boards = boardsRepository.findByBoardCode(boardCode);
+        return boards != null;
     }
 
 }
