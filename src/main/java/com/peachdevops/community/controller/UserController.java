@@ -63,8 +63,6 @@ public class UserController {
             userService.verificationCode(code);
         } catch (Exception e) {
             model.addAttribute("exception", e.getMessage());
-            System.out.println(e.getMessage());
-
             return "verificationEmail";
         }
         return "index";

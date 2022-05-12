@@ -1,5 +1,6 @@
 package com.peachdevops.community.controller;
 
+import com.peachdevops.community.constant.ErrorCode;
 import com.peachdevops.community.domain.Article;
 import com.peachdevops.community.domain.Comment;
 import com.peachdevops.community.domain.User;
@@ -7,8 +8,10 @@ import com.peachdevops.community.dto.article.ArticleDto;
 import com.peachdevops.community.dto.article.ArticleResponse;
 import com.peachdevops.community.dto.article.ArticleViewResponse;
 import com.peachdevops.community.dto.comment.CommentResponse;
+import com.peachdevops.community.exception.AlreadyDeletedException;
 import com.peachdevops.community.exception.DataAccessErrorException;
 import com.peachdevops.community.exception.NotFoundBoard;
+import com.peachdevops.community.exception.UserNotFoundException;
 import com.peachdevops.community.service.BoardService;
 import com.querydsl.core.types.Predicate;
 import lombok.RequiredArgsConstructor;
@@ -45,11 +48,23 @@ public class BoardController {
 
     @GetMapping("/write/{boardCode}")
     public String createArticleGet(@PathVariable(name = "boardCode") String boardCode,
-                                   @SessionAttribute(name = "user") User user) {
-        if (checkRole(user, boardCode)) {
+                                   @SessionAttribute(name = "user", required = false) User user,
+                                   Model model) {
+        try {
+            if (checkRole(user, boardCode)) {
+                model.addAttribute("exception", ErrorCode.WRONG_ACCESS.getMessage());
+                System.out.println(ErrorCode.WRONG_ACCESS.getMessage());
+                return "redirect:/board/" + boardCode;
+            } else if (user.getUsername() == null) {
+                model.addAttribute("exception", ErrorCode.WRONG_ACCESS.getMessage());
+                System.out.println(ErrorCode.WRONG_ACCESS.getMessage());
+                return "redirect:/board/" + boardCode;
+            }
+            return "board/write";
+        } catch (Exception e) {
+            model.addAttribute("exception", ErrorCode.WRONG_ACCESS.getMessage());
             return "redirect:/board/" + boardCode;
         }
-        return "board/write";
     }
 
     @PostMapping("/post/{boardCode}")
@@ -67,7 +82,8 @@ public class BoardController {
     public String modifyArticle(@PathVariable(name = "boardCode") String boardCode,
                                 @PathVariable(name = "articleId") Long articleId,
                                 @SessionAttribute(name = "user") User user,
-                                Model model) {
+                                Model model) throws Exception {
+
         if (checkRole(user, boardCode)) {
             return "redirect:/board/" + boardCode + "/" + articleId;
         }
@@ -75,14 +91,14 @@ public class BoardController {
         if (article.isPresent()) {
             ArticleDto article1 = article.get();
             if (!article1.nickname().equals(user.getNickname())) {
-                throw new DataAccessErrorException();
+                throw new UserNotFoundException();
             }
             if (article1.isDeleted().equals(true)) {
-                throw new DataAccessErrorException();
+                throw new AlreadyDeletedException();
             }
             model.addAttribute("article", article1);
         } else {
-            throw new DataAccessErrorException();
+            throw new Exception();
         }
 
         return "board/modify";
@@ -100,10 +116,17 @@ public class BoardController {
 
     @PostMapping("/delete/{boardCode}/{articleId}")
     @ResponseStatus(value = HttpStatus.OK)
-    public void deleteArticle(@PathVariable(name = "boardCode") String boardCode,
-                              @PathVariable(name = "articleId") Long articleId,
-                              @SessionAttribute(name = "user") User user) {
+    public String deleteArticle(@PathVariable(name = "boardCode") String boardCode,
+                                @PathVariable(name = "articleId") Long articleId,
+                                @SessionAttribute(name = "user") User user,
+                                Model model) {
+
+        if (checkRole(user, boardCode)) {
+            model.addAttribute("exception", ErrorCode.WRONG_ACCESS.getMessage());
+            return "redirect:/board/" + boardCode;
+        }
         boardService.deleteArticle(articleId, user);
+        return "redirect:/board/" + boardCode;
     }
 
     @GetMapping("/{boardCode}")
@@ -286,6 +309,10 @@ public class BoardController {
                               @PathVariable(name = "commentId") Long commentId,
                               Model model,
                               @SessionAttribute(name = "user") User user) {
+        if (checkRole(user, boardCode)) {
+            return;
+        }
+
         boardService.deleteComment(commentId, user);
         model.addAttribute("boardCode", boardCode);
         model.addAttribute("articleId", articleId);

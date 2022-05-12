@@ -9,6 +9,16 @@
     <title>게시글 목록</title>
     <script defer src="/script/articleList.js"></script>
     <script defer src="/script/jquery-3.6.0.min.js"></script>
+    <script>
+        /*<![CDATA[*/
+        let exception = "[[${exception}]]";
+        /*]]>*/
+
+        if (exception !== "") {
+            alert(exception);
+        }
+        window.close();
+    </script>
     <link
             rel="stylesheet"
             href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"

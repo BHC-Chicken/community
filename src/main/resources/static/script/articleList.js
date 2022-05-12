@@ -22,7 +22,7 @@ articleList.addEventListener('click', (e) => {
                 window.location.reload();
             },
             error: function (e) {
-                alert("삭제 실패");
+                alert("삭제에 실패했습니다.");
             }
         });
         e.preventDefault();

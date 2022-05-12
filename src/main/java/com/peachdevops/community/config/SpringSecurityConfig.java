@@ -33,7 +33,10 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
         http.csrf();
         http.rememberMe().disable();
         http.authorizeRequests()
-                .antMatchers("/", "/signup", "/login").permitAll();
+                .antMatchers("/", "/signup", "/login").permitAll()
+                .antMatchers(HttpMethod.GET, "/board/modify/**").authenticated()
+                .antMatchers(HttpMethod.POST, "/board/modify/**").authenticated()
+                .antMatchers(HttpMethod.POST, "/board/delete/**").authenticated();
         http.formLogin()
                 .loginPage("/login")
                 .defaultSuccessUrl("/")
