@@ -13,7 +13,9 @@ public record ArticleDto(
         LocalDateTime writeAt,
         LocalDateTime modifyAt,
         Integer view,
-        Boolean isDeleted
+        Boolean isDeleted,
+        Boolean isNotice,
+        Long recommendCount
 ) {
     public static ArticleDto of(
             Long id,
@@ -24,7 +26,9 @@ public record ArticleDto(
             LocalDateTime writeAt,
             LocalDateTime modifyAt,
             Integer view,
-            Boolean isDeleted
+            Boolean isDeleted,
+            Boolean isNotice,
+            Long recommendCount
     ) {
         return new ArticleDto(
                 id,
@@ -35,7 +39,9 @@ public record ArticleDto(
                 writeAt,
                 modifyAt,
                 view,
-                isDeleted
+                isDeleted,
+                isNotice,
+                recommendCount
         );
     }
 
@@ -49,7 +55,9 @@ public record ArticleDto(
                 article.getWriteAt(),
                 article.getModifyAt(),
                 article.getView(),
-                article.getIsDeleted()
+                article.getIsDeleted(),
+                article.getIsNotice(),
+                article.getRecommendCount()
         );
     }
 
@@ -63,14 +71,22 @@ public record ArticleDto(
                 writeAt,
                 modifyAt,
                 view,
-                isDeleted
+                isDeleted,
+                isNotice,
+                recommendCount
         );
     }
 
     public Article updateEntity(Article article) {
-        if (boardCode != null) {article.setBoardCode(boardCode);}
-        if (title != null) {article.setTitle(title);}
-        if (content != null) {article.setContent(content);}
+        if (boardCode != null) {
+            article.setBoardCode(boardCode);
+        }
+        if (title != null) {
+            article.setTitle(title);
+        }
+        if (content != null) {
+            article.setContent(content);
+        }
 
         return article;
     }

@@ -3,6 +3,7 @@ package com.peachdevops.community.domain;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.checkerframework.checker.units.qual.C;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
@@ -15,6 +16,7 @@ import java.util.Objects;
 @Entity
 public class Article {
     @Id
+    @Setter
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
@@ -52,6 +54,14 @@ public class Article {
     @Column(nullable = false)
     private Boolean isDeleted = false;
 
+    @Setter
+    @Column(nullable = false)
+    private Boolean isNotice;
+
+    @Setter
+    @Column(nullable = false)
+    private Long recommendCount;
+
     public Article() {
     }
 
@@ -64,7 +74,9 @@ public class Article {
             LocalDateTime writeAt,
             LocalDateTime modifyAt,
             Integer view,
-            Boolean isDeleted
+            Boolean isDeleted,
+            Boolean isNotice,
+            Long recommendCount
     ) {
         this.id = id;
         this.nickname = nickname;
@@ -75,6 +87,8 @@ public class Article {
         this.modifyAt = modifyAt;
         this.view = view;
         this.isDeleted = isDeleted;
+        this.isNotice = isNotice;
+        this.recommendCount = recommendCount;
     }
 
     public static Article of(
@@ -86,7 +100,9 @@ public class Article {
             LocalDateTime writeAt,
             LocalDateTime modifyAt,
             Integer view,
-            Boolean isDeleted
+            Boolean isDeleted,
+            Boolean isNotice,
+            Long recommendCount
     ) {
         return new Article(
                 id,
@@ -97,7 +113,9 @@ public class Article {
                 writeAt,
                 modifyAt,
                 view,
-                isDeleted
+                isDeleted,
+                isNotice,
+                recommendCount
         );
     }
 
@@ -111,10 +129,17 @@ public class Article {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, nickname, boardCode, title, content, writeAt, modifyAt, view, isDeleted);
+        return Objects.hash(id, nickname, boardCode, title, content, writeAt, modifyAt, view, isDeleted,
+                isNotice, recommendCount);
     }
 
     public void increaseViewCount() {
         this.view++;
+    }
+    public void increaseRecommendCount() {
+        this.recommendCount++;
+    }
+    public void decreaseRecommendCount() {
+        this.recommendCount--;
     }
 }

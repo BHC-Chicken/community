@@ -11,9 +11,20 @@ public record ArticleViewResponse(
         LocalDateTime writeAt,
         LocalDateTime modifyAt,
         Integer view,
-        Boolean isDeleted
+        Boolean isDeleted,
+        Boolean isNotice
 ) {
-    public ArticleViewResponse(Long id, String boardCode,String title, String nickname,  String content, LocalDateTime writeAt, LocalDateTime modifyAt, Integer view, Boolean isDeleted) {
+    public ArticleViewResponse(Long id,
+                               String boardCode,
+                               String title,
+                               String nickname,
+                               String content,
+                               LocalDateTime writeAt,
+                               LocalDateTime modifyAt,
+                               Integer view,
+                               Boolean isDeleted,
+                               Boolean isNotice
+    ) {
         this.id = id;
         this.boardCode = boardCode;
         this.title = title;
@@ -23,6 +34,7 @@ public record ArticleViewResponse(
         this.modifyAt = modifyAt;
         this.view = view;
         this.isDeleted = isDeleted;
+        this.isNotice = isNotice;
     }
 
     public static ArticleViewResponse of(
@@ -34,7 +46,8 @@ public record ArticleViewResponse(
             LocalDateTime writeAt,
             LocalDateTime modifyAt,
             Integer view,
-            Boolean isDeleted
+            Boolean isDeleted,
+            Boolean isNotice
     ) {
         return new ArticleViewResponse(
                 id,
@@ -45,7 +58,8 @@ public record ArticleViewResponse(
                 writeAt,
                 modifyAt,
                 view,
-                isDeleted
+                isDeleted,
+                isNotice
         );
     }
 
@@ -62,7 +76,8 @@ public record ArticleViewResponse(
                 articleDto.writeAt(),
                 articleDto.modifyAt(),
                 articleDto.view(),
-                articleDto.isDeleted()
+                articleDto.isDeleted(),
+                articleDto.isNotice()
         );
     }
 }

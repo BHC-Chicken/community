@@ -2,6 +2,7 @@ const deleteComment = window.document.querySelector('#commentTable');
 const commentList = window.document.querySelector('.commentList');
 const createComment = window.document.querySelector('[rel="createComment"]')
 const commentContent = window.document.querySelector('.commentContent')
+const recommendArticle = window.document.querySelector('#recommend')
 
 const display = window.document.querySelector('.display-none')
 
@@ -10,6 +11,33 @@ let csrfToken = window.document.body.querySelector('[name="_csrf"]')
 if (csrfToken) {
     csrfToken=csrfToken.value
 }
+
+recommendArticle.addEventListener('click', (e) => {
+    let formData = new FormData();
+    if (csrfToken) {
+        formData.append("_csrf", csrfToken);
+    }
+    if (!e.target.classList.contains("recommend-article")) {
+        return;
+    }
+
+    $.ajax({
+        url: e.target.href,
+        data:formData,
+        method: 'POST',
+        processData: false,
+        contentType: false,
+        cache: false,
+        success: function (d) {
+
+            document.getElementById('recommendCount').innerText = d['hit'];
+        },
+        error: function (e) {
+            alert("실패");
+        }
+    })
+    e.preventDefault()
+})
 
 createComment.addEventListener('click', (e) => {
     let formData = new FormData();

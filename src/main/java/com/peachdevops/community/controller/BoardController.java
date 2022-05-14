@@ -257,12 +257,14 @@ public class BoardController {
         Node document = parser.parse(article.content());
         HtmlRenderer renderer = HtmlRenderer.builder().build();
 
+        article1.setId(article.id());
         article1.setTitle(article.title());
         article1.setNickname(article.nickname());
         article1.setContent(renderer.render(document));
         article1.setModifyAt(article.modifyAt());
         article1.setView(article.view());
         article1.setBoardCode(article.boardCode());
+        article1.setRecommendCount(article.recommendCount());
 
         map.put("article", article1);
 
@@ -331,5 +333,22 @@ public class BoardController {
         boardService.modifyComment(commentId, comment);
 
         return "redirect:/board/" + boardCode + "/" + articleId;
+    }
+
+    @PostMapping("/recommendation/{boardCode}/{articleId}")
+    @ResponseStatus(value = HttpStatus.OK)
+    @ResponseBody
+    public Map<String, Object> recommendation(@PathVariable(name = "articleId") Long articleId,
+                               @PathVariable(name = "boardCode") String boardCode,
+                               @SessionAttribute(name = "user") User user
+    ) {
+        if (checkRole(user, boardCode)) {
+            return null;
+        }
+        Long hit = boardService.recommendArticle(articleId, user);
+        Map<String, Object> map = new HashMap<>();
+        map.put("hit", hit);
+
+        return map;
     }
 }

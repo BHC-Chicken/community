@@ -7,6 +7,8 @@
         <attr sel="#content" th:utext="*{content} ?: _"/>
         <attr sel="#modifyAt" th:text="*{modifyAt} ?: _"/>
         <attr sel="#view" th:text="*{view} ?: _"/>
+        <attr sel="#recommendCount" th:text="*{recommendCount} ?: _"/>
     </attr>
+    <attr sel="#recommend" th:href="@{/board/recommendation/{boardCode}/{articleId} (boardCode =${article.boardCode}, articleId=${article.id})}"/>
     <attr sel="#backToArticles" th:href="@{/board/{boardCode} (boardCode =${article.boardCode})}"/>
 </thlogic>

@@ -12,7 +12,7 @@
             rel="stylesheet"
             href="https://use.fontawesome.com/releases/v5.0.6/css/all.css"
     >
-    <script defer src="/script/comment.js"></script>
+    <script defer src="/script/articleDetail.js"></script>
     <script defer src="/script/jquery-3.6.0.min.js"></script>
 </head>
 <body>
@@ -42,8 +42,15 @@
             <td>조회수</td>
             <td><span id="view">?</span></td>
         </tr>
+        <tr>
+            <td>추천수</td>
+            <td><span id="recommendCount">0</span></td>
+        </tr>
         </tbody>
     </table>
+    <div>
+        <a id="recommend" type="button" class="recommend-article btn btn-secondary">추천</a>
+    </div>
     <a id="backToArticles" type="button">취소</a>
     <form method="post" th:action="@{#}">
         <label>

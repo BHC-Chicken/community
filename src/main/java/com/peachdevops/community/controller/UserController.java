@@ -1,6 +1,7 @@
 package com.peachdevops.community.controller;
 
 import com.peachdevops.community.domain.User;
+import com.peachdevops.community.dto.SentimentDto;
 import com.peachdevops.community.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -89,4 +90,11 @@ public class UserController {
         }
         return "index";
     }
+
+//    @PostMapping("https://naveropenapi.apigw.ntruss.com/sentiment-analysis/v1/analyze")
+//    @ResponseBody
+//    public String sentiment(@RequestBody SentimentDto sentimentDto){
+//
+//
+//    }
 }

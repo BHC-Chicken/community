@@ -1,9 +1,6 @@
 package com.peachdevops.community.service;
 
-import com.peachdevops.community.domain.Article;
-import com.peachdevops.community.domain.Boards;
-import com.peachdevops.community.domain.Comment;
-import com.peachdevops.community.domain.User;
+import com.peachdevops.community.domain.*;
 import com.peachdevops.community.dto.article.ArticleDto;
 import com.peachdevops.community.dto.article.ArticleViewResponse;
 import com.peachdevops.community.dto.comment.CommentDto;
@@ -11,11 +8,13 @@ import com.peachdevops.community.exception.DataAccessErrorException;
 import com.peachdevops.community.repository.ArticleRepository;
 import com.peachdevops.community.repository.BoardsRepository;
 import com.peachdevops.community.repository.CommentRepository;
+import com.peachdevops.community.repository.RecommendRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,6 +26,7 @@ public class BoardService {
     private final ArticleRepository articleRepository;
     private final CommentRepository commentRepository;
     private final BoardsRepository boardsRepository;
+    private final RecommendRepository recommendRepository;
 
     public List<ArticleDto> getArticles(String boardCode, Pageable pageable) {
         return articleRepository.findAllByBoardCodeAndIsDeleted(boardCode, false, pageable);
@@ -156,4 +156,29 @@ public class BoardService {
         return boards != null;
     }
 
+    @Transactional
+    public Long recommendArticle(Long articleId, User user) {
+        Optional<Article> article = articleRepository.findById(articleId);
+        Optional<Recommend> recommend = recommendRepository.findByArticleIdAndNickname(articleId, user.getNickname());
+
+        if (article.isPresent()) {
+            Article article1 = article.get();
+            if (recommend.isPresent()) {
+                article1.decreaseRecommendCount();
+                articleRepository.save(article1);
+                recommendRepository.deleteRecommendByArticleIdAndNickname(articleId, user.getNickname());
+            } else {
+                Recommend recommend1 = new Recommend();
+                article1.increaseRecommendCount();
+                recommend1.setArticleId(articleId);
+                recommend1.setNickname(user.getNickname());
+                articleRepository.save(article1);
+                recommendRepository.save(recommend1);
+            }
+            return article1.getRecommendCount();
+
+        } else {
+            throw new DataAccessErrorException();
+        }
+    }
 }

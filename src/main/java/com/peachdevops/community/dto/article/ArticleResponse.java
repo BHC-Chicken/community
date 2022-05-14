@@ -10,7 +10,8 @@ public record ArticleResponse(
         String boardCode,
         LocalDateTime writeAt,
         LocalDateTime modifyAt,
-        Integer view
+        Integer view,
+        Long recommendCount
 ) {
 
     public static ArticleResponse of(
@@ -21,7 +22,8 @@ public record ArticleResponse(
             String boardCode,
             LocalDateTime writeAt,
             LocalDateTime modifyAt,
-            Integer view
+            Integer view,
+            Long recommendCount
     ) {
         return new ArticleResponse(
                 id,
@@ -31,7 +33,9 @@ public record ArticleResponse(
                 boardCode,
                 writeAt,
                 modifyAt,
-                view);
+                view,
+                recommendCount
+        );
     }
 
     public static ArticleResponse from(ArticleDto articleDto) {
@@ -46,7 +50,8 @@ public record ArticleResponse(
                 articleDto.boardCode(),
                 articleDto.writeAt(),
                 articleDto.modifyAt(),
-                articleDto.view()
+                articleDto.view(),
+                articleDto.recommendCount()
         );
     }
 }
