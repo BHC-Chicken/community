@@ -103,8 +103,7 @@ public class UserController {
         String id = "1dpgj5ppss";
         String secret = "DXw1h17Vk5tflV5bv4IKlGRccgxGknBjRaHj8S2p";
         String content = "컴퓨터 소프트웨어";
-        jsonObject.put("X-NCP-APIGW-API-KEY-ID", id);
-        jsonObject.put("X-NCP-APIGW-API-KEY", secret);
+        
         jsonObject.put("Content-Type", "application/json");
         jsonObject.put("content", content);
 
