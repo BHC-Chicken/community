@@ -100,9 +100,7 @@ public class UserController {
     public Map<String, Object> sentiment(@RequestBody SentimentDto sentimentDto) throws JSONException {
 
         JSONObject jsonObject = new JSONObject();
-        String id = "1dpgj5ppss";
-        String secret = "DXw1h17Vk5tflV5bv4IKlGRccgxGknBjRaHj8S2p";
-        String content = "컴퓨터 소프트웨어";
+       
         
         jsonObject.put("Content-Type", "application/json");
         jsonObject.put("content", content);
