@@ -30,7 +30,7 @@
 </head>
 <body>
 <div class="container">
-    <a class="btn btn-outline-primary" th:href="@{/}">HOME</a>
+    <a style="margin-top: 1rem" class="btn btn-outline-primary" th:href="@{/}">HOME</a>
     <p>
         <span id="articlesTitle"></span>
     </p>
@@ -42,6 +42,9 @@
             <th>시간</th>
             <th>조회수</th>
             <th>추천수</th>
+            <th></th>
+            <th></th>
+            <th></th>
         </tr>
         </thead>
         <tbody th:data-csrfToken="${_csrf.token}">

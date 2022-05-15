@@ -20,38 +20,40 @@
     <p>
         <span id="articleTitle"></span>
     </p>
-    <table id="articleTable" class="table">
-        <tbody>
-        <tr class="table-active">
-            <td><div>제목</div></td>
-            <td><div id="title">?</div></td>
-        </tr>
-        <tr>
-            <td><div>작성자</div></td>
-            <td><div id="nickname">?</div></td>
-        </tr>
-        <tr>
-            <td><div>내용</div></td>
-            <td><div id="content">?</div></td>
-        </tr>
-        <tr>
-            <td><div>작성 일시</div></td>
-            <td><div id="modifyAt">?</div></td>
-        </tr>
-        <tr>
-            <td><div>조회수</div></td>
-            <td><div id="view">?</div></td>
-        </tr>
-        <tr>
-            <td><div>추천수</div></td>
-            <td><div id="recommendCount">0</div></td>
-        </tr>
-        </tbody>
-    </table>
-    <div>
-        <a id="recommend" type="button" class="recommend-article btn btn-secondary">추천</a>
+    <div class="table-responsive-lg">
+        <table id="articleTable" class="table">
+            <tbody>
+            <tr class="table-active">
+                <td style="width: 16.6%"><div>제목</div></td>
+                <td><div id="title">?</div></td>
+            </tr>
+            <tr>
+                <td style="width: 16.6%"><div>작성자</div></td>
+                <td><div id="nickname">?</div></td>
+            </tr>
+            <tr>
+                <td style="width: 16.6%"><div>내용</div></td>
+                <td><div id="content">?</div></td>
+            </tr>
+            <tr>
+                <td style="width: 16.6%"><div>작성 일시</div></td>
+                <td><div id="modifyAt">?</div></td>
+            </tr>
+            <tr>
+                <td style="width: 16.6%"><div>조회수</div></td>
+                <td><div id="view">?</div></td>
+            </tr>
+            <tr>
+                <td style="width: 16.6%"><div>추천수</div></td>
+                <td><div id="recommendCount">0</div></td>
+            </tr>
+            </tbody>
+        </table>
     </div>
-    <a id="backToArticles" type="button">취소</a>
+    <div style="margin-bottom: 2rem">
+        <a id="recommend" type="button" class="recommend-article btn btn-secondary">추천</a>
+        <a id="backToArticles" type="button" class="btn btn-secondary">뒤로가기</a>
+    </div>
     <form method="post" th:action="@{#}">
         <label>
             <textarea type="text" style="resize: none" name="content" class="form-control commentContent " placeholder="댓글" cols="50"></textarea>
@@ -61,9 +63,7 @@
         </div>
     </form>
     <div>
-        <div class="commentList">
-
-        </div>
+        <div class="commentList"></div>
     </div>
 </div>
 </body>
