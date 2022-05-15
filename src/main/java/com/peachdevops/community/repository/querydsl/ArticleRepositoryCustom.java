@@ -10,6 +10,7 @@ public interface ArticleRepositoryCustom {
             String[] title,
             String[] content,
             String nickname,
+            Boolean is_deleted,
             Pageable pageable
     );
 

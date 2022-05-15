@@ -12,7 +12,8 @@ public record ArticleViewResponse(
         LocalDateTime modifyAt,
         Integer view,
         Boolean isDeleted,
-        Boolean isNotice
+        Boolean isNotice,
+        Long recommendCount
 ) {
     public ArticleViewResponse(Long id,
                                String boardCode,
@@ -23,7 +24,8 @@ public record ArticleViewResponse(
                                LocalDateTime modifyAt,
                                Integer view,
                                Boolean isDeleted,
-                               Boolean isNotice
+                               Boolean isNotice,
+                               Long recommendCount
     ) {
         this.id = id;
         this.boardCode = boardCode;
@@ -35,6 +37,7 @@ public record ArticleViewResponse(
         this.view = view;
         this.isDeleted = isDeleted;
         this.isNotice = isNotice;
+        this.recommendCount = recommendCount;
     }
 
     public static ArticleViewResponse of(
@@ -47,7 +50,8 @@ public record ArticleViewResponse(
             LocalDateTime modifyAt,
             Integer view,
             Boolean isDeleted,
-            Boolean isNotice
+            Boolean isNotice,
+            Long recommendCount
     ) {
         return new ArticleViewResponse(
                 id,
@@ -59,7 +63,8 @@ public record ArticleViewResponse(
                 modifyAt,
                 view,
                 isDeleted,
-                isNotice
+                isNotice,
+                recommendCount
         );
     }
 
@@ -77,7 +82,8 @@ public record ArticleViewResponse(
                 articleDto.modifyAt(),
                 articleDto.view(),
                 articleDto.isDeleted(),
-                articleDto.isNotice()
+                articleDto.isNotice(),
+                articleDto.recommendCount()
         );
     }
 }

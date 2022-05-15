@@ -4,6 +4,8 @@ import com.peachdevops.community.domain.User;
 import com.peachdevops.community.dto.SentimentDto;
 import com.peachdevops.community.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.boot.configurationprocessor.json.JSONException;
+import org.springframework.boot.configurationprocessor.json.JSONObject;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,6 +17,8 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.security.Principal;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 @Controller
 @RequiredArgsConstructor
@@ -91,10 +95,22 @@ public class UserController {
         return "index";
     }
 
-//    @PostMapping("https://naveropenapi.apigw.ntruss.com/sentiment-analysis/v1/analyze")
-//    @ResponseBody
-//    public String sentiment(@RequestBody SentimentDto sentimentDto){
-//
-//
-//    }
+    @PostMapping("https://naveropenapi.apigw.ntruss.com/sentiment-analysis/v1/analyze")
+    @ResponseBody
+    public Map<String, Object> sentiment(@RequestBody SentimentDto sentimentDto) throws JSONException {
+
+        JSONObject jsonObject = new JSONObject();
+        String id = "1dpgj5ppss";
+        String secret = "DXw1h17Vk5tflV5bv4IKlGRccgxGknBjRaHj8S2p";
+        String content = "컴퓨터 소프트웨어";
+        jsonObject.put("X-NCP-APIGW-API-KEY-ID", id);
+        jsonObject.put("X-NCP-APIGW-API-KEY", secret);
+        jsonObject.put("Content-Type", "application/json");
+        jsonObject.put("content", content);
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("sentiment", jsonObject);
+
+        return map;
+    }
 }

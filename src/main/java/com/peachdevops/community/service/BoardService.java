@@ -65,7 +65,7 @@ public class BoardService {
     ) {
 
         return articleRepository.findArticleViewPageBySearchParams(
-                title, content, nickname, pageable);
+                title, content, nickname, false,pageable);
 
     }
 

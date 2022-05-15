@@ -26,6 +26,7 @@ public class ArticleRepositoryCustomImpl extends QuerydslRepositorySupport imple
             String [] title,
             String [] content,
             String nickname,
+            Boolean is_deleted,
             Pageable pageable
     )
      {
@@ -42,7 +43,9 @@ public class ArticleRepositoryCustomImpl extends QuerydslRepositorySupport imple
                          article.writeAt,
                          article.modifyAt,
                          article.view,
-                         article.isDeleted
+                         article.isDeleted,
+                         article.isNotice,
+                         article.recommendCount
                  ));
 
          if (title != null) {
@@ -57,6 +60,9 @@ public class ArticleRepositoryCustomImpl extends QuerydslRepositorySupport imple
          }
          if (nickname != null && !nickname.isBlank()) {
              query.where(article.nickname.contains(nickname));
+         }
+         if (!is_deleted) {
+             query.where(article.isDeleted.eq(false));
          }
 
          List<ArticleViewResponse> articles = Optional.ofNullable(getQuerydsl())

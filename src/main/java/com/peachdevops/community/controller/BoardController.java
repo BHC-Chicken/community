@@ -143,7 +143,7 @@ public class BoardController {
             page = page - 1;
         }
         final int articleCount = 20;
-        Pageable pageable = PageRequest.of(page, articleCount, Sort.by("id").descending());
+        Pageable pageable = PageRequest.of(page, articleCount, Sort.by("isNotice").descending().and(Sort.by("id").descending()));
         //TODO : 존재하지 않는 게시판에 접근시 예외처리 해야함. boardService 에 getBoard 메서드 작성.
         Map<String, Object> map = new HashMap<>();
         List<ArticleResponse> articleList = boardService.getArticles(boardCode, pageable)
