@@ -94,20 +94,4 @@ public class UserController {
         }
         return "index";
     }
-
-    @PostMapping("https://naveropenapi.apigw.ntruss.com/sentiment-analysis/v1/analyze")
-    @ResponseBody
-    public Map<String, Object> sentiment(@RequestBody SentimentDto sentimentDto) throws JSONException {
-
-        JSONObject jsonObject = new JSONObject();
-       
-        
-        jsonObject.put("Content-Type", "application/json");
-        jsonObject.put("content", content);
-
-        Map<String, Object> map = new HashMap<>();
-        map.put("sentiment", jsonObject);
-
-        return map;
-    }
 }

@@ -43,7 +43,6 @@ public class Article {
 
     @LastModifiedDate
     @Setter
-    @Column(insertable = false, updatable = false)
     private LocalDateTime modifyAt = LocalDateTime.now();
 
     @Setter
@@ -56,11 +55,15 @@ public class Article {
 
     @Setter
     @Column(nullable = false)
-    private Boolean isNotice;
+    private Boolean isNotice = false;
 
     @Setter
     @Column(nullable = false)
-    private Long recommendCount;
+    private Long recommendCount = 0L;
+
+    @Setter
+    @Column(nullable = false)
+    private Float sentimentScore = 0F;
 
     public Article() {
     }
@@ -76,7 +79,8 @@ public class Article {
             Integer view,
             Boolean isDeleted,
             Boolean isNotice,
-            Long recommendCount
+            Long recommendCount,
+            Float sentimentScore
     ) {
         this.id = id;
         this.nickname = nickname;
@@ -89,6 +93,7 @@ public class Article {
         this.isDeleted = isDeleted;
         this.isNotice = isNotice;
         this.recommendCount = recommendCount;
+        this.sentimentScore = sentimentScore;
     }
 
     public static Article of(
@@ -102,7 +107,8 @@ public class Article {
             Integer view,
             Boolean isDeleted,
             Boolean isNotice,
-            Long recommendCount
+            Long recommendCount,
+            Float sentimentScore
     ) {
         return new Article(
                 id,
@@ -115,7 +121,8 @@ public class Article {
                 view,
                 isDeleted,
                 isNotice,
-                recommendCount
+                recommendCount,
+                sentimentScore
         );
     }
 
@@ -130,7 +137,7 @@ public class Article {
     @Override
     public int hashCode() {
         return Objects.hash(id, nickname, boardCode, title, content, writeAt, modifyAt, view, isDeleted,
-                isNotice, recommendCount);
+                isNotice, recommendCount, sentimentScore);
     }
 
     public void increaseViewCount() {

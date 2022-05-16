@@ -32,6 +32,7 @@ public record ArticleRequest(
                 null,
                 null,
                 null,
+                null,
                 null
         );
     }

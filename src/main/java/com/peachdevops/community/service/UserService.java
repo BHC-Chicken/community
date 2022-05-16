@@ -11,6 +11,7 @@ import com.peachdevops.community.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -66,6 +67,7 @@ public class UserService {
         return userRepository.findByUsername(username);
     }
 
+    @Async
     public void signup(
             String username,
             String password,
@@ -195,6 +197,4 @@ public class UserService {
         }
         throw new NonExistentCollegeException();
     }
-
-
 }

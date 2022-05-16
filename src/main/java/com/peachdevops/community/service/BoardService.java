@@ -1,5 +1,6 @@
 package com.peachdevops.community.service;
 
+import com.google.cloud.language.v1.Sentiment;
 import com.peachdevops.community.domain.*;
 import com.peachdevops.community.dto.article.ArticleDto;
 import com.peachdevops.community.dto.article.ArticleViewResponse;
@@ -16,9 +17,11 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+
+import static com.peachdevops.community.service.TextSentiment.textSentiment;
 
 @Service
 @RequiredArgsConstructor
@@ -58,30 +61,33 @@ public class BoardService {
     }
 
     public Page<ArticleViewResponse> getArticleViewResponse(
-            String [] title,
+            String[] title,
             String nickname,
-            String [] content,
+            String[] content,
             Pageable pageable
     ) {
 
         return articleRepository.findArticleViewPageBySearchParams(
-                title, content, nickname, false,pageable);
+                title, content, nickname, false, pageable);
 
     }
 
-    public boolean createArticle(Article article, User user) {
+    public boolean createArticle(Article article, User user) throws Exception {
 
         if (article == null) {
             return false;
         }
 
         article.setNickname(user.getNickname());
-
+        String content = article.getContent();
+        content = content.replaceAll("(\\r\\n|\\r|\\n|\\n\\r)", " ");
+        Sentiment sentiment = textSentiment(content);
+        article.setSentimentScore(sentiment.getScore());
         articleRepository.save(article);
         return true;
     }
 
-    public boolean modifyArticle(Long articleId, Article article, User user) {
+    public boolean modifyArticle(Long articleId, Article article, User user) throws Exception {
         if (articleId == null || article == null)
             return false;
 
@@ -96,7 +102,11 @@ public class BoardService {
             }
             article2.setTitle(article.getTitle());
             article2.setContent(article.getContent());
-
+            article2.setModifyAt(LocalDateTime.now());
+            String content = article.getContent();
+            content = content.replaceAll("(\\r\\n|\\r|\\n|\\n\\r)", " ");
+            Sentiment sentiment = textSentiment(content);
+            article2.setSentimentScore(sentiment.getScore());
             articleRepository.save(article2);
         }
         return true;
@@ -180,5 +190,9 @@ public class BoardService {
         } else {
             throw new DataAccessErrorException();
         }
+    }
+
+    public void getSentiment(String text) throws Exception {
+        textSentiment(text);
     }
 }

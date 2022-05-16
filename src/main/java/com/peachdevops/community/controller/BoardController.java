@@ -72,7 +72,7 @@ public class BoardController {
                                 @SessionAttribute(name = "user") User user,
                                 Article article,
                                 Model model
-    ) {
+    ) throws Exception {
         boardService.createArticle(article, user);
         model.addAttribute("article", article);
         return "redirect:/board/" + boardCode;
@@ -108,7 +108,7 @@ public class BoardController {
     public String modifyArticle(@PathVariable(name = "boardCode") String boardCode,
                                 @PathVariable(name = "articleId") Long articleId,
                                 @SessionAttribute(name = "user") User user,
-                                Article article) {
+                                Article article) throws Exception {
         boardService.modifyArticle(articleId, article, user);
 
         return "redirect:/board/" + boardCode;
@@ -255,7 +255,7 @@ public class BoardController {
 
         Parser parser = Parser.builder().build();
         Node document = parser.parse(article.content());
-        HtmlRenderer renderer = HtmlRenderer.builder().build();
+        HtmlRenderer renderer = HtmlRenderer.builder().escapeHtml(true).build();
 
         article1.setId(article.id());
         article1.setTitle(article.title());

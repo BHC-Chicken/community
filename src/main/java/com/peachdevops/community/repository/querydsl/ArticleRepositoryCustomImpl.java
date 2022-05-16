@@ -2,7 +2,6 @@ package com.peachdevops.community.repository.querydsl;
 
 import com.peachdevops.community.domain.Article;
 import com.peachdevops.community.domain.QArticle;
-import com.peachdevops.community.domain.User;
 import com.peachdevops.community.dto.article.ArticleViewResponse;
 import com.peachdevops.community.exception.DataAccessErrorException;
 import com.querydsl.core.types.Projections;
@@ -45,7 +44,8 @@ public class ArticleRepositoryCustomImpl extends QuerydslRepositorySupport imple
                          article.view,
                          article.isDeleted,
                          article.isNotice,
-                         article.recommendCount
+                         article.recommendCount,
+                         article.sentimentScore
                  ));
 
          if (title != null) {
