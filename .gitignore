@@ -58,7 +58,6 @@ cmake-build-*/
 
 # IntelliJ
 out/
-application.properties
 
 # mpeltonen/sbt-idea plugin
 .idea_modules/
@@ -187,3 +186,5 @@ gradle-app.setting
 **/build/
 
 # End of https://www.toptal.com/developers/gitignore/api/java,intellij+all,visualstudiocode,gradle,macos
+
+src/main/resources/application.properties
