@@ -1,5 +1,6 @@
 package com.peachdevops.community.service;
 
+import com.fasterxml.jackson.annotation.JsonAlias;
 import com.google.cloud.language.v1.Sentiment;
 import com.peachdevops.community.domain.*;
 import com.peachdevops.community.dto.article.ArticleDto;
@@ -11,15 +12,23 @@ import com.peachdevops.community.repository.BoardsRepository;
 import com.peachdevops.community.repository.CommentRepository;
 import com.peachdevops.community.repository.RecommendRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.boot.configurationprocessor.json.JSONException;
+import org.springframework.boot.configurationprocessor.json.JSONObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static com.peachdevops.community.service.TextSentiment.textSentiment;
 
@@ -72,24 +81,62 @@ public class BoardService {
 
     }
 
-    public boolean createArticle(Article article, User user) throws Exception {
+    private String getSentiment(String text) throws IOException, JSONException {
+        try {
+            URL url = new URL("https://naveropenapi.apigw.ntruss.com/sentiment-analysis/v1/analyze\n");
+
+            String responseData = "";
+            String returnData = "";
+
+            HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+
+            urlConnection.setUseCaches(false);
+            urlConnection.setDoInput(true);
+            urlConnection.setDoOutput(true);
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("content", text);
+            OutputStream outputStream = urlConnection.getOutputStream();
+            outputStream.write(jsonObject.toString().getBytes(StandardCharsets.UTF_8));
+            outputStream.flush();
+            outputStream.close();
+
+            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
+            StringBuilder stringBuilder = new StringBuilder();
+            while ((responseData = bufferedReader.readLine()) != null) {
+                stringBuilder.append(responseData);
+            }
+
+            returnData = stringBuilder.toString();
+            String responseCode = String.valueOf(urlConnection.getResponseCode());
+            System.out.println(returnData);
+
+            return returnData;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public JSONObject createArticle(Article article, User user) throws Exception {
 
         if (article == null) {
-            return false;
+            return null;
         }
-
+        Map<String, Object> map = new HashMap<>();
         article.setNickname(user.getNickname());
         String content = article.getContent();
         content = content.replaceAll("(\\r\\n|\\r|\\n|\\n\\r)", " ");
-        Sentiment sentiment = textSentiment(content);
-        article.setSentimentScore(sentiment.getScore());
+        String result = getSentiment(content);
+
+        JSONObject jsonObject = new JSONObject(result);
+
         articleRepository.save(article);
-        return true;
+        return jsonObject;
     }
 
-    public boolean modifyArticle(Long articleId, Article article, User user) throws Exception {
+    public Map<String, Object> modifyArticle(Long articleId, Article article, User user) throws Exception {
         if (articleId == null || article == null)
-            return false;
+            return null;
 
         Optional<Article> article1 = articleRepository.findById(articleId);
         if (article1.isPresent()) {
@@ -103,13 +150,19 @@ public class BoardService {
             article2.setTitle(article.getTitle());
             article2.setContent(article.getContent());
             article2.setModifyAt(LocalDateTime.now());
+
+            Map<String, Object> map = new HashMap<>();
+            article.setNickname(user.getNickname());
             String content = article.getContent();
             content = content.replaceAll("(\\r\\n|\\r|\\n|\\n\\r)", " ");
-            Sentiment sentiment = textSentiment(content);
-            article2.setSentimentScore(sentiment.getScore());
+            String result = Arrays.toString(Objects.requireNonNull(getSentiment(content)).getBytes(StandardCharsets.UTF_8));
+
+            map.put("sentiment", result);
+
             articleRepository.save(article2);
+            return map;
         }
-        return true;
+        return null;
     }
 
     public boolean deleteArticle(Long articleId, User user) {
@@ -190,9 +243,5 @@ public class BoardService {
         } else {
             throw new DataAccessErrorException();
         }
-    }
-
-    public void getSentiment(String text) throws Exception {
-        textSentiment(text);
     }
 }

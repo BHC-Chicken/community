@@ -18,6 +18,8 @@ import lombok.RequiredArgsConstructor;
 import org.commonmark.node.Node;
 import org.commonmark.parser.Parser;
 import org.commonmark.renderer.html.HtmlRenderer;
+import org.springframework.boot.configurationprocessor.json.JSONException;
+import org.springframework.boot.configurationprocessor.json.JSONObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -30,10 +32,14 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.constraints.Size;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
+import java.util.*;
 
 @Controller
 @RequiredArgsConstructor
@@ -68,14 +74,22 @@ public class BoardController {
     }
 
     @PostMapping("/post/{boardCode}")
-    public String createArticle(@PathVariable(name = "boardCode") String boardCode,
+    @ResponseBody
+    public ModelAndView createArticle(@PathVariable(name = "boardCode") String boardCode,
                                 @SessionAttribute(name = "user") User user,
                                 Article article,
                                 Model model
     ) throws Exception {
-        boardService.createArticle(article, user);
+
+        Map<String, Object> map = new HashMap<>();
+        JSONObject sentiment = boardService.createArticle(article, user);
         model.addAttribute("article", article);
-        return "redirect:/board/" + boardCode;
+        JSONObject jsonObject = sentiment.getJSONObject("document");
+        String jsonObject1 = jsonObject.getString("sentiment");
+
+        map.put("sentiment",jsonObject1);
+
+        return new ModelAndView("redirect:/board/" + boardCode, map);
     }
 
     @GetMapping("/modify/{boardCode}/{articleId}")
