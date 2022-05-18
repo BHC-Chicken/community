@@ -2,11 +2,12 @@ const articleList = document.getElementsByTagName("tbody")[0];
 const csrfToken = articleList.getAttribute("data-csrfToken");
 const searchKeyword = document.getElementById("search-keyword");
 const searchInput = document.getElementById("search-input");
-const searchButton = document.getElementById("search-button")
-const hiddenBoardCode = document.getElementById("hidden-boardCode")
+const searchButton = document.getElementById("search-button");
+const hiddenBoardCode = document.getElementById("hidden-boardCode");
+const title = document.getElementsByClassName("title");
+
 
 articleList.addEventListener('click', (e) => {
-
     if (e.target.classList.contains("delete")) {
         let formData = new FormData();
         formData.append("_csrf", csrfToken);
