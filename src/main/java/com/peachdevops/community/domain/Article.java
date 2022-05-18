@@ -63,7 +63,7 @@ public class Article {
 
     @Setter
     @Column(nullable = false)
-    private Float sentimentScore = 0F;
+    private String sentiment = " ";
 
     public Article() {
     }
@@ -80,7 +80,7 @@ public class Article {
             Boolean isDeleted,
             Boolean isNotice,
             Long recommendCount,
-            Float sentimentScore
+            String sentiment
     ) {
         this.id = id;
         this.nickname = nickname;
@@ -93,7 +93,7 @@ public class Article {
         this.isDeleted = isDeleted;
         this.isNotice = isNotice;
         this.recommendCount = recommendCount;
-        this.sentimentScore = sentimentScore;
+        this.sentiment = sentiment;
     }
 
     public static Article of(
@@ -108,7 +108,7 @@ public class Article {
             Boolean isDeleted,
             Boolean isNotice,
             Long recommendCount,
-            Float sentimentScore
+            String sentiment
     ) {
         return new Article(
                 id,
@@ -122,7 +122,7 @@ public class Article {
                 isDeleted,
                 isNotice,
                 recommendCount,
-                sentimentScore
+                sentiment
         );
     }
 
@@ -137,7 +137,7 @@ public class Article {
     @Override
     public int hashCode() {
         return Objects.hash(id, nickname, boardCode, title, content, writeAt, modifyAt, view, isDeleted,
-                isNotice, recommendCount, sentimentScore);
+                isNotice, recommendCount, sentiment);
     }
 
     public void increaseViewCount() {

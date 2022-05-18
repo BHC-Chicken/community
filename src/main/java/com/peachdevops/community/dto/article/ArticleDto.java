@@ -16,7 +16,7 @@ public record ArticleDto(
         Boolean isDeleted,
         Boolean isNotice,
         Long recommendCount,
-        Float sentimentScore
+        String sentiment
 ) {
     public static ArticleDto of(
             Long id,
@@ -30,7 +30,7 @@ public record ArticleDto(
             Boolean isDeleted,
             Boolean isNotice,
             Long recommendCount,
-            Float sentimentScore
+            String sentiment
     ) {
         return new ArticleDto(
                 id,
@@ -44,7 +44,7 @@ public record ArticleDto(
                 isDeleted,
                 isNotice,
                 recommendCount,
-                sentimentScore
+                sentiment
         );
     }
 
@@ -61,7 +61,7 @@ public record ArticleDto(
                 article.getIsDeleted(),
                 article.getIsNotice(),
                 article.getRecommendCount(),
-                article.getSentimentScore()
+                article.getSentiment()
         );
     }
 
@@ -78,7 +78,7 @@ public record ArticleDto(
                 isDeleted,
                 isNotice,
                 recommendCount,
-                sentimentScore
+                sentiment
         );
     }
 

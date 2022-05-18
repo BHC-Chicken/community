@@ -12,7 +12,7 @@ public record ArticleResponse(
         LocalDateTime modifyAt,
         Integer view,
         Long recommendCount,
-        Float sentimentScore
+        String sentiment
 ) {
 
     public static ArticleResponse of(
@@ -25,7 +25,7 @@ public record ArticleResponse(
             LocalDateTime modifyAt,
             Integer view,
             Long recommendCount,
-            Float sentimentScore
+            String sentiment
     ) {
         return new ArticleResponse(
                 id,
@@ -37,7 +37,7 @@ public record ArticleResponse(
                 modifyAt,
                 view,
                 recommendCount,
-                sentimentScore
+                sentiment
         );
     }
 
@@ -55,7 +55,7 @@ public record ArticleResponse(
                 articleDto.modifyAt(),
                 articleDto.view(),
                 articleDto.recommendCount(),
-                articleDto.sentimentScore()
+                articleDto.sentiment()
         );
     }
 }

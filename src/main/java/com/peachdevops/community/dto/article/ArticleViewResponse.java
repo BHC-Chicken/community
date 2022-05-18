@@ -14,7 +14,7 @@ public record ArticleViewResponse(
         Boolean isDeleted,
         Boolean isNotice,
         Long recommendCount,
-        Float sentimentScore
+        String sentiment
 ) {
     public ArticleViewResponse(Long id,
                                String boardCode,
@@ -27,7 +27,7 @@ public record ArticleViewResponse(
                                Boolean isDeleted,
                                Boolean isNotice,
                                Long recommendCount,
-                               Float sentimentScore
+                               String sentiment
     ) {
         this.id = id;
         this.boardCode = boardCode;
@@ -40,7 +40,7 @@ public record ArticleViewResponse(
         this.isDeleted = isDeleted;
         this.isNotice = isNotice;
         this.recommendCount = recommendCount;
-        this.sentimentScore = sentimentScore;
+        this.sentiment = sentiment;
     }
 
     public static ArticleViewResponse of(
@@ -55,7 +55,7 @@ public record ArticleViewResponse(
             Boolean isDeleted,
             Boolean isNotice,
             Long recommendCount,
-            Float sentimentScore
+            String sentiment
     ) {
         return new ArticleViewResponse(
                 id,
@@ -69,7 +69,7 @@ public record ArticleViewResponse(
                 isDeleted,
                 isNotice,
                 recommendCount,
-                sentimentScore
+                sentiment
         );
     }
 
@@ -89,7 +89,7 @@ public record ArticleViewResponse(
                 articleDto.isDeleted(),
                 articleDto.isNotice(),
                 articleDto.recommendCount(),
-                articleDto.sentimentScore()
+                articleDto.sentiment()
         );
     }
 }

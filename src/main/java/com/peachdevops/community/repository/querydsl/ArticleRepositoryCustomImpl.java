@@ -45,7 +45,7 @@ public class ArticleRepositoryCustomImpl extends QuerydslRepositorySupport imple
                          article.isDeleted,
                          article.isNotice,
                          article.recommendCount,
-                         article.sentimentScore
+                         article.sentiment
                  ));
 
          if (title != null) {
