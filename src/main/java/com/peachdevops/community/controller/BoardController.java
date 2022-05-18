@@ -18,7 +18,6 @@ import lombok.RequiredArgsConstructor;
 import org.commonmark.node.Node;
 import org.commonmark.parser.Parser;
 import org.commonmark.renderer.html.HtmlRenderer;
-import org.springframework.boot.configurationprocessor.json.JSONException;
 import org.springframework.boot.configurationprocessor.json.JSONObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -32,14 +31,10 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.constraints.Size;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.nio.charset.StandardCharsets;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 @Controller
 @RequiredArgsConstructor
@@ -74,22 +69,15 @@ public class BoardController {
     }
 
     @PostMapping("/post/{boardCode}")
-    @ResponseBody
-    public ModelAndView createArticle(@PathVariable(name = "boardCode") String boardCode,
+    public String createArticle(@PathVariable(name = "boardCode") String boardCode,
                                 @SessionAttribute(name = "user") User user,
                                 Article article,
-                                Model model
-    ) throws Exception {
-
-        Map<String, Object> map = new HashMap<>();
-        JSONObject sentiment = boardService.createArticle(article, user);
+                                Model model) throws Exception
+    {
+        boardService.createArticle(article, user);
         model.addAttribute("article", article);
-        JSONObject jsonObject = sentiment.getJSONObject("document");
-        String jsonObject1 = jsonObject.getString("sentiment");
 
-        map.put("sentiment",jsonObject1);
-
-        return new ModelAndView("redirect:/board/" + boardCode, map);
+        return "redirect:/board/" + boardCode;
     }
 
     @GetMapping("/modify/{boardCode}/{articleId}")
@@ -158,7 +146,7 @@ public class BoardController {
         }
         final int articleCount = 20;
         Pageable pageable = PageRequest.of(page, articleCount, Sort.by("isNotice").descending().and(Sort.by("id").descending()));
-        //TODO : 존재하지 않는 게시판에 접근시 예외처리 해야함. boardService 에 getBoard 메서드 작성.
+
         Map<String, Object> map = new HashMap<>();
         List<ArticleResponse> articleList = boardService.getArticles(boardCode, pageable)
                 .stream()
@@ -353,8 +341,8 @@ public class BoardController {
     @ResponseStatus(value = HttpStatus.OK)
     @ResponseBody
     public Map<String, Object> recommendation(@PathVariable(name = "articleId") Long articleId,
-                               @PathVariable(name = "boardCode") String boardCode,
-                               @SessionAttribute(name = "user") User user
+                                              @PathVariable(name = "boardCode") String boardCode,
+                                              @SessionAttribute(name = "user") User user
     ) {
         if (checkRole(user, boardCode)) {
             return null;
