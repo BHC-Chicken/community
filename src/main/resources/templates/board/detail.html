@@ -12,6 +12,8 @@
             rel="stylesheet"
             href="https://use.fontawesome.com/releases/v5.0.6/css/all.css"
     >
+    <link rel="stylesheet" href="/css/report.css">
+    <link rel="stylesheet" href="/css/list.css">
     <script defer src="/script/articleDetail.js"></script>
     <script defer src="/script/jquery-3.6.0.min.js"></script>
 </head>
@@ -24,39 +26,76 @@
         <table id="articleTable" class="table">
             <tbody>
             <tr class="table-active">
-                <td style="width: 16.6%"><div>제목</div></td>
-                <td><div id="title">?</div></td>
+                <td style="width: 16.6%">
+                    <div>제목</div>
+                </td>
+                <td>
+                    <div id="title">?</div>
+                </td>
             </tr>
             <tr>
-                <td style="width: 16.6%"><div>작성자</div></td>
-                <td><div id="nickname">?</div></td>
+                <td style="width: 16.6%">
+                    <div>작성자</div>
+                </td>
+                <td>
+                    <div id="nickname">?</div>
+                </td>
             </tr>
             <tr>
-                <td style="width: 16.6%"><div>내용</div></td>
-                <td><div id="content">?</div></td>
+                <td style="width: 16.6%">
+                    <div>내용</div>
+                </td>
+                <td>
+                    <div id="content">?</div>
+                </td>
             </tr>
             <tr>
-                <td style="width: 16.6%"><div>작성 일시</div></td>
-                <td><div id="modifyAt">?</div></td>
+                <td style="width: 16.6%">
+                    <div>작성 일시</div>
+                </td>
+                <td>
+                    <div id="modifyAt">?</div>
+                </td>
             </tr>
             <tr>
-                <td style="width: 16.6%"><div>조회수</div></td>
-                <td><div id="view">?</div></td>
+                <td style="width: 16.6%">
+                    <div>조회수</div>
+                </td>
+                <td>
+                    <div id="view">?</div>
+                </td>
             </tr>
             <tr>
-                <td style="width: 16.6%"><div>추천수</div></td>
-                <td><div id="recommendCount">0</div></td>
+                <td style="width: 16.6%">
+                    <div>추천수</div>
+                </td>
+                <td>
+                    <div id="recommendCount">0</div>
+                </td>
             </tr>
             </tbody>
         </table>
     </div>
     <div style="margin-bottom: 2rem">
         <a id="recommend" type="button" class="recommend-article btn btn-secondary">추천</a>
+        <button type="button" class="btn btn-secondary" id="reportButton">신고하기</button>
         <a id="backToArticles" type="button" class="btn btn-secondary">뒤로가기</a>
+        <div class="display-none" id="report">
+            <form method="post" role="form" class="report-center">
+                <div class="form-group">
+                    <div class="text-danger">신고 사유를 작성해주세요.</div>
+                    <label>
+                        <input type="text" placeholder="사유" name="reportReason" class="form-control">
+                    </label>
+                    <button type="submit" class="btn btn-default">전송</button>
+                </div>
+            </form>
+        </div>
     </div>
     <form method="post" th:action="@{#}">
         <label>
-            <textarea type="text" style="resize: none" name="content" class="form-control commentContent " placeholder="댓글" cols="50"></textarea>
+            <textarea type="text" style="resize: none" name="content" class="form-control commentContent "
+                      placeholder="댓글" cols="50"></textarea>
         </label>
         <div>
             <button class="btn btn-secondary" rel="createComment">작성</button>
@@ -65,6 +104,9 @@
     <div>
         <div class="commentList"></div>
     </div>
+</div>
+<div>
+    <div th:replace="board/list.html :: articles"></div>
 </div>
 </body>
 </html>

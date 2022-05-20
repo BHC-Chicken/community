@@ -3,6 +3,8 @@ const commentList = window.document.querySelector('.commentList');
 const createComment = window.document.querySelector('[rel="createComment"]')
 const commentContent = window.document.querySelector('.commentContent')
 const recommendArticle = window.document.querySelector('#recommend')
+const reportButton = window.document.querySelector('#reportButton')
+const reportDisplay = window.document.querySelector('#report')
 
 const display = window.document.querySelector('.display-none')
 
@@ -104,4 +106,8 @@ commentList.addEventListener('click', (e) => {
         }
     })
     e.preventDefault()
+})
+
+reportButton.addEventListener('click', () => {
+    reportDisplay.classList.toggle('display-none')
 })

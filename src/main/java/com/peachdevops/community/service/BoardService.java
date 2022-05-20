@@ -89,7 +89,6 @@ public class BoardService {
             String returnData = "";
 
             HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
-
             
             urlConnection.setUseCaches(false);
             urlConnection.setDoInput(true);

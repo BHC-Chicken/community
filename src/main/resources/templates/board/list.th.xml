@@ -10,7 +10,7 @@
                 <attr sel="td.recommend" th:text="${article.recommendCount}"/>
                 <attr sel="td.sentiment" th:text="${article.sentiment}" />
                 <attr sel="a.detail" th:text="'상세'"
-                      th:href="@{/board/{boardCode}/{id}(boardCode=${article.boardCode}, id=${article.id})}"/>
+                      th:href="${searchType} ? @{/board/{boardCode}/{id}(page=${page},${searchType}=${searchValue}, boardCode=${article.boardCode}, id=${article.id})}: @{/board/{boardCode}/{id}(page=${page}, boardCode=${article.boardCode}, id=${article.id})}"/>
                 <attr sel="a.modify" th:text="'수정'"
                       th:href="@{/board/modify/{boardCode}/{id}(boardCode=${article.boardCode}, id=${article.id})}"/>
                 <attr sel="a.delete" th:text="'삭제'"
@@ -20,5 +20,6 @@
     </attr>
     <attr sel="#writeArticle">
         <attr sel="a.write" th:text="'글쓰기'" th:href="@{/board/write/{boardCode} (boardCode=${boardCode})}"/>
+        <attr sel="a.back" th:text="'목록'" th:href="@{/board/{boardCode} (boardCode=${boardCode})}"/>
     </attr>
 </thlogic>

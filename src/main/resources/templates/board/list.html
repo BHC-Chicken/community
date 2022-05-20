@@ -30,7 +30,7 @@
     >
 </head>
 <body>
-<div class="container">
+<div class="container" th:fragment="articles">
     <a style="margin-top: 1rem" class="btn btn-outline-primary" th:href="@{/}">HOME</a>
     <p>
         <span id="articlesTitle"></span>
@@ -63,6 +63,7 @@
     </table>
     <div id="writeArticle">
         <a class="write btn btn-secondary"></a>
+        <a class="back btn btn-secondary right"></a>
     </div>
     <div>
         <label>
@@ -84,7 +85,7 @@
                 <ul class="pagination ">
                     <li th:classappend="${articlePage.getPageable().getPageNumber() <= 9} ? 'disabled'"
                         class="page-item">
-                        <a class="page-link" th:href="@{/board/{boardCode} (boardCode=${boardCode})}">
+                        <a class="page-link" th:href="${searchType} ? @{/board/{boardCode}/search (${searchType}=${searchValue}, boardCode=${boardCode})} : @{/board/{boardCode} (boardCode=${boardCode})}">
                             <span>&laquo;</span>
                             <span class="sr-only">First</span>
                         </a>
@@ -92,7 +93,7 @@
 
                     <li th:classappend="${articlePage.first} ? 'disabled'" class="page-item">
                         <a class="page-link"
-                           th:href="${articlePage.first} ? '#' : @{/board/{boardCode}(page=${#numbers.formatDecimal(pageNumber, 0, -1)}, boardCode=${boardCode}) }"
+                           th:href="${articlePage.first} ? '#' : (${searchType} ?  @{/board/{boardCode}/search (${searchType}=${searchValue}, page=${#numbers.formatDecimal(pageNumber, 0, -1)}, boardCode=${boardCode}} : @{/board/{boardCode} (page=${#numbers.formatDecimal(pageNumber, 0, -1)}, boardCode=${boardCode}})"
                            aria-label="Previous">
                             <span aria-hidden="true">&lt;</span>
                             <span class="sr-only">Previous</span>
@@ -102,12 +103,12 @@
                     <li th:each="page: ${#numbers.sequence(startPage, endPage)}"
                         th:classappend="${page == pageNumber + 1} ? 'active'" class="page-item">
                         <a th:text="${page}" class="page-link"
-                           th:href="@{/board/{boardCode}(page=${page}, boardCode=${boardCode})}"></a>
+                           th:href="${searchType} ? @{/board/{boardCode}/search (${searchType}=${searchValue}, page=${page}, boardCode=${boardCode})} : @{/board/{boardCode}(page=${page}, boardCode=${boardCode})}"></a>
                     </li>
 
                     <li th:classappend="${articlePage.last} ? 'disabled'" class="page-item">
                         <a class="page-link"
-                           th:href="${articlePage.last} ? '#' : @{/board/{boardCode}(page=${#numbers.formatDecimal(pageNumber + 2, 0, -1)}, boardCode=${boardCode})}"
+                           th:href="${articlePage.last} ? '#' :(${searchType} ? @{/board/{boardCode}/search (${searchType}=${searchValue}, page=${#numbers.formatDecimal(pageNumber + 2, 0, -1)}, boardCode=${boardCode})} : @{/board/{boardCode}(page=${#numbers.formatDecimal(pageNumber + 2, 0, -1)}, boardCode=${boardCode})})"
                            aria-label="Next">
                             <span aria-hidden="true">&gt;</span>
                             <span class="sr-only">Next</span>
@@ -116,7 +117,7 @@
                     <li th:classappend="${articlePage.getPageable().getPageNumber() >= 10} ? 'disabled'"
                         class="page-item">
                         <a class="page-link"
-                           th:href="@{/board/{boardCode}(page=${totalPages}, boardCode=${boardCode}) }">
+                           th:href="${searchType} ? @{/board/{boardCode}/search (${searchType}=${searchValue}, page=${totalPages}, boardCode=${boardCode})}: @{/board/{boardCode}(page=${totalPages}, boardCode=${boardCode})}">
                             <span>&raquo;</span>
                             <span class="sr-only">Last</span>
                         </a>

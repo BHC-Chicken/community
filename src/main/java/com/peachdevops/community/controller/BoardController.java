@@ -18,7 +18,6 @@ import lombok.RequiredArgsConstructor;
 import org.commonmark.node.Node;
 import org.commonmark.parser.Parser;
 import org.commonmark.renderer.html.HtmlRenderer;
-import org.springframework.boot.configurationprocessor.json.JSONObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -41,10 +40,86 @@ import java.util.Optional;
 @RequestMapping("/board")
 public class BoardController {
 
+    final int articleCount = 20;
     private final BoardService boardService;
 
     private boolean checkRole(User user, String boardCode) {
         return user.getAuthorities().stream().noneMatch(r -> r.getAuthority().equals("ROLE_" + boardCode.toUpperCase()));
+    }
+
+    private void list(Model model, Map<String, Object> map, String boardCode, int page,
+                      String[] titleParam,
+                      String nickname,
+                      String[] contentParam) {
+        Pageable pageable;
+
+        double pageNumber;
+        double pageSize;
+        int totalPages;
+        int maxPage;
+
+        if (titleParam != null || nickname != null || contentParam != null) {
+            pageable = PageRequest.of(page, articleCount, Sort.by("id").descending());
+            Page<ArticleViewResponse> articleViewResponses = boardService.getArticleViewResponse(
+                    titleParam,
+                    nickname,
+                    contentParam,
+                    pageable
+            );
+            if (titleParam != null) {
+                map.put("searchType", "title");
+                map.put("searchValue", String.join(" ", titleParam));
+            } else if (nickname != null) {
+                map.put("searchType", "nickname");
+                map.put("searchValue", nickname);
+            } else {
+                map.put("searchType", "content");
+                map.put("searchValue", String.join(" ", contentParam));
+            }
+
+            pageNumber = articleViewResponses.getPageable().getPageNumber();
+            pageSize = articleViewResponses.getPageable().getPageSize();
+            totalPages = articleViewResponses.getTotalPages();
+            maxPage = (int) Math.ceil(articleViewResponses.getTotalElements() / (float) articleCount) - 1;
+
+            map.put("articles", articleViewResponses);
+            map.put("articlePage", articleViewResponses);
+        } else {
+            pageable = PageRequest.of(page, articleCount, Sort.by("isNotice").descending().and(Sort.by("id").descending()));
+            Page<ArticleDto> articleDtoPage = boardService.getTotalArticles(boardCode, pageable);
+            List<ArticleResponse> articleList = boardService.getArticles(boardCode, pageable)
+                    .stream()
+                    .map(ArticleResponse::from)
+                    .toList();
+            map.put("articles", articleList);
+
+            pageNumber = articleDtoPage.getPageable().getPageNumber();
+            pageSize = articleDtoPage.getPageable().getPageSize();
+            totalPages = articleDtoPage.getTotalPages();
+            maxPage = (int) Math.ceil(articleDtoPage.getTotalElements() / (float) articleCount) - 1;
+            map.put("articlePage", articleDtoPage);
+        }
+
+        int startPage = (int) (pageNumber - pageNumber % 10) + 1;
+        int tempEndPage = startPage + 9;
+        int endPage = Math.min(tempEndPage, totalPages);
+
+        if (maxPage < 0) {
+            maxPage = 0;
+        }
+
+        if (page > maxPage) {
+            throw new RuntimeException();
+        }
+
+        model.addAttribute("pageNumber", pageNumber);
+        model.addAttribute("pageSize", pageSize);
+        model.addAttribute("totalPages", totalPages);
+        model.addAttribute("startPage", startPage);
+        model.addAttribute("tempEndPage", tempEndPage);
+        model.addAttribute("endPage", endPage);
+
+        map.put("boardCode", boardCode);
     }
 
     @GetMapping("/write/{boardCode}")
@@ -72,8 +147,7 @@ public class BoardController {
     public String createArticle(@PathVariable(name = "boardCode") String boardCode,
                                 @SessionAttribute(name = "user") User user,
                                 Article article,
-                                Model model) throws Exception
-    {
+                                Model model) throws Exception {
         boardService.createArticle(article, user);
         model.addAttribute("article", article);
 
@@ -144,42 +218,12 @@ public class BoardController {
         if (page > 0) {
             page = page - 1;
         }
-        final int articleCount = 20;
-        Pageable pageable = PageRequest.of(page, articleCount, Sort.by("isNotice").descending().and(Sort.by("id").descending()));
 
         Map<String, Object> map = new HashMap<>();
-        List<ArticleResponse> articleList = boardService.getArticles(boardCode, pageable)
-                .stream()
-                .map(ArticleResponse::from)
-                .toList();
+        list(model, map, boardCode, page, null, null, null);
 
-        Page<ArticleDto> articleDtoPage = boardService.getTotalArticles(boardCode, pageable);
+        map.put("page", page + 1);
 
-        double pageNumber = articleDtoPage.getPageable().getPageNumber();
-        double pageSize = articleDtoPage.getPageable().getPageSize();
-        int totalPages = articleDtoPage.getTotalPages();
-        int startPage = (int) (pageNumber - pageNumber % 10) + 1;
-        int tempEndPage = startPage + 9;
-        int endPage = Math.min(tempEndPage, totalPages);
-        int maxPage = (int) Math.ceil(articleDtoPage.getTotalElements() / 20.0) - 1;
-        if (maxPage < 0) {
-            maxPage = 0;
-        }
-
-        if (page > maxPage) {
-            throw new RuntimeException();
-        }
-
-        model.addAttribute("pageNumber", pageNumber);
-        model.addAttribute("pageSize", pageSize);
-        model.addAttribute("totalPages", totalPages);
-        model.addAttribute("startPage", startPage);
-        model.addAttribute("tempEndPage", tempEndPage);
-        model.addAttribute("endPage", endPage);
-
-        map.put("articlePage", articleDtoPage);
-        map.put("articles", articleList);
-        map.put("boardCode", boardCode);
 
         return new ModelAndView("board/list", map);
     }
@@ -192,55 +236,35 @@ public class BoardController {
                                     @Size(min = 1) String nickname,
                                     Model model
     ) {
+        Map<String, Object> map = new HashMap<>();
         int page = parameterPage.orElse(1);
         if (page > 0) {
             page = page - 1;
         }
-        final int articleCount = 20;
-        Pageable pageable = PageRequest.of(page, articleCount, Sort.by("id").descending());
 
         String[] contentParam = null;
         if (content != null) {
             contentParam = content.split("\\s+");
+            map.put("searchType", "content");
+            map.put("searchValue", content);
         }
 
         String[] titleParam = null;
         if (title != null) {
             titleParam = title.split("\\s+");
+            map.put("searchType", "title");
+            map.put("searchValue", title);
         }
 
-        Map<String, Object> map = new HashMap<>();
-        Page<ArticleViewResponse> articles = boardService.getArticleViewResponse(
-                titleParam,
-                nickname,
-                contentParam,
-                pageable
-        );
-
-        double pageNumber = articles.getPageable().getPageNumber();
-        double pageSize = articles.getPageable().getPageSize();
-        int totalPages = articles.getTotalPages();
-        int startPage = (int) (pageNumber - pageNumber % 10) + 1;
-        int tempEndPage = startPage + 9;
-        int endPage = Math.min(tempEndPage, totalPages);
-        int maxPage = (int) Math.ceil(articles.getTotalElements() / 20.0) - 1;
-
-        if (maxPage < 0) {
-            maxPage = 0;
-        }
-        if (page > maxPage) {
-            throw new RuntimeException();
+        if (nickname != null) {
+            map.put("searchType", "nickname");
+            map.put("searchValue", nickname);
         }
 
-        model.addAttribute("pageNumber", pageNumber);
-        model.addAttribute("pageSize", pageSize);
-        model.addAttribute("totalPages", totalPages);
-        model.addAttribute("startPage", startPage);
-        model.addAttribute("tempEndPage", tempEndPage);
-        model.addAttribute("endPage", endPage);
 
-        map.put("articles", articles);
-        map.put("articlePage", articles);
+        list(model, map, boardCode, page, titleParam, nickname, contentParam);
+        map.put("page", page + 1);
+
 
         return new ModelAndView("board/list", map);
     }
@@ -248,6 +272,12 @@ public class BoardController {
     @GetMapping("/{boardCode}/{articleId}")
     public ModelAndView articleDetail(@PathVariable(name = "boardCode") String boardCode,
                                       @PathVariable(name = "articleId") Long articleId,
+                                      @RequestParam(name = "page") Optional<Integer> page,
+                                      @Size(min = 1) String title,
+                                      @Size(min = 1) String nickname,
+                                      @Size(min = 1) String content,
+                                      Model model,
+
                                       @QuerydslPredicate(root = Comment.class) Predicate predicate) {
         Map<String, Object> map = new HashMap<>();
         ArticleResponse article = boardService.getArticle(articleId)
@@ -267,8 +297,32 @@ public class BoardController {
         article1.setView(article.view());
         article1.setBoardCode(article.boardCode());
         article1.setRecommendCount(article.recommendCount());
+        article1.setSentiment(article.sentiment());
+
+        int page1 = page.orElse(1);
+        if (page1 > 0) {
+            page1 = page1 - 1;
+        }
+
+        String[] ifTitle = null;
+        if (title != null) {
+            ifTitle = title.split("\\s+");
+        }
+
+        String[] ifContent = null;
+        if (content != null) {
+            ifContent = content.split("\\s+");
+        }
+
+        String ifNickname = null;
+        if (nickname != null) {
+            ifNickname = nickname;
+        }
+
+        list(model, map, boardCode, page1, ifTitle, ifNickname, ifContent);
 
         map.put("article", article1);
+        map.put("page", page1 + 1);
 
         return new ModelAndView("board/detail", map);
     }
@@ -352,5 +406,14 @@ public class BoardController {
         map.put("hit", hit);
 
         return map;
+    }
+
+    @PostMapping("/report/{boardCode}/{articleId}")
+    public void postReport(@PathVariable(name = "articleId") Long articleId,
+                           @PathVariable(name = "boardCode") String boardCode,
+                           @SessionAttribute(name = "user") User user
+
+    ) {
+
     }
 }
