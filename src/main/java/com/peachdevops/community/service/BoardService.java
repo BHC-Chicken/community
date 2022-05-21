@@ -5,10 +5,7 @@ import com.peachdevops.community.dto.article.ArticleDto;
 import com.peachdevops.community.dto.article.ArticleViewResponse;
 import com.peachdevops.community.dto.comment.CommentDto;
 import com.peachdevops.community.exception.DataAccessErrorException;
-import com.peachdevops.community.repository.ArticleRepository;
-import com.peachdevops.community.repository.BoardsRepository;
-import com.peachdevops.community.repository.CommentRepository;
-import com.peachdevops.community.repository.RecommendRepository;
+import com.peachdevops.community.repository.*;
 import lombok.RequiredArgsConstructor;
 
 import org.json.simple.JSONArray;
@@ -18,6 +15,7 @@ import org.json.simple.parser.ParseException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -39,6 +37,8 @@ public class BoardService {
     private final CommentRepository commentRepository;
     private final BoardsRepository boardsRepository;
     private final RecommendRepository recommendRepository;
+
+    private final ReportRepository reportRepository;
 
     public List<ArticleDto> getArticles(String boardCode, Pageable pageable) {
         return articleRepository.findAllByBoardCodeAndIsDeleted(boardCode, false, pageable);
@@ -89,7 +89,7 @@ public class BoardService {
             String returnData = "";
 
             HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
-            
+
             urlConnection.setUseCaches(false);
             urlConnection.setDoInput(true);
             urlConnection.setDoOutput(true);
@@ -250,5 +250,23 @@ public class BoardService {
         } else {
             throw new DataAccessErrorException();
         }
+    }
+
+    public boolean report(Long articleId,User user, Report report) {
+        report.setArticleId(articleId);
+        report.setUserId(user.getId());
+        if (reportRepository.findByArticleIdAndUserId(articleId, user.getId()) != null) {
+            return false;
+        }
+        reportRepository.save(report);
+        if (reportRepository.countByArticleId(articleId) >= 10) {
+            Optional<Article> article = articleRepository.findById(articleId);
+            if (article.isPresent()) {
+                Article article1 = article.get();
+                article1.setIsDeleted(true);
+                articleRepository.save(article1);
+            }
+        }
+        return true;
     }
 }

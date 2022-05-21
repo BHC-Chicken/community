@@ -3,6 +3,7 @@ package com.peachdevops.community.controller;
 import com.peachdevops.community.constant.ErrorCode;
 import com.peachdevops.community.domain.Article;
 import com.peachdevops.community.domain.Comment;
+import com.peachdevops.community.domain.Report;
 import com.peachdevops.community.domain.User;
 import com.peachdevops.community.dto.article.ArticleDto;
 import com.peachdevops.community.dto.article.ArticleResponse;
@@ -10,7 +11,7 @@ import com.peachdevops.community.dto.article.ArticleViewResponse;
 import com.peachdevops.community.dto.comment.CommentResponse;
 import com.peachdevops.community.exception.AlreadyDeletedException;
 import com.peachdevops.community.exception.DataAccessErrorException;
-import com.peachdevops.community.exception.NotFoundBoard;
+import com.peachdevops.community.exception.NotFoundBoardException;
 import com.peachdevops.community.exception.UserNotFoundException;
 import com.peachdevops.community.service.BoardService;
 import com.querydsl.core.types.Predicate;
@@ -24,6 +25,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.querydsl.binding.QuerydslPredicate;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -211,7 +213,7 @@ public class BoardController {
                                     Model model
     ) {
         if (!boardService.getBoards(boardCode)) {
-            throw new NotFoundBoard();
+            throw new NotFoundBoardException();
         }
 
         int page = parameterPage.orElse(1);
@@ -408,12 +410,16 @@ public class BoardController {
         return map;
     }
 
-    @PostMapping("/report/{boardCode}/{articleId}")
-    public void postReport(@PathVariable(name = "articleId") Long articleId,
-                           @PathVariable(name = "boardCode") String boardCode,
-                           @SessionAttribute(name = "user") User user
-
+    @PostMapping("/{boardCode}/{articleId}/report")
+    public ResponseEntity<HttpStatus> postReport(@PathVariable(name = "articleId") Long articleId,
+                                     @PathVariable(name = "boardCode") String boardCode,
+                                     @SessionAttribute(name = "user") User user,
+                                     Report report
     ) {
-
+       if (boardService.report(articleId, user, report)) {
+           return new ResponseEntity<>(HttpStatus.OK);
+       } else {
+           return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+       }
     }
 }
