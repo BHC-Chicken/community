@@ -2,7 +2,7 @@
 <thlogic>
     <attr sel="#articleTitle"/>
     <attr sel="#articleTable" th:object="${article}">
-        <attr sel="#title" th:text="*{title} ?: _"/>
+        <attr sel="#title" th:classappend="*{sentiment}" th:text="*{title} ?: _"/>
         <attr sel="#nickname" th:text="*{nickname} ?: _"/>
         <attr sel="#content" th:utext="*{content} ?: _"/>
         <attr sel="#modifyAt" th:text="*{#temporals.format(modifyAt, 'yyyy-MM-dd HH:mm')} ?: _"/>
