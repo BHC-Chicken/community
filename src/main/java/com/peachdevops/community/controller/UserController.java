@@ -1,12 +1,8 @@
 package com.peachdevops.community.controller;
 
 import com.peachdevops.community.domain.User;
-import com.peachdevops.community.dto.SentimentDto;
 import com.peachdevops.community.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.boot.configurationprocessor.json.JSONException;
-import org.springframework.boot.configurationprocessor.json.JSONObject;
-import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -14,26 +10,28 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.mail.MessagingException;
 import javax.servlet.http.HttpSession;
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.nio.charset.StandardCharsets;
 import java.security.Principal;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
 
 @Controller
 @RequiredArgsConstructor
 public class UserController {
     private final UserService userService;
 
-    @GetMapping("/signup")
-    public String getSignUp() {
+    @GetMapping("/login")
+    public String getLogin(@SessionAttribute(name = "user", required = false) User user) {
+        if (user != null) {
+            return "redirect:/";
+        }
 
+        return "login";
+    }
+
+    @GetMapping("/signup")
+    public String getSignUp(@SessionAttribute(name = "user", required = false) User user) {
+        if (user != null) {
+            return "redirect:/";
+        }
         return "signup";
     }
 
@@ -87,11 +85,10 @@ public class UserController {
     @PostMapping("/orcSignup")
     public String postOrcSignup(
             @RequestParam(value = "image", required = false) MultipartFile[] files,
-                                Principal principal,
-                                HttpSession session,
-                                User user,
-                                Model model) throws IOException {
-        System.out.println(principal.getName());
+            Principal principal,
+            HttpSession session,
+            User user,
+            Model model) throws IOException {
         try {
             userService.uploadImage(files[0], principal);
             session.invalidate();

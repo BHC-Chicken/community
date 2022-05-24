@@ -20,10 +20,4 @@ public class RootController {
         return "index";
     }
 
-    @GetMapping("/login")
-    public String getLogin() {
-
-        return "login";
-    }
-
 }

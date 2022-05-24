@@ -33,11 +33,10 @@ recommendArticle.addEventListener('click', (e) => {
         contentType: false,
         cache: false,
         success: function (d) {
-
             document.getElementById('recommendCount').innerText = d['hit'];
         },
         error: function (e) {
-            alert("실패");
+            alert("중복 추천입니다.");
         }
     })
     e.preventDefault()
@@ -60,7 +59,7 @@ createComment.addEventListener('click', (e) => {
             commentContent.value = "";
         },
         error: function (e) {
-            alert("댓글 등록에 실패")
+            alert("댓글 등록에 실패했습니다.")
         }
     })
     e.preventDefault();
@@ -102,7 +101,7 @@ commentList.addEventListener('click', (e) => {
             loadComment();
         },
         error: function (e) {
-            alert("실패");
+            alert("삭제에 실패했습니다.");
         }
     })
     e.preventDefault()
@@ -134,7 +133,7 @@ report.addEventListener('click', (e) => {
             alert("신고되었습니다.");
         },
         error: function (e) {
-            alert("실패");
+            alert("중복 신고입니다.");
         }
     })
     e.preventDefault()
