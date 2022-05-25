@@ -146,14 +146,18 @@ public class BoardController {
     }
 
     @PostMapping("/post/{boardCode}")
-    public String createArticle(@PathVariable(name = "boardCode") String boardCode,
+    public ResponseEntity<HttpStatus> createArticle(@PathVariable(name = "boardCode") String boardCode,
                                 @SessionAttribute(name = "user") User user,
                                 Article article,
                                 Model model) throws Exception {
-        boardService.createArticle(article, user);
-        model.addAttribute("article", article);
-
-        return "redirect:/board/" + boardCode;
+        System.out.println(article.getTitle());
+        System.out.println(article.getContent());
+        if (boardService.createArticle(article, user) == ErrorCode.OK) {
+            model.addAttribute("article", article);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
     }
 
     @GetMapping("/modify/{boardCode}/{articleId}")

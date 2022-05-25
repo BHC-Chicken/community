@@ -1,5 +1,6 @@
 package com.peachdevops.community.service;
 
+import com.peachdevops.community.constant.ErrorCode;
 import com.peachdevops.community.domain.*;
 import com.peachdevops.community.dto.article.ArticleDto;
 import com.peachdevops.community.dto.article.ArticleViewResponse;
@@ -7,7 +8,6 @@ import com.peachdevops.community.dto.comment.CommentDto;
 import com.peachdevops.community.exception.DataAccessErrorException;
 import com.peachdevops.community.repository.*;
 import lombok.RequiredArgsConstructor;
-
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -15,7 +15,6 @@ import org.json.simple.parser.ParseException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,6 +27,7 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -89,7 +89,7 @@ public class BoardService {
             String returnData = "";
 
             HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
-
+            
             urlConnection.setUseCaches(false);
             urlConnection.setDoInput(true);
             urlConnection.setDoOutput(true);
@@ -121,27 +121,29 @@ public class BoardService {
         return null;
     }
 
-    public void
-    createArticle(Article article, User user) throws Exception {
-
-        if (article == null) {
-            return;
+    @Transactional
+    public ErrorCode createArticle(Article article, User user) throws Exception {
+        System.out.println(article.getTitle());
+        System.out.println(article.getContent());
+        if (article.getTitle().isEmpty() || article.getContent().isEmpty()) {
+            return ErrorCode.BAD_REQUEST;
         }
         article.setNickname(user.getNickname());
         String content = article.getContent();
         content = content.replaceAll("(\\r\\n|\\r|\\n|\\n\\r)", " ");
-        JSONObject result = getSentiment(content);
-
+        JSONObject result = getSentiment(content); // naver api 요청
+        System.out.println(result);
         JSONArray sentences = (JSONArray) result.get("sentences");
         JSONObject sentencesArray = (JSONObject) sentences.get(0);
         String sentiment = (String) sentencesArray.get("sentiment");
 
         article.setSentiment(sentiment);
         articleRepository.save(article);
+
+        return ErrorCode.OK;
     }
 
-    public void
-    modifyArticle(Long articleId, Article article, User user) throws Exception {
+    public void modifyArticle(Long articleId, Article article, User user) throws Exception {
         if (articleId == null || article == null)
             return;
 

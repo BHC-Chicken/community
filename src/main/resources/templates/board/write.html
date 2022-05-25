@@ -11,6 +11,8 @@
             rel="stylesheet"
             href="https://use.fontawesome.com/releases/v5.0.6/css/all.css"
     >
+    <script defer src="/script/jquery-3.6.0.min.js"></script>
+    <script defer src="/script/writeArticle.js"></script>
     <title>글쓰기</title>
 </head>
 <body id="writeArticle">
@@ -20,7 +22,7 @@
         <input type="text" class="form-control mt-4 mb-2" name="title" id="title" placeholder="제목" maxlength="1000">
         <label for="inputText"></label>
         <textarea class="form-control" rows="10" id="inputText" name="content" placeholder="내용"></textarea>
-        <input  class="btn btn-secondary mb-3" type="submit">
+        <button  class="btn btn-secondary mb-3 postArticle" type="button">작성</button>
     </form>
 </div>
 </body>
