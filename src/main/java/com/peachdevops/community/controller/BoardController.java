@@ -31,6 +31,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.constraints.Size;
 import java.util.HashMap;
 import java.util.List;
@@ -165,7 +166,6 @@ public class BoardController {
                                 @PathVariable(name = "articleId") Long articleId,
                                 @SessionAttribute(name = "user") User user,
                                 Model model) throws Exception {
-
         if (checkRole(user, boardCode)) {
             return "redirect:/board/" + boardCode + "/" + articleId;
         }
@@ -182,18 +182,19 @@ public class BoardController {
         } else {
             throw new Exception();
         }
-
         return "board/modify";
     }
 
     @PostMapping("/modify/{boardCode}/{articleId}")
-    public String modifyArticle(@PathVariable(name = "boardCode") String boardCode,
+    public ResponseEntity<HttpStatus> modifyArticle(@PathVariable(name = "boardCode") String boardCode,
                                 @PathVariable(name = "articleId") Long articleId,
                                 @SessionAttribute(name = "user") User user,
                                 Article article) throws Exception {
-        boardService.modifyArticle(articleId, article, user);
-
-        return "redirect:/board/" + boardCode;
+        if (boardService.modifyArticle(articleId, article, user) == ErrorCode.OK) {
+            return new ResponseEntity<>(HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
     }
 
     @PostMapping("/delete/{boardCode}/{articleId}")
@@ -229,7 +230,6 @@ public class BoardController {
         list(model, map, boardCode, page, null, null, null);
 
         map.put("page", page + 1);
-
 
         return new ModelAndView("board/list", map);
     }

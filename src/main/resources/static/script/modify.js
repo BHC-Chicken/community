@@ -29,7 +29,7 @@ postArticle.addEventListener('click', (e) => {
         contentType: false,
         cache: false,
         success: function () {
-            window.location.href = window.document.location.pathname.replace("/write/", "/");
+            window.location.href = window.document.location.pathname.replace("/modify/", "/");
         },
         error: function (e) {
             alert("제목과 내용을 적어주세요.");

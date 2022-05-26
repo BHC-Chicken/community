@@ -11,6 +11,8 @@
             rel="stylesheet"
             href="https://use.fontawesome.com/releases/v5.0.6/css/all.css"
     >
+    <script defer src="/script/jquery-3.6.0.min.js"></script>
+    <script defer src="/script/modify.js"></script>
     <title>Title</title>
 </head>
 <body id="writeArticle">
@@ -22,7 +24,7 @@
         <label for="inputText"></label>
         <textarea id="inputText" class="form-control" rows="10" name="content"
                   th:text="${article.content()}"></textarea>
-        <input type="submit">
+        <button class="btn btn-secondary mb-3 postArticle" type="button">작성</button>
     </form>
 </div>
 </body>

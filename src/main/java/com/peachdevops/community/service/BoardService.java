@@ -123,8 +123,6 @@ public class BoardService {
 
     @Transactional
     public ErrorCode createArticle(Article article, User user) throws Exception {
-        System.out.println(article.getTitle());
-        System.out.println(article.getContent());
         if (article.getTitle().isEmpty() || article.getContent().isEmpty()) {
             return ErrorCode.BAD_REQUEST;
         }
@@ -132,7 +130,6 @@ public class BoardService {
         String content = article.getContent();
         content = content.replaceAll("(\\r\\n|\\r|\\n|\\n\\r)", " ");
         JSONObject result = getSentiment(content); // naver api 요청
-        System.out.println(result);
         JSONArray sentences = (JSONArray) result.get("sentences");
         JSONObject sentencesArray = (JSONObject) sentences.get(0);
         String sentiment = (String) sentencesArray.get("sentiment");
@@ -143,35 +140,38 @@ public class BoardService {
         return ErrorCode.OK;
     }
 
-    public void modifyArticle(Long articleId, Article article, User user) throws Exception {
-        if (articleId == null || article == null)
-            return;
+    public ErrorCode modifyArticle(Long articleId, Article article, User user) throws Exception {
+        if (article.getTitle().isEmpty() || article.getContent().isEmpty()) {
+            return ErrorCode.BAD_REQUEST;
+        }
 
         Optional<Article> article1 = articleRepository.findById(articleId);
         if (article1.isPresent()) {
             Article article2 = article1.get();
             if (!article2.getNickname().equals(user.getNickname())) {
-                throw new RuntimeException();
+                return ErrorCode.BAD_REQUEST;
             }
             if (article2.getIsDeleted().equals(true)) {
-                throw new RuntimeException();
+                return ErrorCode.BAD_REQUEST;
             }
             article2.setTitle(article.getTitle());
             article2.setContent(article.getContent());
             article2.setModifyAt(LocalDateTime.now());
 
-            article.setNickname(user.getNickname());
             String content = article.getContent();
             content = content.replaceAll("(\\r\\n|\\r|\\n|\\n\\r)", " ");
             JSONObject result = getSentiment(content);
-
             JSONArray sentences = (JSONArray) result.get("sentences");
             JSONObject sentencesArray = (JSONObject) sentences.get(0);
             String sentiment = (String) sentencesArray.get("sentiment");
             article2.setSentiment(sentiment);
 
             articleRepository.save(article2);
+
+            return ErrorCode.OK;
         }
+
+        return ErrorCode.BAD_REQUEST;
     }
 
     public boolean deleteArticle(Long articleId, User user) {
