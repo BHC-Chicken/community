@@ -39,21 +39,27 @@
         </tr>
         </thead>
         <tbody th:data-csrfToken="${_csrf.token}">
-        <tr>
-            <td class="title">test</td>
-            <td class="nickname">nickname</td>
-            <td class="modifyAt">test</td>
-            <td class="view">0</td>
-            <td class="recommend">0</td>
-            <td><a class="detail">상세</a></td>
-            <td><a class="modify">수정</a></td>
-            <td><a class="delete">삭제</a></td>
+        <tr th:each="article : ${articles}">
+            <td th:text="${article.title}" th:classappend="${article.sentiment}" class="title">test</td>
+            <td th:text="${article.nickname}" class="nickname">nickname</td>
+            <td th:text="${#temporals.format(article.modifyAt,'yyyy-MM-dd HH:mm')}" class="modifyAt">test</td>
+            <td th:text="${article.view}" class="view">0</td>
+            <td th:text="${article.recommendCount}" class="recommend">0</td>
+            <td>
+                <a th:href="${searchType} ? @{/board/{boardCode}/{id}(page=${page},${searchType}=${searchValue}, boardCode=${article.boardCode}, id=${article.id})}: @{/board/{boardCode}/{id}(page=${page}, boardCode=${article.boardCode}, id=${article.id})}"
+                   class="detail">상세</a></td>
+            <td><a th:href="@{/board/modify/{boardCode}/{id}(boardCode=${article.boardCode}, id=${article.id})}"
+                   th:if="${article.nickname} == ${session.user.nickname}" class="modify">수정</a></td>
+            <td><a th:href="@{/board/delete/{boardCode}/{id}(boardCode=${article.boardCode}, id=${article.id})}"
+                   th:if="${article.nickname} == ${session.user.nickname}" class="delete">삭제</a></td>
         </tr>
         </tbody>
     </table>
     <div id="writeArticle">
-        <a class="write btn btn-secondary"></a>
-        <a class="back btn btn-secondary right"></a>
+        <a th:href="@{/board/write/{boardCode} (boardCode=${boardCode})}"
+           class="write btn btn-secondary">글쓰기</a>
+        <a th:href="@{/board/{boardCode} (boardCode=${boardCode})}"
+           class="back btn btn-secondary right">목록</a>
     </div>
     <div>
         <label>
@@ -75,7 +81,8 @@
                 <ul class="pagination ">
                     <li th:classappend="${articlePage.getPageable().getPageNumber() <= 9} ? 'disabled'"
                         class="page-item">
-                        <a class="page-link" th:href="${searchType} ? @{/board/{boardCode}/search (${searchType}=${searchValue}, boardCode=${boardCode})} : @{/board/{boardCode} (boardCode=${boardCode})}">
+                        <a class="page-link"
+                           th:href="${searchType} ? @{/board/{boardCode}/search (${searchType}=${searchValue}, boardCode=${boardCode})} : @{/board/{boardCode} (boardCode=${boardCode})}">
                             <span>&laquo;</span>
                             <span class="sr-only">First</span>
                         </a>

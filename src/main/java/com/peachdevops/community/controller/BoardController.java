@@ -132,11 +132,9 @@ public class BoardController {
         try {
             if (checkRole(user, boardCode)) {
                 model.addAttribute("exception", ErrorCode.WRONG_ACCESS.getMessage());
-                System.out.println(ErrorCode.WRONG_ACCESS.getMessage());
                 return "redirect:/board/" + boardCode;
             } else if (user.getUsername() == null) {
                 model.addAttribute("exception", ErrorCode.WRONG_ACCESS.getMessage());
-                System.out.println(ErrorCode.WRONG_ACCESS.getMessage());
                 return "redirect:/board/" + boardCode;
             }
             return "board/write";
@@ -162,6 +160,7 @@ public class BoardController {
     }
 
     @GetMapping("/modify/{boardCode}/{articleId}")
+    @ExceptionHandler()
     public String modifyArticle(@PathVariable(name = "boardCode") String boardCode,
                                 @PathVariable(name = "articleId") Long articleId,
                                 @SessionAttribute(name = "user") User user,

@@ -5,21 +5,6 @@ const searchInput = document.getElementById("search-input");
 const searchButton = document.getElementById("search-button");
 const hiddenBoardCode = document.getElementById("hidden-boardCode");
 const title = document.getElementsByClassName("title");
-const modify = document.getElementsByClassName("modify");
-
-try {
-    modify.addEventListener('click', (e) => {
-        window.location.href = e.target.href
-    })
-} catch (e) {
-    console.log(e);
-    alert('수정이 불가능합니다.');
-}
-
-modify.addEventListener('click', ()=> {
-
-})
-
 
 articleList.addEventListener('click', (e) => {
     if (e.target.classList.contains("delete")) {

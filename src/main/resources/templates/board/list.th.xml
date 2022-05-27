@@ -1,25 +1,25 @@
-<?xml version="1.0"?>
-<thlogic>
-    <attr sel="#articlesTable">
-        <attr sel="tbody">
-            <attr sel="tr[0]" th:each="article : ${articles}">
-                <attr sel="td.title" th:text="${article.title}" th:classappend="${article.sentiment}"/>
-                <attr sel="td.nickname" th:text="${article.nickname}"/>
-                <attr sel="td.modifyAt" th:text="${#temporals.format(article.modifyAt,'yyyy-MM-dd HH:mm')}"/>
-                <attr sel="td.view" th:text="${article.view}"/>
-                <attr sel="td.recommend" th:text="${article.recommendCount}"/>
-                <attr sel="td.sentiment" th:text="${article.sentiment}" />
-                <attr sel="a.detail" th:text="'상세'"
-                      th:href="${searchType} ? @{/board/{boardCode}/{id}(page=${page},${searchType}=${searchValue}, boardCode=${article.boardCode}, id=${article.id})}: @{/board/{boardCode}/{id}(page=${page}, boardCode=${article.boardCode}, id=${article.id})}"/>
-                <attr sel="a.modify" th:text="'수정'"
-                      th:href="@{/board/modify/{boardCode}/{id}(boardCode=${article.boardCode}, id=${article.id})}"/>
-                <attr sel="a.delete" th:text="'삭제'"
-                      th:href="@{/board/delete/{boardCode}/{id}(boardCode=${article.boardCode}, id=${article.id})}"/>
-            </attr>
-        </attr>
-    </attr>
-    <attr sel="#writeArticle">
-        <attr sel="a.write" th:text="'글쓰기'" th:href="@{/board/write/{boardCode} (boardCode=${boardCode})}"/>
-        <attr sel="a.back" th:text="'목록'" th:href="@{/board/{boardCode} (boardCode=${boardCode})}"/>
-    </attr>
-</thlogic>
+<!--<?xml version="1.0"?>-->
+<!--<thlogic>-->
+<!--    <attr sel="#articlesTable">-->
+<!--        <attr sel="tbody">-->
+<!--            <attr sel="tr[0]" th:each="article : ${articles}">-->
+<!--                <attr sel="td.title" th:text="${article.title}" th:classappend="${article.sentiment}"/>-->
+<!--                <attr sel="td.nickname" th:text="${article.nickname}"/>-->
+<!--                <attr sel="td.modifyAt" th:text="${#temporals.format(article.modifyAt,'yyyy-MM-dd HH:mm')}"/>-->
+<!--                <attr sel="td.view" th:text="${article.view}"/>-->
+<!--                <attr sel="td.recommend" th:text="${article.recommendCount}"/>-->
+<!--                <attr sel="td.sentiment" th:text="${article.sentiment}" />-->
+<!--                <attr sel="a.detail" th:text="'상세'"-->
+<!--                      th:href="${searchType} ? @{/board/{boardCode}/{id}(page=${page},${searchType}=${searchValue}, boardCode=${article.boardCode}, id=${article.id})}: @{/board/{boardCode}/{id}(page=${page}, boardCode=${article.boardCode}, id=${article.id})}"/>-->
+<!--                <attr sel="a.modify" th:text="'수정'"-->
+<!--                      th:href="@{/board/modify/{boardCode}/{id}(boardCode=${article.boardCode}, id=${article.id})}"/>-->
+<!--                <attr sel="a.delete" th:text="'삭제'"-->
+<!--                      th:href="@{/board/delete/{boardCode}/{id}(boardCode=${article.boardCode}, id=${article.id})}"/>-->
+<!--            </attr>-->
+<!--        </attr>-->
+<!--    </attr>-->
+<!--    <attr sel="#writeArticle">-->
+<!--        <attr sel="a.write" th:text="'글쓰기'" th:href="@{/board/write/{boardCode} (boardCode=${boardCode})}"/>-->
+<!--        <attr sel="a.back" th:text="'목록'" th:href="@{/board/{boardCode} (boardCode=${boardCode})}"/>-->
+<!--    </attr>-->
+<!--</thlogic>-->
