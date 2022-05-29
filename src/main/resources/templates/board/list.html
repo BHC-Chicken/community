@@ -49,9 +49,9 @@
                 <a th:href="${searchType} ? @{/board/{boardCode}/{id}(page=${page},${searchType}=${searchValue}, boardCode=${article.boardCode}, id=${article.id})}: @{/board/{boardCode}/{id}(page=${page}, boardCode=${article.boardCode}, id=${article.id})}"
                    class="detail">상세</a></td>
             <td><a th:href="@{/board/modify/{boardCode}/{id}(boardCode=${article.boardCode}, id=${article.id})}"
-                   th:if="${article.nickname} == ${session.user.nickname}" class="modify">수정</a></td>
+                   th:if="${article?.nickname} == ${session.user?.nickname}" class="modify">수정</a></td>
             <td><a th:href="@{/board/delete/{boardCode}/{id}(boardCode=${article.boardCode}, id=${article.id})}"
-                   th:if="${article.nickname} == ${session.user.nickname}" class="delete">삭제</a></td>
+                   th:if="${article?.nickname} == ${session.user?.nickname}" class="delete">삭제</a></td>
         </tr>
         </tbody>
     </table>
