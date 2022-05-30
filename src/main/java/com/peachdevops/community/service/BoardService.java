@@ -54,7 +54,6 @@ public class BoardService {
             if (article.isPresent()) {
                 Article article1 = article.get();
                 article1.increaseViewCount();
-                System.out.println(article1.getView());
                 articleRepository.save(article1);
             }
 

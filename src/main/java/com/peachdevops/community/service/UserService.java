@@ -137,7 +137,6 @@ public class UserService {
         String name = principal.getName();
         String text = detectText(file.getInputStream());
         String college = getUniversity(text);
-        System.out.println(college);
         User user = userRepository.findByUsername(name);
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 

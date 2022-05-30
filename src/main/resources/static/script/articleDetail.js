@@ -140,7 +140,8 @@ report.addEventListener('click', (e) => {
     e.preventDefault();
 });
 
-deleteButton.addEventListener('click', (e) => {
+if (deleteButton) {
+    deleteButton.addEventListener('click', (e) => {
         let formData = new FormData();
         formData.append("_csrf", csrfToken);
 
@@ -152,11 +153,13 @@ deleteButton.addEventListener('click', (e) => {
             contentType: false,
             cache: false,
             success: function () {
-                window.location.reload();
+                alert("삭제되었습니다.");
+                window.location.href=window.document.location.pathname + "/../";
             },
             error: function (e) {
                 alert("삭제에 실패했습니다.");
             }
         });
         e.preventDefault();
-});
+    });
+}

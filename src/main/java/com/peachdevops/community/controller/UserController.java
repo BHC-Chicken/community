@@ -42,7 +42,6 @@ public class UserController {
             userService.signup(user.getUsername(), user.getPassword(), user.getNickname());
         } catch (Exception e) {
             model.addAttribute("exception", e.getMessage());
-            System.out.println(e.getMessage());
             return "redirect:signup";
         }
         // 회원가입 후 로그인 페이지로 이동
