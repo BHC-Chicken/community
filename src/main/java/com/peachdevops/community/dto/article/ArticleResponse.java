@@ -10,6 +10,7 @@ public record ArticleResponse(
         String boardCode,
         LocalDateTime writeAt,
         LocalDateTime modifyAt,
+        Boolean isDeleted,
         Integer view,
         Long recommendCount,
         String sentiment
@@ -23,6 +24,7 @@ public record ArticleResponse(
             String boardCode,
             LocalDateTime writeAt,
             LocalDateTime modifyAt,
+            Boolean isDeleted,
             Integer view,
             Long recommendCount,
             String sentiment
@@ -35,6 +37,7 @@ public record ArticleResponse(
                 boardCode,
                 writeAt,
                 modifyAt,
+                isDeleted,
                 view,
                 recommendCount,
                 sentiment
@@ -53,6 +56,7 @@ public record ArticleResponse(
                 articleDto.boardCode(),
                 articleDto.writeAt(),
                 articleDto.modifyAt(),
+                articleDto.isDeleted(),
                 articleDto.view(),
                 articleDto.recommendCount(),
                 articleDto.sentiment()

@@ -149,8 +149,6 @@ public class BoardController {
                                 @SessionAttribute(name = "user") User user,
                                 Article article,
                                 Model model) throws Exception {
-        System.out.println(article.getTitle());
-        System.out.println(article.getContent());
         if (boardService.createArticle(article, user) == ErrorCode.OK) {
             model.addAttribute("article", article);
             return new ResponseEntity<>(HttpStatus.OK);
@@ -283,12 +281,16 @@ public class BoardController {
                                       @Size(min = 1) String content,
                                       Model model,
 
-                                      @QuerydslPredicate(root = Comment.class) Predicate predicate) {
+                                      @QuerydslPredicate(root = Comment.class) Predicate predicate) throws Exception {
         Map<String, Object> map = new HashMap<>();
         ArticleResponse article = boardService.getArticle(articleId)
                 .map(ArticleResponse::from)
                 .orElseThrow(DataAccessErrorException::new);
         Article article1 = new Article();
+        if (article.isDeleted()) {
+            throw new Exception();
+        }
+
 
         Parser parser = Parser.builder().build();
         Node document = parser.parse(article.content());

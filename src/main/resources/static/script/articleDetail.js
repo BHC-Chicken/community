@@ -6,14 +6,15 @@ const recommendArticle = window.document.querySelector('#recommend');
 const reportButton = window.document.querySelector('#reportButton');
 const reportDisplay = window.document.querySelector('#report');
 const report = window.document.querySelector('#submit-report');
-const reportReason = window.document.querySelector('#report-reason')
+const reportReason = window.document.querySelector('#report-reason');
+const deleteButton = window.document.getElementsByClassName("delete")[0];
 
-const display = window.document.querySelector('.display-none')
+const display = window.document.querySelector('.display-none');
 
-let csrfToken = window.document.body.querySelector('[name="_csrf"]')
+let csrfToken = window.document.body.querySelector('[name="_csrf"]');
 
 if (csrfToken) {
-    csrfToken = csrfToken.value
+    csrfToken = csrfToken.value;
 }
 
 recommendArticle.addEventListener('click', (e) => {
@@ -39,7 +40,7 @@ recommendArticle.addEventListener('click', (e) => {
             alert("중복 추천입니다.");
         }
     })
-    e.preventDefault()
+    e.preventDefault();
 })
 
 createComment.addEventListener('click', (e) => {
@@ -59,11 +60,11 @@ createComment.addEventListener('click', (e) => {
             commentContent.value = "";
         },
         error: function (e) {
-            alert("댓글 등록에 실패했습니다.")
+            alert("댓글 등록에 실패했습니다.");
         }
     })
     e.preventDefault();
-})
+});
 
 
 function loadComment() {
@@ -76,10 +77,10 @@ function loadComment() {
         }
     ).done(function (data) {
         commentList.innerHTML = data
-    })
+    });
 }
 
-window.addEventListener('load', loadComment)
+window.addEventListener('load', loadComment);
 
 commentList.addEventListener('click', (e) => {
     let formData = new FormData();
@@ -108,8 +109,8 @@ commentList.addEventListener('click', (e) => {
 })
 
 reportButton.addEventListener('click', () => {
-    reportDisplay.classList.toggle('display-none')
-})
+    reportDisplay.classList.toggle('display-none');
+});
 
 report.addEventListener('click', (e) => {
     let formData = new FormData();
@@ -136,5 +137,26 @@ report.addEventListener('click', (e) => {
             alert("중복 신고입니다.");
         }
     })
-    e.preventDefault()
-})
+    e.preventDefault();
+});
+
+deleteButton.addEventListener('click', (e) => {
+        let formData = new FormData();
+        formData.append("_csrf", csrfToken);
+
+        $.ajax({
+            url: e.target.href,
+            method: 'POST',
+            data: formData,
+            processData: false,
+            contentType: false,
+            cache: false,
+            success: function () {
+                window.location.reload();
+            },
+            error: function (e) {
+                alert("삭제에 실패했습니다.");
+            }
+        });
+        e.preventDefault();
+});
