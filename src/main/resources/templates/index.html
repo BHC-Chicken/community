@@ -6,46 +6,43 @@
 <head>
     <title>login</title>
     <link rel="stylesheet" href="/css/style.css">
+    <script defer src="/script/index.js"></script>
 </head>
 <body>
-<header>
-
-    <div class="header-center">
-        <div>전국단대익명커뮤니티</div>
+<header class="title">
+    <div class="title-name">
+        <div>언네임드</div>
     </div>
-    <div class="header-right">
-        <ul>
-            <li class="nav-item">
+    <div>
+        <ul class="user">
+            <li sec:authorize="!isAuthenticated()" class="nav-item">
                 <a
                         class="nav-link active"
-                        sec:authorize="!isAuthenticated()"
                         th:href="@{/login}"
                 >
                     로그인
                 </a>
             </li>
-            <li class="nav-item">
+            <li sec:authorize="!isAuthenticated()" class="nav-item">
                 <a
                         class="nav-link active"
-                        sec:authorize="!isAuthenticated()"
                         th:href="@{/signup}"
                 >
                     회원가입
                 </a>
             </li>
-            <li class="nav-item">
+            <li sec:authorize="hasRole('ROLE_USER')" class="nav-item">
                 <a
                         class="nav-link active"
-                        sec:authorize="hasRole('ROLE_USER')"
                         th:href="@{/orcSignup}"
                 >
                     학생증 인증
                 </a>
             </li>
-            <li class="nav-item">
+            <li sec:authorize="isAuthenticated()" class="nav-item">
                 <a
-                        class="nav-link active"
                         sec:authorize="isAuthenticated()"
+                        class="nav-link active"
                         th:href="@{/logout}"
                 >
                     로그아웃
@@ -53,13 +50,15 @@
             </li>
         </ul>
     </div>
-
 </header>
-<main class="college">
-    <div class="item item-etc">
+<div>
+    <div class="menu">
+        <div class="item college-list">단대목록</div>
         <div class="item"><a href="/board/free">자유게시판</a></div>
         <div class="item"><a href="/board/notice">공지사항</a></div>
     </div>
+</div>
+<main class="colleges college-none">
     <div class="item"><a href="/board/ai">AI학부</a></div>
     <div class="item"><a href="/board/art">조형예술대학</a></div>
     <div class="item"><a href="/board/culture">성산교육대학</a></div>
