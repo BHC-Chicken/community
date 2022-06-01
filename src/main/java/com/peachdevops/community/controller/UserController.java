@@ -18,6 +18,19 @@ import java.security.Principal;
 public class UserController {
     private final UserService userService;
 
+    private boolean checkRole(User user) {
+        if (user == null) {
+            return true;
+        }
+        return user.getAuthorities().stream().noneMatch(r -> {
+            String authority = r.getAuthority();
+            if (authority == null) {
+                return false;
+            }
+            return authority.equals("ROLE_USER");
+        });
+    }
+
     @GetMapping("/login")
     public String getLogin(@SessionAttribute(name = "user", required = false) User user) {
         if (user != null) {
@@ -77,7 +90,10 @@ public class UserController {
     }
 
     @GetMapping("/orcSignup")
-    public String getOrcSignup() {
+    public String getOrcSignup(@SessionAttribute(name = "user", required = false) User user) {
+        if (checkRole(user)) {
+            return "redirect:/";
+        }
         return "orcSignup";
     }
 
@@ -86,8 +102,11 @@ public class UserController {
             @RequestParam(value = "image", required = false) MultipartFile[] files,
             Principal principal,
             HttpSession session,
-            User user,
+            @SessionAttribute(name = "user", required = false) User user,
             Model model) throws IOException {
+        if (checkRole(user)) {
+            return "redirect:/";
+        }
         try {
             userService.uploadImage(files[0], principal);
             session.invalidate();
