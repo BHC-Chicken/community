@@ -37,7 +37,7 @@ public class UserController {
             return "redirect:/";
         }
 
-        return "login";
+        return "user/login";
     }
 
     @GetMapping("/signup")
@@ -45,7 +45,7 @@ public class UserController {
         if (user != null) {
             return "redirect:/";
         }
-        return "signup";
+        return "user/signup";
     }
 
     @PostMapping("/signup")
@@ -84,7 +84,7 @@ public class UserController {
             userService.verificationCode(code);
         } catch (Exception e) {
             model.addAttribute("exception", e.getMessage());
-            return "verificationEmail";
+            return "user/verificationEmail";
         }
         return "index";
     }
@@ -94,7 +94,7 @@ public class UserController {
         if (checkRole(user)) {
             return "redirect:/";
         }
-        return "orcSignup";
+        return "user/orcSignup";
     }
 
     @PostMapping("/orcSignup")
@@ -114,5 +114,25 @@ public class UserController {
             model.addAttribute("exception", e.getMessage());
         }
         return "index";
+    }
+
+    @GetMapping("/verificationPassword")
+    public String getVerificationPassword(@SessionAttribute(name = "user", required = false) User user) {
+        if (checkRole(user)) {
+            return "redirect:/";
+        }
+
+        return "user/verificationPassword";
+    }
+
+    @PostMapping("/verificationPassword")
+    public String postVerificationPassword(
+            @SessionAttribute(name = "user", required = false) User user,
+            User userInfo) throws Exception {
+        userInfo.setUsername(user.getUsername());
+        if (userService.verificationPassword(user)) {
+            return "user/selectModify";
+        }
+        return "user/verificationPassword";
     }
 }

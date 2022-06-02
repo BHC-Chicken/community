@@ -196,4 +196,9 @@ public class UserService {
         }
         throw new NonExistentCollegeException();
     }
+
+    public boolean verificationPassword(User user) throws Exception {
+        User userInfo = userRepository.findByUsername(user.getUsername());
+        return !passwordEncoder.encode(user.getPassword()).equals(userInfo.getPassword());
+    }
 }
