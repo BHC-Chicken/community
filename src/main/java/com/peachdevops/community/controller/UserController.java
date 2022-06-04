@@ -3,6 +3,8 @@ package com.peachdevops.community.controller;
 import com.peachdevops.community.domain.User;
 import com.peachdevops.community.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -126,13 +128,21 @@ public class UserController {
     }
 
     @PostMapping("/verificationPassword")
-    public String postVerificationPassword(
+    public ResponseEntity<HttpStatus> postVerificationPassword(
             @SessionAttribute(name = "user", required = false) User user,
             User userInfo) throws Exception {
         userInfo.setUsername(user.getUsername());
-        if (userService.verificationPassword(user)) {
-            return "user/selectModify";
+        if (userService.verificationPassword(userInfo)) {
+            return new ResponseEntity<>(HttpStatus.OK);
         }
-        return "user/verificationPassword";
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    }
+
+    @GetMapping("/modifyPassword")
+    public String getModifyPassword(@SessionAttribute(name = "user", required = false) User user) {
+        if (checkRole(user)) {
+            return "redirect:/";
+        }
+        return "user/modifyPassword";
     }
 }

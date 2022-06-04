@@ -26,6 +26,14 @@
             <li sec:authorize="!isAuthenticated()" class="nav-item">
                 <a
                         class="nav-link active"
+                        th:href="@{/findPassword}"
+                >
+                    비밀번호 찾기
+                </a>
+            </li>
+            <li sec:authorize="!isAuthenticated()" class="nav-item">
+                <a
+                        class="nav-link active"
                         th:href="@{/signup}"
                 >
                     회원가입
@@ -37,6 +45,15 @@
                         th:href="@{/orcSignup}"
                 >
                     학생증 인증
+                </a>
+            </li>
+            <li sec:authorize="isAuthenticated()" class="nav-item">
+                <a
+                        sec:authorize="isAuthenticated()"
+                        class="nav-link active"
+                        th:href="@{/verificationPassword}"
+                >
+                    정보변경
                 </a>
             </li>
             <li sec:authorize="isAuthenticated()" class="nav-item">
