@@ -5,7 +5,7 @@ const NICKNAME = "^([0-9a-zA-Z가-힣]{1,10})$";
 const formSignUp = window.document.body.querySelector('[rel="form-signup"]');
 const username = formSignUp.querySelector('[name="username"]');
 const password = formSignUp.querySelector('[rel="password"]');
-const passwordCheck = formSignUp.querySelector('[name="password"]');
+const passwordCheck = formSignUp.querySelector('[rel="password-check"]');
 const nickname = formSignUp.querySelector('[name="nickname"]');
 
 const csrfToken = formSignUp.querySelector('[name="_csrf"]').value;

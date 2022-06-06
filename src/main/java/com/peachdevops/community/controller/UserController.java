@@ -1,10 +1,14 @@
 package com.peachdevops.community.controller;
 
+import com.google.api.Http;
 import com.peachdevops.community.domain.User;
+import com.peachdevops.community.dto.ModifyPassword;
 import com.peachdevops.community.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -13,24 +17,18 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.mail.MessagingException;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.net.URI;
+import java.net.URL;
 import java.security.Principal;
 
 @Controller
 @RequiredArgsConstructor
 public class UserController {
     private final UserService userService;
+    private final PasswordEncoder passwordEncoder;
 
     private boolean checkRole(User user) {
-        if (user == null) {
-            return true;
-        }
-        return user.getAuthorities().stream().noneMatch(r -> {
-            String authority = r.getAuthority();
-            if (authority == null) {
-                return false;
-            }
-            return authority.equals("ROLE_USER");
-        });
+        return user == null;
     }
 
     @GetMapping("/login")
@@ -116,31 +114,76 @@ public class UserController {
         return "index";
     }
 
-    @GetMapping("/verificationPassword")
-    public String getVerificationPassword(@SessionAttribute(name = "user", required = false) User user) {
-        if (checkRole(user)) {
-            return "redirect:/";
-        }
-
-        return "user/verificationPassword";
-    }
-
-    @PostMapping("/verificationPassword")
-    public ResponseEntity<HttpStatus> postVerificationPassword(
-            @SessionAttribute(name = "user", required = false) User user,
-            User userInfo) throws Exception {
-        userInfo.setUsername(user.getUsername());
-        if (userService.verificationPassword(userInfo)) {
-            return new ResponseEntity<>(HttpStatus.OK);
-        }
-        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-    }
-
     @GetMapping("/modifyPassword")
-    public String getModifyPassword(@SessionAttribute(name = "user", required = false) User user) {
+    public String getVerificationPassword(@SessionAttribute(name = "user") User user) {
         if (checkRole(user)) {
             return "redirect:/";
         }
         return "user/modifyPassword";
     }
+
+    @PostMapping("/modifyPassword")
+    public ResponseEntity<HttpStatus> postVerificationPassword(
+            @SessionAttribute(name = "user") User user,
+            ModifyPassword modifyPassword,
+            HttpSession httpSession,
+            User userInfo) {
+        userInfo.setUsername(user.getUsername());
+        if (userService.verificationPassword(userInfo, modifyPassword)) {
+            httpSession.removeAttribute("user");
+            return new ResponseEntity<>(HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    }
+
+    @GetMapping("/searchPassword")
+    public String getSearchPassword(
+            @SessionAttribute(name = "user", required = false) User user
+    ) {
+        if (!checkRole(user)) {
+            return "redirect:/";
+        }
+        return "user/searchPassword";
+    }
+
+    @PostMapping("/searchPassword")
+    public ResponseEntity<HttpStatus> postSearchPassword(User user) throws MessagingException {
+        if (userService.findByUsername(user.getUsername()) == null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        userService.searchPasswordEmailVerification(user);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @GetMapping("/findPassword")
+    public String getFindPassword(
+            @SessionAttribute(name = "user", required = false) User user,
+            @RequestParam(value = "code") String code,
+            HttpSession session
+    ) {
+        if (!checkRole(user)) {
+            return "redirect:/";
+        }
+        try {
+            userService.verificationCode(code);
+        } catch (Exception e) {
+            return "redirect:/";
+        }
+        session.setAttribute("code", code);
+        return "user/findPassword";
+    }
+
+    @PostMapping("/findPassword")
+    public ResponseEntity<HttpStatus> postFindPassword (
+            ModifyPassword modifyPassword,
+            @SessionAttribute(name = "code") String code,
+            HttpSession session
+    ) {
+        if (userService.findPassword(code, modifyPassword)) {
+            session.removeAttribute("code");
+            return new ResponseEntity<>(HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    }
+
 }

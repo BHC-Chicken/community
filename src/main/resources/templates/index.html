@@ -26,7 +26,7 @@
             <li sec:authorize="!isAuthenticated()" class="nav-item">
                 <a
                         class="nav-link active"
-                        th:href="@{/findPassword}"
+                        th:href="@{/searchPassword}"
                 >
                     비밀번호 찾기
                 </a>
@@ -51,9 +51,9 @@
                 <a
                         sec:authorize="isAuthenticated()"
                         class="nav-link active"
-                        th:href="@{/verificationPassword}"
+                        th:href="@{/modifyPassword}"
                 >
-                    정보변경
+                    비밀번호 변경
                 </a>
             </li>
             <li sec:authorize="isAuthenticated()" class="nav-item">

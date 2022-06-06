@@ -1,6 +1,7 @@
 package com.peachdevops.community.service;
 
 import com.peachdevops.community.domain.User;
+import com.peachdevops.community.dto.ModifyPassword;
 import com.peachdevops.community.dto.UserEmailVerificationCode;
 import com.peachdevops.community.exception.NonExistentCollegeException;
 import com.peachdevops.community.exception.NotValidationRegExpException;
@@ -195,8 +196,40 @@ public class UserService {
         throw new NonExistentCollegeException();
     }
 
-    public boolean verificationPassword(User userInfo) {
+    public boolean verificationPassword(User userInfo, ModifyPassword modifyPassword) {
         User user = userRepository.findByUsername(userInfo.getUsername());
-        return passwordEncoder.matches(userInfo.getPassword(), user.getPassword());
+        if (!passwordEncoder.matches(userInfo.getPassword(), user.getPassword())) {
+            return false;
+        }
+        user.setPassword(passwordEncoder.encode(modifyPassword.getModifyPassword()));
+        userRepository.save(user);
+
+        return true;
+    }
+
+    @Async
+    public void searchPasswordEmailVerification(User user) throws MessagingException {
+        String code = passwordEncoder.encode(user.getUsername());
+        registerVerificationCodeRepository.save(new UserEmailVerificationCode(user.getUsername(), code));
+        String Code = URLEncoder.encode(code, StandardCharsets.UTF_8);
+        MimeMessage message = this.javaMailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(message);
+        helper.setTo(user.getUsername());
+        helper.setSubject("비밀번호 변경");
+        helper.setText(String.format("<a href=\"https://community.peachdevops.com/findPassword?code=%s\" target=\"_blank\">비밀번호 변경</a>", Code), true);
+
+        this.javaMailSender.send(message);
+    }
+
+    public boolean findPassword(String code, ModifyPassword modifyPassword) {
+
+        UserEmailVerificationCode userEmailVerificationCode = registerVerificationCodeRepository.findByVerificationCode(code);
+        System.out.println(userEmailVerificationCode.getUsername());
+        User user = userRepository.findByUsername(userEmailVerificationCode.getUsername());
+        user.setPassword(passwordEncoder.encode(modifyPassword.getModifyPassword()));
+
+        userRepository.save(user);
+
+        return true;
     }
 }
