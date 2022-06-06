@@ -11,14 +11,11 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.config.annotation.web.configurers.ExpressionUrlAuthorizationConfigurer;
-import org.springframework.security.config.annotation.web.configurers.ExpressionUrlAuthorizationConfigurer.ExpressionInterceptUrlRegistry;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import javax.servlet.http.HttpSession;
-import java.util.Locale;
 
 @Configuration
 @EnableWebSecurity
@@ -33,7 +30,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
         http.csrf();
         http.rememberMe().disable();
         http.authorizeRequests()
-                .antMatchers("/", "/signup", "/login").permitAll()
+                .antMatchers("/", "/signup", "/login", "/searchPassword").permitAll()
                 .antMatchers(HttpMethod.GET, "/board/modify/**").authenticated()
                 .antMatchers(HttpMethod.POST, "/board/modify/**").authenticated()
                 .antMatchers(HttpMethod.POST, "/board/delete/**").authenticated();
