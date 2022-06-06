@@ -37,7 +37,7 @@ recommendArticle.addEventListener('click', (e) => {
             document.getElementById('recommendCount').innerText = d['hit'];
         },
         error: function (e) {
-            alert("중복 추천입니다.");
+
         }
     })
     e.preventDefault();

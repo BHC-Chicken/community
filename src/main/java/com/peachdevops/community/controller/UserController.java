@@ -54,7 +54,7 @@ public class UserController {
     public String signup(@ModelAttribute User user, Model model) throws MessagingException {
 
         try {
-            userService.signup(user.getUsername(), user.getPassword(), user.getNickname());
+            userService.signup(user);
         } catch (Exception e) {
             model.addAttribute("exception", e.getMessage());
             return "redirect:signup";
@@ -66,17 +66,15 @@ public class UserController {
     @PostMapping("/signup/check-username")
     @ResponseBody
     public int checkUsername(@ModelAttribute User user) {
-        int check = userService.checkInfoUsername(user.getUsername());
 
-        return check;
+        return userService.checkInfoUsername(user.getUsername());
     }
 
     @PostMapping("/signup/check-nickname")
     @ResponseBody
     public int checkNickname(@ModelAttribute User user) {
-        int check = userService.checkInfoNickname(user.getNickname());
 
-        return check;
+        return userService.checkInfoNickname(user.getNickname());
     }
 
     @GetMapping("/verificationEmail")

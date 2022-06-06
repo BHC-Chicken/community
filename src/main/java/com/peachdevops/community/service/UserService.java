@@ -1,7 +1,7 @@
 package com.peachdevops.community.service;
 
 import com.peachdevops.community.domain.User;
-import com.peachdevops.community.dto.UserRegisterDto;
+import com.peachdevops.community.dto.UserEmailVerificationCode;
 import com.peachdevops.community.exception.NonExistentCollegeException;
 import com.peachdevops.community.exception.NotValidationRegExpException;
 import com.peachdevops.community.exception.VerificationCodeAlreadyUsedException;
@@ -69,26 +69,24 @@ public class UserService {
 
     @Async
     public void signup(
-            String username,
-            String password,
-            String nickname
+            User user
     ) throws MessagingException {
-        if (!checkUsername(username)) {
+        if (!checkUsername(user.getUsername())) {
             throw new NotValidationRegExpException();
         }
-        if (!checkPassword(password)) {
+        if (!checkPassword(user.getPassword())) {
             throw new NotValidationRegExpException();
         }
-        if (!checkNickname(nickname)) {
+        if (!checkNickname(user.getNickname())) {
             throw new NotValidationRegExpException();
         }
-        userRepository.save(new User(username, passwordEncoder.encode(password), nickname, "ROLE_USER"));
-        String code = passwordEncoder.encode(username);
-        registerVerificationCodeRepository.save(new UserRegisterDto(username, code));
+        userRepository.save(new User(user.getUsername(), passwordEncoder.encode(user.getPassword()), user.getNickname(), "ROLE_USER"));
+        String code = passwordEncoder.encode(user.getUsername());
+        registerVerificationCodeRepository.save(new UserEmailVerificationCode(user.getUsername(), code));
         String Code = URLEncoder.encode(code, StandardCharsets.UTF_8);
         MimeMessage message = this.javaMailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message);
-        helper.setTo(username);
+        helper.setTo(user.getUsername());
         helper.setSubject("인증");
         helper.setText(String.format("<a href=\"https://community.peachdevops.com/verificationEmail?code=%s\" target=\"_blank\">인증하기</a>", Code), true);
 
@@ -109,12 +107,12 @@ public class UserService {
             throw new VerificationCodeNotFoundException();
         }
 
-        UserRegisterDto userRegisterDto = registerVerificationCodeRepository.findByVerificationCode(code);
-        User user = userRepository.findByUsername(userRegisterDto.getUsername());
+        UserEmailVerificationCode userEmailVerificationCode = registerVerificationCodeRepository.findByVerificationCode(code);
+        User user = userRepository.findByUsername(userEmailVerificationCode.getUsername());
 
         user.setEmailVerifiedFlag(true);
-        userRegisterDto.setExpiredFlag(true);
-        registerVerificationCodeRepository.save(userRegisterDto);
+        userEmailVerificationCode.setExpiredFlag(true);
+        registerVerificationCodeRepository.save(userEmailVerificationCode);
         userRepository.save(user);
     }
 

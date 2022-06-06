@@ -31,7 +31,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.constraints.Size;
 import java.util.HashMap;
 import java.util.List;
@@ -158,7 +157,6 @@ public class BoardController {
     }
 
     @GetMapping("/modify/{boardCode}/{articleId}")
-    @ExceptionHandler()
     public String modifyArticle(@PathVariable(name = "boardCode") String boardCode,
                                 @PathVariable(name = "articleId") Long articleId,
                                 @SessionAttribute(name = "user") User user,
@@ -280,7 +278,6 @@ public class BoardController {
                                       @Size(min = 1) String nickname,
                                       @Size(min = 1) String content,
                                       Model model,
-
                                       @QuerydslPredicate(root = Comment.class) Predicate predicate) throws Exception {
         Map<String, Object> map = new HashMap<>();
         ArticleResponse article = boardService.getArticle(articleId)
@@ -399,16 +396,16 @@ public class BoardController {
     }
 
     @PostMapping("/recommendation/{boardCode}/{articleId}")
-    @ResponseStatus(value = HttpStatus.OK)
     @ResponseBody
     public Map<String, Object> recommendation(@PathVariable(name = "articleId") Long articleId,
                                               @PathVariable(name = "boardCode") String boardCode,
                                               @SessionAttribute(name = "user") User user
-    ) {
+    ) throws Exception {
         if (checkRole(user, boardCode)) {
-            return null;
+            throw new Exception();
         }
         Long hit = boardService.recommendArticle(articleId, user);
+
         Map<String, Object> map = new HashMap<>();
         map.put("hit", hit);
 
