@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC
+        "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.peachdevops.community.mappers.IBoardMapper">
+    <select id="findAllArticles" parameterType="com.peachdevops.community.domain.Article"
+            resultType="com.peachdevops.community.dto.article.ArticleResponse">
+        select a.id as `id`,
+               board_code as `boardCode`,
+               write_at as `writeAt`,
+               modify_at as `modifyAt`,
+               title as `title`,
+               content as `content`,
+               view as `views`,
+               is_deleted as `isDeleted`,
+               is_notice as `isNotice`,
+               recommend_count as `recommendCount`,
+               sentiment as `sentiment`,
+               user.nickname as `nickname`
+        from community.article a
+                 left join community.user on a.user_id = user.id
+        where board_code = #{boardCode}
+          and is_deleted = false
+    </select>
+</mapper>
