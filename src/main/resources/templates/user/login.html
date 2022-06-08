@@ -6,27 +6,29 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/bootstrap.css">
     <link rel="stylesheet" href="/css/login.css">
     <script defer src="/script/jquery-3.6.0.min.js"></script>
-    <title>전국 단대 익명 커뮤니티</title>
+    <title>로그인</title>
 </head>
 <body>
 <div class="main">
     <form class="form-signin" method="post" th:action="@{/login}">
-        <h1 class="logo">전국 단대 익명 커뮤니티</h1>
-        <div class="container">
+        <span class="form-signin-heading">로그인</span>
+        <p>
             <label>
-                <input type="text" placeholder="ID" id="username" name="username" required autofocus class="account">
+                <input type="text" placeholder="ID" id="username" name="username" required autofocus>
             </label>
+        </p>
+        <p>
             <label>
-                <input type="password" placeholder="Password" id="password" class="account" name="password">
+                <input type="password" placeholder="Password" id="password" name="password">
             </label>
-            <p id="alert" class="account"></p>
-            <button type="submit">로그인</button>
-            <a th:href="@{/signup}">
-                <button type="button">회원가입</button>
-            </a>
-        </div>
+        </p>
+        <button type="submit">로그인</button>
+        <a th:href="@{/signup}">
+            <button type="button">회원가입</button>
+        </a>
     </form>
 </div>
 </body>

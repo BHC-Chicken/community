@@ -4,8 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" type="text/css" href="/css/signin.css">
-    <link rel="stylesheet" type="text/css" href="/css/signup.css">
+    <link rel="stylesheet" href="/css/signup.css">
     <link
             rel="stylesheet"
             href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
@@ -26,32 +25,33 @@
             window.history.back();
         }
     </script>
+    <title>회원가입</title>
 </head>
 <body>
-<div class="container">
-    <form class="form-signin" method="post" th:action="@{/signup}" rel="form-signup">
+<div class="form-signup">
+    <form method="post" th:action="@{/signup}" rel="form-signup">
         <h2 class="form-signin-heading">회원가입</h2>
         <p>
             <label for="username" class="sr-only"></label>
-            <input type="email" id="username" name="username" class="form-control"
+            <input type="email" id="username" name="username" class="form-control w-100"
                    placeholder="Username" required autofocus>
             <span class="input-message" rel="email-message"></span>
         </p>
         <p>
             <label for="password" class="sr-only"></label>
-            <input type="password" id="password" class="form-control password" rel="password"
+            <input type="password" id="password" class="form-control password w-100" rel="password"
                    placeholder="Password" required>
             <span class="input-message" rel="password-message"></span>
         </p>
         <p>
             <label for="passwordCheck" class="sr-only"></label>
-            <input type="password" id="passwordCheck" name="password" class="form-control" rel="password-check"
+            <input type="password" id="passwordCheck" name="password" class="form-control w-100" rel="password-check"
                    placeholder="Password" required>
             <span class="input-message" rel="password-check-message"></span>
         </p>
         <p>
             <label for="nickname" class="sr-only"></label>
-            <input type="text" id="nickname" name="nickname" class="form-control"
+            <input type="text" id="nickname" name="nickname" class="form-control w-100"
                    placeholder="Nickname" required>
             <span class="input-message" rel="nickname-message"></span>
         </p>
