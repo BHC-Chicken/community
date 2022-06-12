@@ -81,7 +81,7 @@
 
                     <li th:classappend="${articlePage.first} ? 'disabled'" class="page-item">
                         <a class="page-link"
-                           th:href="${articlePage.first} ? '#' : (${searchType} ?  @{/board/{boardCode}/search (${searchType}=${searchValue}, page=${#numbers.formatDecimal(pageNumber, 0, -1)}, boardCode=${boardCode}} : @{/board/{boardCode} (page=${#numbers.formatDecimal(pageNumber, 0, -1)}, boardCode=${boardCode}})"
+                           th:href="${articlePage.first} ? '#' : (${searchType} ?  @{/board/{boardCode}/search (${searchType}=${searchValue}, page=${#numbers.formatDecimal(pageNumber, 0, -1)}, boardCode=${boardCode})} : @{/board/{boardCode} (page=${#numbers.formatDecimal(pageNumber, 0, -1)}, boardCode=${boardCode})})"
                            aria-label="Previous">
                             <span aria-hidden="true">&lt;</span>
                             <span class="sr-only">Previous</span>
