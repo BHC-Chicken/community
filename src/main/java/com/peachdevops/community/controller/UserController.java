@@ -129,7 +129,7 @@ public class UserController {
             User userInfo) {
         userInfo.setUsername(user.getUsername());
         if (userService.verificationPassword(userInfo, modifyPassword)) {
-            httpSession.removeAttribute("user");
+            httpSession.invalidate();
             return new ResponseEntity<>(HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);

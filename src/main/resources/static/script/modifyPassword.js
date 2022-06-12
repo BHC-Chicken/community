@@ -2,17 +2,25 @@ const PASSWORD = "^([0-9a-zA-Z`~!@#$%^&*()\\-_=+\\[{\\]}\\\\|;:'\",<.>/?]{8,50})
 
 const formSignUp = window.document.body.querySelector('[rel="form-modifyInfo"]');
 
-const password = formSignUp.querySelector('[rel="change-password"]');
-const passwordCheck = formSignUp.querySelector('[rel="change-password-check"]');
+const password = formSignUp.querySelector('[rel="password"]');
+const changePassword = formSignUp.querySelector('[rel="change-password"]');
+const changePasswordCheck = formSignUp.querySelector('[rel="change-password-check"]');
 
+const submitModifyInfo = formSignUp.querySelector('[rel="submit-modifyInfo"]');
 
-password.addEventListener('focusout', () => {
+let csrfToken = window.document.body.querySelector('[name="_csrf"]')
+
+if (csrfToken) {
+    csrfToken = csrfToken.value
+}
+
+changePassword.addEventListener('focusout', () => {
     const passwordMessage = window.document.body.querySelector('[rel="password-message"]');
     passwordMessage.innerText = '';
     passwordMessage.classList.remove('good');
     passwordMessage.classList.remove('warning');
 
-    if (!password.value.match(PASSWORD)) {
+    if (!changePassword.value.match(PASSWORD)) {
         passwordMessage.innerText = "올바른 비밀번호 형식이 아닙니다.";
         passwordMessage.classList.add('warning');
     } else {
@@ -21,7 +29,7 @@ password.addEventListener('focusout', () => {
     }
 });
 
-passwordCheck.addEventListener('focusout', () => {
+changePasswordCheck.addEventListener('focusout', () => {
     const passwordMessage = window.document.body.querySelector('[rel="password-check-message"]');
 
     passwordMessage.innerText = '';
@@ -43,4 +51,35 @@ passwordCheck.addEventListener('focusout', () => {
         passwordMessage.innerText = '비밀번호가 일치합니다.';
         passwordMessage.classList.remove('warning');
     }
+})
+
+submitModifyInfo.addEventListener('click', (e)=> {
+    let formData = new FormData();
+
+    if (csrfToken) {
+        formData.append("_csrf", csrfToken);
+    }
+    if (password.value !== "" && changePassword.value !== "" && changePasswordCheck.value !== "") {
+        formData.append("modifyPassword", changePasswordCheck.value);
+        formData.append("password", password.value);
+    } else {
+        alert("빈칸이 존재합니다.");
+        return;
+    }
+
+    $.ajax({
+        url: e.target.parentElement.getAttribute("action"),
+        data: formData,
+        method: 'POST',
+        processData: false,
+        contentType: false,
+        cache: false,
+        success: function () {
+            window.location.href = window.document.location.pathname.replace("/modifyPassword", "/");
+            alert("비밀번호가 변경되었습니다. 다시 로그인해주세요.")
+        },
+        error: function (e) {
+            alert("비밀번호 변경에 실패하였습니다.");
+        }
+    })
 })
