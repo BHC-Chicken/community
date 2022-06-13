@@ -25,7 +25,7 @@
         <input type="text" name="title" id="title" class="form-control mt-4 mb-2" th:value="${article.title()}">
         <label for="inputText"></label>
         <textarea id="inputText" class="form-control" rows="10" name="content"
-                  th:text="${article.content()}"></textarea>
+                  th:text="${article.content()}" maxlength="1000"></textarea>
         <button class="btn btn-secondary mb-3 postArticle" type="button">작성</button>
     </form>
 </div>

@@ -27,10 +27,10 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
 @Service
+
 @RequiredArgsConstructor
 public class BoardService {
     private final ArticleRepository articleRepository;
@@ -88,7 +88,9 @@ public class BoardService {
             String returnData = "";
 
             HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+
             
+
             urlConnection.setUseCaches(false);
             urlConnection.setDoInput(true);
             urlConnection.setDoOutput(true);
@@ -106,6 +108,7 @@ public class BoardService {
             }
 
             returnData = stringBuilder.toString();
+            System.out.println(returnData);
             JSONParser parser = new JSONParser();
             JSONObject object = null;
 
@@ -127,6 +130,9 @@ public class BoardService {
         }
         article.setNickname(user.getNickname());
         String content = article.getContent();
+        if (content.length() > 1001) {
+            return ErrorCode.BAD_REQUEST;
+        }
         content = content.replaceAll("(\\r\\n|\\r|\\n|\\n\\r)", " ");
         JSONObject result = getSentiment(content); // naver api 요청
         JSONArray sentences = (JSONArray) result.get("sentences");
@@ -158,6 +164,11 @@ public class BoardService {
             article2.setModifyAt(LocalDateTime.now());
 
             String content = article.getContent();
+
+            if (content.length() > 1001) {
+                return ErrorCode.BAD_REQUEST;
+            }
+
             content = content.replaceAll("(\\r\\n|\\r|\\n|\\n\\r)", " ");
             JSONObject result = getSentiment(content);
             JSONArray sentences = (JSONArray) result.get("sentences");
@@ -253,7 +264,7 @@ public class BoardService {
         }
     }
 
-    public boolean report(Long articleId,User user, Report report) {
+    public boolean report(Long articleId, User user, Report report) {
         report.setArticleId(articleId);
         report.setUserId(user.getId());
         if (reportRepository.findByArticleIdAndUserId(articleId, user.getId()) != null) {
