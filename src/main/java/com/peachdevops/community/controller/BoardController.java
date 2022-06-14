@@ -14,6 +14,7 @@ import com.peachdevops.community.exception.DataAccessErrorException;
 import com.peachdevops.community.exception.NotFoundBoardException;
 import com.peachdevops.community.exception.UserNotFoundException;
 import com.peachdevops.community.service.BoardService;
+import com.peachdevops.community.service.UserService;
 import com.querydsl.core.types.Predicate;
 import lombok.RequiredArgsConstructor;
 import org.commonmark.node.Node;
@@ -66,6 +67,7 @@ public class BoardController {
                     titleParam,
                     nickname,
                     contentParam,
+                    boardCode,
                     pageable
             );
             if (titleParam != null) {

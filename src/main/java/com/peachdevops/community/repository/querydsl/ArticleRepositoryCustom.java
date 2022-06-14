@@ -11,6 +11,7 @@ public interface ArticleRepositoryCustom {
             String[] content,
             String nickname,
             Boolean is_deleted,
+            String boardCode,
             Pageable pageable
     );
 

@@ -72,11 +72,12 @@ public class BoardService {
             String[] title,
             String nickname,
             String[] content,
+            String boardCode,
             Pageable pageable
     ) {
 
         return articleRepository.findArticleViewPageBySearchParams(
-                title, content, nickname, false, pageable);
+                title, content, nickname, false, boardCode, pageable);
 
     }
 

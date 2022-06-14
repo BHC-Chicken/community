@@ -26,6 +26,7 @@ public class ArticleRepositoryCustomImpl extends QuerydslRepositorySupport imple
             String [] content,
             String nickname,
             Boolean is_deleted,
+            String boardCode,
             Pageable pageable
     )
      {
@@ -64,6 +65,7 @@ public class ArticleRepositoryCustomImpl extends QuerydslRepositorySupport imple
          if (!is_deleted) {
              query.where(article.isDeleted.eq(false));
          }
+         query.where(article.boardCode.eq(boardCode));
 
          List<ArticleViewResponse> articles = Optional.ofNullable(getQuerydsl())
                  .orElseThrow(DataAccessErrorException::new)
