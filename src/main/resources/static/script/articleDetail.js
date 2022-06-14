@@ -37,7 +37,7 @@ recommendArticle.addEventListener('click', (e) => {
             document.getElementById('recommendCount').innerText = d['hit'];
         },
         error: function (e) {
-
+            alert('추천에 실패하였습니다.');
         }
     })
     e.preventDefault();
