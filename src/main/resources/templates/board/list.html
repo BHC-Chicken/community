@@ -37,7 +37,8 @@
         <tbody th:data-csrfToken="${_csrf.token}">
         <tr th:each="article : ${articles}">
             <td>
-                <a th:text="${article.title}" th:classappend="${article.sentiment}" th:href="${searchType} ? @{/board/{boardCode}/{id}(page=${page},${searchType}=${searchValue}, boardCode=${article.boardCode}, id=${article.id})}: @{/board/{boardCode}/{id}(page=${page}, boardCode=${article.boardCode}, id=${article.id})}"
+                <a th:text="${article.title}" th:classappend="${article.sentiment}"
+                   th:href="${searchType} ? @{/board/{boardCode}/{id}(page=${page},${searchType}=${searchValue}, boardCode=${article.boardCode}, id=${article.id})}: @{/board/{boardCode}/{id}(page=${page}, boardCode=${article.boardCode}, id=${article.id})}"
                    class="title">제목</a></td>
             <td th:text="${article.nickname}" class="nickname">nickname</td>
             <td th:text="${#temporals.format(article.modifyAt,'yyyy-MM-dd HH:mm')}" class="modifyAt">test</td>
@@ -48,7 +49,8 @@
     </table>
     <div id="writeArticle">
         <a th:href="@{/board/write/{boardCode} (boardCode=${boardCode})}"
-           class="write btn btn-secondary">글쓰기</a>
+           th:if="${authority}"
+           class="btn btn-secondary" id="write">글쓰기</a>
         <a th:href="@{/board/{boardCode} (boardCode=${boardCode})}"
            class="back btn btn-secondary right">목록</a>
     </div>

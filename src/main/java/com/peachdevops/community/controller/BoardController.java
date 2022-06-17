@@ -14,7 +14,6 @@ import com.peachdevops.community.exception.DataAccessErrorException;
 import com.peachdevops.community.exception.NotFoundBoardException;
 import com.peachdevops.community.exception.UserNotFoundException;
 import com.peachdevops.community.service.BoardService;
-import com.peachdevops.community.service.UserService;
 import com.querydsl.core.types.Predicate;
 import lombok.RequiredArgsConstructor;
 import org.commonmark.node.Node;
@@ -128,28 +127,21 @@ public class BoardController {
 
     @GetMapping("/write/{boardCode}")
     public String createArticleGet(@PathVariable(name = "boardCode") String boardCode,
-                                   @SessionAttribute(name = "user", required = false) User user,
-                                   Model model) {
-        try {
-            if (checkRole(user, boardCode)) {
-                model.addAttribute("exception", ErrorCode.WRONG_ACCESS.getMessage());
-                return "redirect:/board/" + boardCode;
-            } else if (user.getUsername() == null) {
-                model.addAttribute("exception", ErrorCode.WRONG_ACCESS.getMessage());
-                return "redirect:/board/" + boardCode;
-            }
-            return "board/write";
-        } catch (Exception e) {
-            model.addAttribute("exception", ErrorCode.WRONG_ACCESS.getMessage());
+                                   @SessionAttribute(name = "user", required = false) User user) {
+        if (user == null) {
             return "redirect:/board/" + boardCode;
         }
+        if (checkRole(user, boardCode)) {
+            return "redirect:/board/" + boardCode;
+        }
+        return "board/write";
     }
 
     @PostMapping("/post/{boardCode}")
     public ResponseEntity<HttpStatus> createArticle(@PathVariable(name = "boardCode") String boardCode,
-                                @SessionAttribute(name = "user") User user,
-                                Article article,
-                                Model model) throws Exception {
+                                                    @SessionAttribute(name = "user") User user,
+                                                    Article article,
+                                                    Model model) throws Exception {
         if (boardService.createArticle(article, user) == ErrorCode.OK) {
             model.addAttribute("article", article);
             return new ResponseEntity<>(HttpStatus.OK);
@@ -184,9 +176,9 @@ public class BoardController {
 
     @PostMapping("/modify/{boardCode}/{articleId}")
     public ResponseEntity<HttpStatus> modifyArticle(@PathVariable(name = "boardCode") String boardCode,
-                                @PathVariable(name = "articleId") Long articleId,
-                                @SessionAttribute(name = "user") User user,
-                                Article article) throws Exception {
+                                                    @PathVariable(name = "articleId") Long articleId,
+                                                    @SessionAttribute(name = "user") User user,
+                                                    Article article) throws Exception {
         if (boardService.modifyArticle(articleId, article, user) == ErrorCode.OK) {
             return new ResponseEntity<>(HttpStatus.OK);
         } else {
@@ -212,8 +204,10 @@ public class BoardController {
     @GetMapping("/{boardCode}")
     public ModelAndView articleList(@PathVariable(name = "boardCode") String boardCode,
                                     @RequestParam(name = "page") Optional<Integer> parameterPage,
+                                    @SessionAttribute(name = "user", required = false) User user,
                                     Model model
     ) {
+        boolean authority = false;
         if (!boardService.getBoards(boardCode)) {
             throw new NotFoundBoardException();
         }
@@ -222,10 +216,14 @@ public class BoardController {
         if (page > 0) {
             page = page - 1;
         }
+        if (user != null && !checkRole(user, boardCode)) {
+            authority = true;
+        }
 
         Map<String, Object> map = new HashMap<>();
         list(model, map, boardCode, page, null, null, null);
 
+        map.put("authority",authority);
         map.put("page", page + 1);
 
         return new ModelAndView("board/list", map);
@@ -416,14 +414,14 @@ public class BoardController {
 
     @PostMapping("/{boardCode}/{articleId}/report")
     public ResponseEntity<HttpStatus> postReport(@PathVariable(name = "articleId") Long articleId,
-                                     @PathVariable(name = "boardCode") String boardCode,
-                                     @SessionAttribute(name = "user") User user,
-                                     Report report
+                                                 @PathVariable(name = "boardCode") String boardCode,
+                                                 @SessionAttribute(name = "user") User user,
+                                                 Report report
     ) {
-       if (boardService.report(articleId, user, report)) {
-           return new ResponseEntity<>(HttpStatus.OK);
-       } else {
-           return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-       }
+        if (boardService.report(articleId, user, report)) {
+            return new ResponseEntity<>(HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
     }
 }
