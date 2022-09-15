@@ -189,5 +189,7 @@ gradle-app.setting
 
 src/main/resources/application.properties
 src/main/resources/dump/
+src/main/resources/static/image
 
 *.css
+*.image
