@@ -49,6 +49,12 @@ public class BoardController {
         return user.getAuthorities().stream().noneMatch(r -> r.getAuthority().equals("ROLE_" + boardCode.toUpperCase()));
     }
 
+    @GetMapping("/collegeList")
+    private String collegeList() {
+
+        return "board/collegeList";
+    }
+
     private void list(Model model, Map<String, Object> map, String boardCode, int page,
                       String[] titleParam,
                       String nickname,
@@ -134,7 +140,7 @@ public class BoardController {
         if (checkRole(user, boardCode)) {
             return "redirect:/board/" + boardCode;
         }
-        return "board/write";
+        return "board/write"; // TODO : 에러 발생 시켜서 자바스크립트에서 ajax 로 처리하고 alert 띄워야함.
     }
 
     @PostMapping("/post/{boardCode}")
