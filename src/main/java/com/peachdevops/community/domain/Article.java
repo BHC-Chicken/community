@@ -3,7 +3,7 @@ package com.peachdevops.community.domain;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-리import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
 import javax.persistence.*;

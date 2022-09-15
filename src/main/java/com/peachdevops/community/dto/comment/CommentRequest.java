@@ -1,7 +1,5 @@
 package com.peachdevops.community.dto.comment;
 
-import com.peachdevops.community.dto.article.ArticleRequest;
-
 public record CommentRequest(
         Long id,
         String content,
