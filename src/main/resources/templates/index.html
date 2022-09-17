@@ -5,7 +5,7 @@
 >
 <head>
     <title>언네임드</title>
-    <link rel="stylesheet" href="/css/style.css">
+<!--    <link rel="stylesheet" href="/css/style.css">-->
     <script defer src="/script/index.js"></script>
     <link rel="canonical" href="https://getbootstrap.com/docs/5.2/examples/carousel/">
 
@@ -17,101 +17,174 @@
     <link href="/css/carousel.css" rel="stylesheet">
 </head>
 <body>
-<header class="title">
-    <div>
-        <div><img alt="unnamed" src="/image/unnamed.png"/></div>
-    </div>
-    <div>
-        <ul class="user">
-            <li sec:authorize="!isAuthenticated()" class="nav-item">
-                <a
-                        class="nav-link active"
-                        th:href="@{/login}"
-                >
-                    로그인
-                </a>
-            </li>
-            <li sec:authorize="!isAuthenticated()" class="nav-item">
-                <a
-                        class="nav-link active"
-                        th:href="@{/searchPassword}"
-                >
-                    비밀번호 찾기
-                </a>
-            </li>
-            <li sec:authorize="!isAuthenticated()" class="nav-item">
-                <a
-                        class="nav-link active"
-                        th:href="@{/signup}"
-                >
-                    회원가입
-                </a>
-            </li>
-            <li sec:authorize="hasRole('ROLE_USER')" class="nav-item">
-                <a
-                        class="nav-link active"
-                        th:href="@{/orcSignup}"
-                >
-                    학생증 인증
-                </a>
-            </li>
-            <li sec:authorize="isAuthenticated()" class="nav-item">
-                <a
-                        sec:authorize="isAuthenticated()"
-                        class="nav-link active"
-                        th:href="@{/modifyPassword}"
-                >
-                    비밀번호 변경
-                </a>
-            </li>
-            <li sec:authorize="isAuthenticated()" class="nav-item">
-                <a
-                        sec:authorize="isAuthenticated()"
-                        class="nav-link active"
-                        th:href="@{/logout}"
-                >
-                    로그아웃
-                </a>
-            </li>
-        </ul>
-    </div>
+<header>
+    <nav class="navbar navbar-expand-md fixed-top" style="background-color: #CDECFA;">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/" style="color:BLACK">UNNAMED</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse"
+                    aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarCollapse">
+                <ul class="user navbar-nav me-auto mb-2 mb-md-0">
+                    <li sec:authorize="!isAuthenticated()" class="nav-item">
+                        <a
+                                class="nav-link active"
+                                th:href="@{/login}"
+                        >
+                            로그인
+                        </a>
+                    </li>
+                    <li sec:authorize="!isAuthenticated()" class="nav-item">
+                        <a
+                                class="nav-link active"
+                                th:href="@{/searchPassword}"
+                        >
+                            비밀번호 찾기
+                        </a>
+                    </li>
+                    <li sec:authorize="!isAuthenticated()" class="nav-item">
+                        <a
+                                class="nav-link active"
+                                th:href="@{/signup}"
+                        >
+                            회원가입
+                        </a>
+                    </li>
+                    <li sec:authorize="hasRole('ROLE_USER')" class="nav-item">
+                        <a
+                                class="nav-link active"
+                                th:href="@{/orcSignup}"
+                        >
+                            학생증 인증
+                        </a>
+                    </li>
+                    <li sec:authorize="isAuthenticated()" class="nav-item">
+                        <a
+                                sec:authorize="isAuthenticated()"
+                                class="nav-link active"
+                                th:href="@{/modifyPassword}"
+                        >
+                            비밀번호 변경
+                        </a>
+                    </li>
+                    <li sec:authorize="isAuthenticated()" class="nav-item">
+                        <a
+                                sec:authorize="isAuthenticated()"
+                                class="nav-link active"
+                                th:href="@{/logout}"
+                        >
+                            로그아웃
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
 </header>
-<div class="container marketing">
-    <div class="row">
-        <div class="col-lg-4">
-            <a href=""><img class="circle_img" src="/image/ggg1.JPG" alt="공지사항" width="130px" height="130px"></a>
-            <a hidden href="https://www.flaticon.com/kr/free-icons/" title="외침 아이콘">외침 아이콘  제작자: Icon Monk - Flaticon</a>
-            <br>
-            <h2 class="fw-normal"><b>공지사항</b></h2>
-            <p>모든 공지는 이곳을 통해 확인바랍니다.</p>
-            <p><a class="btn btn-secondary" href="/board/notice" style="border-color:white;">입장 &raquo;</a></p>
+
+<main>
+    <div id="myCarousel" class="carousel slide" data-bs-ride="carousel">
+        <div class="carousel-indicators">
+            <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="0" class="active" aria-current="true"
+                    aria-label="Slide 1"></button>
+            <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
+            <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
         </div>
 
-        <div class="col-lg-4">
-            <a href=""><img class="circle_img" src="/image/ggg2.JPG" alt="단대목록" width="130px" height="130px"></a>
-            <a hidden href="https://www.flaticon.com/kr/free-icons/" title="학과 아이콘">학과 아이콘  제작자: Freepik - Flaticon</a>
-            <br>
-            <h2 class="fw-normal"><b>단대목록</b></h2>
-            <p>학생증 인증이 완료된 대학생만 이용 가능 합니다.
-            </p>
-            <p><a class="btn btn-secondary" href="/board/collegeList" style="border-color:white;">입장 &raquo;</a></p>
+        <div class="carousel-inner">
+            <div class="carousel-item active">
+                <svg class="bd-placeholder-img" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg "
+                     aria-hidden="true" preserveAspectRatio="xMidYMid slice" focusable="false">
+                    <rect width="100%" height="100%" fill="#87CEFA"/>
+                </svg>
+                <div class="container">
+                    <div class="carousel-caption"><img src="/image/img1.JPG" alt="" width="740px" height="290px">
+                        <br></br>
+                        <a class="btn btn-lg btn-light" href="https://www.all-con.co.kr/view/contest/478727"
+                           target="_blank">자세히보기</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="carousel-item">
+                <svg class="bd-placeholder-img" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg"
+                     aria-hidden="true" preserveAspectRatio="xMidYMid slice" focusable="false">
+                    <rect width="100%" height="100%" fill="#87EEC6"/>
+                </svg>
+                <div class="container">
+                    <div class="carousel-caption"><img src="/image/img2.JPG" alt="" width="740px" height="290px">
+                        <br></br>
+                        <a class="btn btn-lg btn-light" href="https://www.kyobogulpan.com/" target="_blank">자세히보기</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="carousel-item">
+                <svg class="bd-placeholder-img" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg"
+                     aria-hidden="true" preserveAspectRatio="xMidYMid slice" focusable="false">
+                    <rect width="100%" height="100%" fill="#FFCFDA"/>
+                </svg>
+                <div class="container">
+                    <div class="carousel-caption"><img src="/image/img3.JPG" alt="" width="740px" height="290px">
+                        <br></br>
+                        <a class="btn btn-lg btn-light"
+                           href="https://www.daeguartfactory.kr/front/board/view.php?code=notice&no=2389"
+                           target="_blank">자세히보기</a>
+                    </div>
+                </div>
+            </div>
         </div>
 
-        <div class="col-lg-4">
-            <a href=""><img class="circle_img" src="/image/ggg3.JPG" alt="단대목록" width="130px" height="130px"></a>
-            <a hidden href="https://www.flaticon.com/kr/free-icons/" title="체크리스트 아이콘">체크리스트 아이콘  제작자: Freepik - Flaticon</a>
-            <br>
-            <h2 class="fw-normal"><b>자유게시판</b></h2>
-            <p>대학생이라면 누구나 이용 가능</p>
-            <p><a class="btn btn-secondary" href="/board/free" style="border-color:white;">입장 &raquo;</a></p>
+        <button class="carousel-control-prev" type="button" data-bs-target="#myCarousel" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">이전</span>
+        </button>
+
+        <button class="carousel-control-next" type="button" data-bs-target="#myCarousel" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">이후</span>
+        </button>
+    </div>
+    <div class="container marketing">
+        <div class="row">
+            <div class="col-lg-4">
+                <a href=""><img class="circle_img" src="/image/ggg1.JPG" alt="공지사항" width="130px" height="130px"></a>
+                <a hidden href="https://www.flaticon.com/kr/free-icons/" title="외침 아이콘">외침 아이콘 제작자: Icon Monk -
+                    Flaticon</a>
+                <br>
+                <h2 class="fw-normal"><b>공지사항</b></h2>
+                <p>모든 공지는 이곳을 통해 확인바랍니다.</p>
+                <p><a class="btn btn-secondary" href="/board/notice" style="border-color:white;">입장 &raquo;</a></p>
+            </div>
+
+            <div class="col-lg-4">
+                <a href=""><img class="circle_img" src="/image/ggg2.JPG" alt="단대목록" width="130px" height="130px"></a>
+                <a hidden href="https://www.flaticon.com/kr/free-icons/" title="학과 아이콘">학과 아이콘 제작자: Freepik -
+                    Flaticon</a>
+                <br>
+                <h2 class="fw-normal"><b>단대목록</b></h2>
+                <p>학생증 인증이 완료된 대학생만 이용 가능 합니다.
+                </p>
+                <p><a class="btn btn-secondary" href="/board/collegeList" style="border-color:white;">입장 &raquo;</a></p>
+            </div>
+
+            <div class="col-lg-4">
+                <a href=""><img class="circle_img" src="/image/ggg3.JPG" alt="단대목록" width="130px" height="130px"></a>
+                <a hidden href="https://www.flaticon.com/kr/free-icons/" title="체크리스트 아이콘">체크리스트 아이콘 제작자: Freepik -
+                    Flaticon</a>
+                <br>
+                <h2 class="fw-normal"><b>자유게시판</b></h2>
+                <p>대학생이라면 누구나 이용 가능</p>
+                <p><a class="btn btn-secondary" href="/board/free" style="border-color:white;">입장 &raquo;</a></p>
+            </div>
         </div>
     </div>
-</div>
 
-<div>
-    <hr class="featurette-divider">
-</div>
-
+    <div>
+        <hr class="featurette-divider">
+    </div>
+</main>
 <footer class="container">
     <p class="float-end"><a href="#">맨위로</a></p>
     <p>&copy; 2022 &middot; <a href="#">팀 : 404 Not Found</a> &middot; <a href="#">문의 : 010-@@@@-@@@@</a></p>
