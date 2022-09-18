@@ -108,7 +108,9 @@ public class UserController {
             userService.uploadImage(files[0], principal);
             session.invalidate();
         } catch (Exception e) {
-            model.addAttribute("exception", e.getMessage());
+            throw e;
+//            System.out.println(e.getMessage());
+//            model.addAttribute("exception", e.getMessage());
         }
         return "index";
     }

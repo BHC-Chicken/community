@@ -89,11 +89,10 @@ public class UserService {
         MimeMessageHelper helper = new MimeMessageHelper(message);
         helper.setTo(user.getUsername());
         helper.setSubject("인증");
-        helper.setText(String.format("<a href=\"https://community.peachdevops.com/verificationEmail?code=%s\" target=\"_blank\">인증하기</a>", Code), true);
+        helper.setText(String.format("<a href=\"https://ioexception.dev/verificationEmail?code=%s\" target=\"_blank\">인증하기</a>", Code), true);
 
         this.javaMailSender.send(message);
     }
-
     public void verificationCode(String code) {
         if (registerVerificationCodeRepository.findByVerificationCode(code) == null) {
             throw new VerificationCodeNotFoundException();
@@ -216,7 +215,7 @@ public class UserService {
         MimeMessageHelper helper = new MimeMessageHelper(message);
         helper.setTo(user.getUsername());
         helper.setSubject("비밀번호 변경");
-        helper.setText(String.format("<a href=\"https://community.peachdevops.com/findPassword?code=%s\" target=\"_blank\">비밀번호 변경</a>", Code), true);
+        helper.setText(String.format("<a href=\"https://ioexception.dev/findPassword?code=%s\" target=\"_blank\">비밀번호 변경</a>", Code), true);
 
         this.javaMailSender.send(message);
     }
