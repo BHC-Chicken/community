@@ -22,6 +22,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.mail.IllegalWriteException;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import java.io.IOException;
@@ -73,13 +74,13 @@ public class UserService {
             User user
     ) throws MessagingException {
         if (!checkUsername(user.getUsername())) {
-            throw new NotValidationRegExpException();
+            throw new IllegalWriteException();
         }
         if (!checkPassword(user.getPassword())) {
-            throw new NotValidationRegExpException();
+            throw new IllegalWriteException();
         }
         if (!checkNickname(user.getNickname())) {
-            throw new NotValidationRegExpException();
+            throw new IllegalWriteException();
         }
         userRepository.save(new User(user.getUsername(), passwordEncoder.encode(user.getPassword()), user.getNickname(), "ROLE_USER"));
         String code = passwordEncoder.encode(user.getUsername());

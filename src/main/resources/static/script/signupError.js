@@ -128,11 +128,42 @@ formSignUp.onsubmit = () => {
         return false;
     }
 
+    let idCheck = $.ajax({
+        url: '/signup/check-username',
+        data: {
+            username: formSignUp['username'].value,
+            _csrf: csrfToken
+        },
+        method: 'POST',
+        success: function (check) {
+            if (check === 0) {
+                return false;
+            }
+        }
+    })
+
+    if (!idCheck) {
+        alert('이미 사용중인 아이디 입니다.')
+
+        return false;
+    }
+
+
     const password = document.getElementById('password').value;
     if (!password.match(PASSWORD)) {
         alert('올바른 비밀번호를 입력해주세요.')
         formSignUp['password'].focus();
         formSignUp['password'].select();
+
+        return false;
+    }
+
+    const passwordCheck = document.getElementById('password-check').value;
+    if (!password.match(passwordCheck)) {
+        alert('비밀번호가 일치하지 않습니다.')
+        formSignUp['password'].focus();
+        formSignUp['password'].select();
+
         return false;
     }
 
@@ -141,6 +172,9 @@ formSignUp.onsubmit = () => {
         alert('올바른 별명을 입력해주세요.')
         formSignUp['nickname'].focus();
         formSignUp['nickname'].select();
+
         return false;
     }
+
+    
 }
