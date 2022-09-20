@@ -137,7 +137,8 @@ public class BoardController {
         if (user == null) {
             return "redirect:/board/" + boardCode;
         }
-        if (checkRole(user, boardCode)) {
+
+        if (!boardCode.equals("free") && checkRole(user, boardCode)) {
             return "redirect:/board/" + boardCode;
         }
         return "board/write"; // TODO : 에러 발생 시켜서 자바스크립트에서 ajax 로 처리하고 alert 띄워야함.
@@ -161,7 +162,7 @@ public class BoardController {
                                 @PathVariable(name = "articleId") Long articleId,
                                 @SessionAttribute(name = "user") User user,
                                 Model model) throws Exception {
-        if (checkRole(user, boardCode)) {
+        if (!boardCode.equals("free") && checkRole(user, boardCode)) {
             return "redirect:/board/" + boardCode + "/" + articleId;
         }
         Optional<ArticleDto> article = boardService.getArticle(articleId);
@@ -185,6 +186,7 @@ public class BoardController {
                                                     @PathVariable(name = "articleId") Long articleId,
                                                     @SessionAttribute(name = "user") User user,
                                                     Article article) throws Exception {
+
         if (boardService.modifyArticle(articleId, article, user) == ErrorCode.OK) {
             return new ResponseEntity<>(HttpStatus.OK);
         } else {
@@ -199,7 +201,7 @@ public class BoardController {
                                 @SessionAttribute(name = "user") User user,
                                 Model model) {
 
-        if (checkRole(user, boardCode)) {
+        if (!boardCode.equals("free") && checkRole(user, boardCode)) {
             model.addAttribute("exception", ErrorCode.WRONG_ACCESS.getMessage());
             return "redirect:/board/" + boardCode;
         }
@@ -219,17 +221,19 @@ public class BoardController {
         }
 
         int page = parameterPage.orElse(1);
+
         if (page > 0) {
             page = page - 1;
         }
-        if (user != null && !checkRole(user, boardCode)) {
+
+        if (user != null && (boardCode.equals("free") || !checkRole(user, boardCode))) {
             authority = true;
         }
 
         Map<String, Object> map = new HashMap<>();
         list(model, map, boardCode, page, null, null, null);
 
-        map.put("authority",authority);
+        map.put("authority", authority);
         map.put("page", page + 1);
 
         return new ModelAndView("board/list", map);
@@ -354,13 +358,13 @@ public class BoardController {
 
     @PostMapping("/{boardCode}/{articleId}")
     @ResponseStatus(value = HttpStatus.OK)
-    public void createComment(@PathVariable(name = "boardCode") String boardCode,
-                              @PathVariable(name = "articleId") Long articleId,
-                              @SessionAttribute(name = "user") User user,
-                              Comment comment,
-                              Model model) {
-        if (checkRole(user, boardCode)) {
-            return;
+    public ResponseEntity<HttpStatus> createComment(@PathVariable(name = "boardCode") String boardCode,
+                                                    @PathVariable(name = "articleId") Long articleId,
+                                                    @SessionAttribute(name = "user") User user,
+                                                    Comment comment,
+                                                    Model model) {
+        if (!boardCode.equals("free") && checkRole(user, boardCode)) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
         comment.setArticleId(articleId);
         comment.setNickname(user.getNickname());
@@ -368,6 +372,8 @@ public class BoardController {
         boardService.putComment(comment);
         model.addAttribute("boardCode", boardCode);
         model.addAttribute("articleId", articleId);
+
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @PostMapping("/delete/{boardCode}/{articleId}/{commentId}")
@@ -377,7 +383,7 @@ public class BoardController {
                               @PathVariable(name = "commentId") Long commentId,
                               Model model,
                               @SessionAttribute(name = "user") User user) {
-        if (checkRole(user, boardCode)) {
+        if (!boardCode.equals("free") && checkRole(user, boardCode)) {
             return;
         }
 
@@ -407,7 +413,7 @@ public class BoardController {
                                               @PathVariable(name = "boardCode") String boardCode,
                                               @SessionAttribute(name = "user") User user
     ) throws Exception {
-        if (checkRole(user, boardCode)) {
+        if (!boardCode.equals("free") && checkRole(user, boardCode)) {
             throw new Exception();
         }
         Long hit = boardService.recommendArticle(articleId, user);
