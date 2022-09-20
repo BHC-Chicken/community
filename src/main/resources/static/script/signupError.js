@@ -118,9 +118,32 @@ nickname.addEventListener('focusout', () => {
     })
 });
 
-formSignUp.onsubmit = () => {
-    const username = document.getElementById('username').value;
-    if (!username.match(USERNAME)) {
+async function idDup () {
+    return new Promise((resolve, reject) => {
+        $.ajax({
+            url: '/signup/check-username',
+            data: {
+                username: formSignUp['username'].value,
+                _csrf: csrfToken
+            },
+            method: 'POST',
+            success: function (check) {
+                if (check === 0) {
+                    reject(
+                        '이미 존재하는 아이디입니다.'
+                    )
+                } else {
+                    resolve();
+                }
+            }
+        })
+    })
+}
+
+window.document.getElementById('onSubmit').onclick = (e) => {
+    e.preventDefault();
+
+    if (!username.value.match(USERNAME)) {
         console.log(username)
         alert('올바른 아이디를 입력해주세요.')
         formSignUp['username'].focus();
@@ -128,53 +151,55 @@ formSignUp.onsubmit = () => {
         return false;
     }
 
-    let idCheck = $.ajax({
-        url: '/signup/check-username',
-        data: {
-            username: formSignUp['username'].value,
-            _csrf: csrfToken
-        },
-        method: 'POST',
-        success: function (check) {
-            if (check === 0) {
-                return false;
+    let dup = new Promise((resolve, reject) => {
+        $.ajax({
+            url: '/signup/check-username',
+            data: {
+                username: formSignUp['username'].value,
+                _csrf: csrfToken
+            },
+            method: 'POST',
+            success: function (check) {
+                if (check === 0) {
+                    reject(
+                        '이미 존재하는 아이디입니다.'
+                    )
+                } else {
+                    resolve();
+                }
             }
-        }
+        })
     })
 
-    if (!idCheck) {
-        alert('이미 사용중인 아이디 입니다.')
+    return dup.then(() => {
+        if (!password.value.match(PASSWORD)) {
+            alert('올바른 비밀번호를 입력해주세요.')
+            password.focus();
 
+            return false;
+        }
+
+        if (password.value !== passwordCheck.value) {
+            alert('비밀번호가 일치하지 않습니다.')
+            passwordCheck.focus();
+
+            return false;
+        }
+
+        if (!nickname.value.match(NICKNAME)) {
+            alert('올바른 별명을 입력해주세요.')
+            nickname.focus();
+
+            return false;
+        }
+
+        formSignUp.submit();
+
+        alert("입력하신 이메일로 인증 메일을 보냈습니다. 이메일 인증을 완료하면 회원가입이 완료됩니다.")
+
+        return true;
+    }).catch((msg) => {
+        alert(msg)
         return false;
-    }
-
-
-    const password = document.getElementById('password').value;
-    if (!password.match(PASSWORD)) {
-        alert('올바른 비밀번호를 입력해주세요.')
-        formSignUp['password'].focus();
-        formSignUp['password'].select();
-
-        return false;
-    }
-
-    const passwordCheck = document.getElementById('password-check').value;
-    if (!password.match(passwordCheck)) {
-        alert('비밀번호가 일치하지 않습니다.')
-        formSignUp['password'].focus();
-        formSignUp['password'].select();
-
-        return false;
-    }
-
-    const nickname = document.getElementById('nickname').value;
-    if (!nickname.match(NICKNAME)) {
-        alert('올바른 별명을 입력해주세요.')
-        formSignUp['nickname'].focus();
-        formSignUp['nickname'].select();
-
-        return false;
-    }
-
-    
+    })
 }

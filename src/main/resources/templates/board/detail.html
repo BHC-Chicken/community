@@ -183,7 +183,7 @@
                       placeholder="댓글" cols="50"></textarea>
         </label>
         <div>
-            <button class="btn btn-secondary" rel="createComment">작성</button>
+            <button th:if="${authority}" class="btn btn-secondary" rel="createComment">작성</button>
         </div>
     </form>
     <div>

@@ -25,7 +25,8 @@ detectText.addEventListener('change', () => {
         cache:false,
         success:function (data) {
 
-            alert("성공");
+            alert("학생증 인증에 성공 하였습니다." +
+                " 이용가능한 게시판은" + "${college}" + "입니다");
             window.history.back();
         },
         beforeSend:function () {
