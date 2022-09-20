@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="css/icons.css">
-    <link rel="stylesheet" href="css/bootstrap.css">
+    <link rel="stylesheet" href="/css/icons.css">
+    <link rel="stylesheet" href="/css/bootstrap.css">
     <link
             rel="stylesheet"
             href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
@@ -15,13 +15,21 @@
             rel="stylesheet"
             href="https://use.fontawesome.com/releases/v5.0.6/css/all.css"
     >
-    <script defer src="script/orcSignUp.js"></script>
-    <script defer src="script/jquery-3.6.0.min.js"></script>
-    <title>Title</title>
+    <script defer src="/script/orcSignUp.js"></script>
+    <script defer src="/script/jquery-3.6.0.min.js"></script>
+    <title>학생증 인증</title>
+    <style>
+        .navbar-brand {
+            font-weight: bold;
+            font-size: 25px;
+        }
+    </style>
 </head>
 <body>
+<img id="student1" src="/image/student.jpg" alt="학생증 샘플 사진" style="display:block; margin: 0 auto; margin-top:170px; margin-bottom:-20px; width:400px; height:230px;"/><br>
+<p style="text-align: center; font-weight:bold;">학생증 사진을 첨부 해주세요.</p>
 <div class="wrap-loading display-none">
-    <div><img src="image/ezgif.com-gif-maker.gif" alt=""> </div>
+    <div><img src="/image/ezgif.com-gif-maker.gif" alt=""> </div>
 </div>
 <div class="container">
     <form method="post" enctype="multipart/form-data" rel="form-orc" th:action="@{#}">

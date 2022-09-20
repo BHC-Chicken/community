@@ -59,7 +59,7 @@ createComment.addEventListener('click', (e) => {
             loadComment();
             commentContent.value = "";
         },
-        error: function (e) {
+        error: function () {
             alert("댓글 등록에 실패했습니다.");
         }
     })
