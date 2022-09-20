@@ -7,6 +7,7 @@ import com.peachdevops.community.exception.NonExistentCollegeException;
 import com.peachdevops.community.exception.NotValidationRegExpException;
 import com.peachdevops.community.exception.VerificationCodeAlreadyUsedException;
 import com.peachdevops.community.exception.VerificationCodeNotFoundException;
+import com.peachdevops.community.repository.BoardsRepository;
 import com.peachdevops.community.repository.RegisterVerificationCodeRepository;
 import com.peachdevops.community.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -61,6 +62,8 @@ public class UserService {
     }
 
     private final UserRepository userRepository;
+
+    private final BoardsRepository boardsRepository;
     private final RegisterVerificationCodeRepository registerVerificationCodeRepository;
     private final PasswordEncoder passwordEncoder;
     private final JavaMailSender javaMailSender;
@@ -69,18 +72,17 @@ public class UserService {
         return userRepository.findByUsername(username);
     }
 
-    @Async
-    public void signup(
+    public boolean signup(
             User user
-    ) throws MessagingException {
-        if (!checkUsername(user.getUsername())) {
-            throw new IllegalWriteException();
+    ) throws Exception {
+        if (!checkUsername(user.getUsername()) || checkInfoUsername(user.getUsername()) == 0) {
+            return false;
         }
         if (!checkPassword(user.getPassword())) {
-            throw new IllegalWriteException();
+            return false;
         }
-        if (!checkNickname(user.getNickname())) {
-            throw new IllegalWriteException();
+        if (!checkNickname(user.getNickname()) || checkInfoNickname(user.getNickname()) == 0) {
+            return false;
         }
         userRepository.save(new User(user.getUsername(), passwordEncoder.encode(user.getPassword()), user.getNickname(), "ROLE_USER"));
         String code = passwordEncoder.encode(user.getUsername());
@@ -89,11 +91,14 @@ public class UserService {
         MimeMessage message = this.javaMailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message);
         helper.setTo(user.getUsername());
-        helper.setSubject("인증");
-        helper.setText(String.format("<a href=\"https://ioexception.dev/verificationEmail?code=%s\" target=\"_blank\">인증하기</a>", Code), true);
+        helper.setSubject("unamed 인증 링크입니다.");
+        helper.setText(String.format("<a href=\"https://ioexception.dev/verificationEmail?code=%s\" target=\"_blank\">여기</a>를 클릭하면 인증이 완료됩니다.", Code), true);
 
         this.javaMailSender.send(message);
+
+        return true;
     }
+
     public void verificationCode(String code) {
         if (registerVerificationCodeRepository.findByVerificationCode(code) == null) {
             throw new VerificationCodeNotFoundException();
@@ -131,7 +136,7 @@ public class UserService {
         return 1;
     }
 
-    public void uploadImage(MultipartFile file, Principal principal) throws IOException {
+    public String uploadImage(MultipartFile file, Principal principal) throws IOException {
 
         String name = principal.getName();
         String text = detectText(file.getInputStream());
@@ -150,6 +155,12 @@ public class UserService {
         user.setAuthority("ROLE_" + college);
         user.setStdCardVerifiedFlag(true);
         userRepository.save(user);
+
+        String board = boardsRepository.findBoardNameByBoardCode(college.toLowerCase());
+
+        System.out.println(board);
+
+        return board;
     }
 
     private String getUniversity(String input) {

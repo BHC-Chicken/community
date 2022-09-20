@@ -48,12 +48,9 @@ public class UserController {
     }
 
     @PostMapping("/signup")
-    public String signup(@ModelAttribute User user, Model model) throws MessagingException {
+    public String signup(@ModelAttribute User user) throws Exception {
 
-        try {
-            userService.signup(user);
-        } catch (Exception e) {
-            model.addAttribute("exception", e.getMessage());
+        if (!userService.signup(user)) {
             return "redirect:signup";
         }
         // 회원가입 후 로그인 페이지로 이동
@@ -105,7 +102,8 @@ public class UserController {
             return "redirect:/";
         }
         try {
-            userService.uploadImage(files[0], principal);
+            String college = userService.uploadImage(files[0], principal);
+            model.addAttribute("college", college);
             session.invalidate();
         } catch (Exception e) {
             throw e;
