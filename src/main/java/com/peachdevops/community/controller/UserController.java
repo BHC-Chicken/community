@@ -4,6 +4,7 @@ import com.peachdevops.community.domain.User;
 import com.peachdevops.community.dto.ModifyPassword;
 import com.peachdevops.community.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.json.simple.JSONObject;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -18,6 +19,8 @@ import javax.mail.MessagingException;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.security.Principal;
+import java.util.HashMap;
+import java.util.Map;
 
 @Controller
 @RequiredArgsConstructor
@@ -92,25 +95,27 @@ public class UserController {
     }
 
     @PostMapping("/orcSignup")
+    @ResponseBody
     public String postOrcSignup(
             @RequestParam(value = "image", required = false) MultipartFile[] files,
             Principal principal,
             HttpSession session,
-            @SessionAttribute(name = "user", required = false) User user,
-            Model model) throws IOException {
+            @SessionAttribute(name = "user", required = false) User user) throws IOException {
         if (checkRole(user)) {
             return "redirect:/";
         }
         try {
             String college = userService.uploadImage(files[0], principal);
-            model.addAttribute("college", college);
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("college", college);
             session.invalidate();
+
+            return jsonObject.toString();
         } catch (Exception e) {
             throw e;
 //            System.out.println(e.getMessage());
 //            model.addAttribute("exception", e.getMessage());
         }
-        return "index";
     }
 
     @GetMapping("/modifyPassword")
