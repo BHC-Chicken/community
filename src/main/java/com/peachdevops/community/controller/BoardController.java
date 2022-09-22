@@ -369,7 +369,9 @@ public class BoardController {
         comment.setArticleId(articleId);
         comment.setNickname(user.getNickname());
 
-        boardService.putComment(comment);
+        if (!boardService.putComment(comment)) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
         model.addAttribute("boardCode", boardCode);
         model.addAttribute("articleId", articleId);
 

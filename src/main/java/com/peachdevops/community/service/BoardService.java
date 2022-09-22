@@ -90,8 +90,6 @@ public class BoardService {
 
             HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
 
-            
-
             urlConnection.setUseCaches(false);
             urlConnection.setDoInput(true);
             urlConnection.setDoOutput(true);
@@ -213,7 +211,7 @@ public class BoardService {
 
 
     public boolean putComment(Comment comment) {
-        if (comment.getContent() == null) {
+        if (comment.getContent().isBlank()) {
             return false;
         }
         commentRepository.save(comment);
