@@ -294,10 +294,9 @@ public class BoardController {
                 .map(ArticleResponse::from)
                 .orElseThrow(DataAccessErrorException::new);
         Article article1 = new Article();
-        if (article.isDeleted()) {
-            throw new Exception();
-        }
-
+//        if (article.isDeleted()) {
+//            throw new Exception();
+//        } // TODO : 게시글 삭제 여부는 서비스에서 확인해야함.
 
         Parser parser = Parser.builder().build();
         Node document = parser.parse(article.content());
@@ -306,7 +305,11 @@ public class BoardController {
         article1.setId(article.id());
         article1.setTitle(article.title());
         article1.setNickname(article.nickname());
-        article1.setContent(renderer.render(document));
+        if (article.docsType().equals("text")) {
+            article1.setContent(article.content());
+        } else if (article.docsType().equals("markdown")) {
+            article1.setContent(renderer.render(document));
+        }
         article1.setModifyAt(article.modifyAt());
         article1.setView(article.view());
         article1.setBoardCode(article.boardCode());
