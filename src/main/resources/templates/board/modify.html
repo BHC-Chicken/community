@@ -21,6 +21,14 @@
 <div class="container">
     <form method="post"
           th:action="@{/board/modify/{boardCode}/{articleId} (boardCode=${boardCode}, articleId=${article.id})}">
+        <div>
+            <label>
+                <input class="docsType" type="radio" name="docsType" value="text" checked> text
+            </label>
+            <label>
+                <input class="docsType" type="radio" name="docsType" value="markdown"> markdown
+            </label>
+        </div>
         <label for="title"></label>
         <input type="text" name="title" id="title" class="form-control mt-4 mb-2" th:value="${article.title()}">
         <label for="inputText"></label>

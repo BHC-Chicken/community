@@ -20,10 +20,19 @@
 <body id="writeArticle">
 <div class="container">
     <form method="post" th:action="@{/board/post/{boardCode} (boardCode=${boardCode})}">
+        <div>
+            <label>
+                <input class="docsType" type="radio" name="docsType" value="text" checked> text
+            </label>
+            <label>
+                <input class="docsType" type="radio" name="docsType" value="markdown"> markdown
+            </label>
+        </div>
         <label for="title"></label>
         <input type="text" class="form-control mt-4 mb-2" name="title" id="title" placeholder="제목" maxlength="1000">
         <label for="inputText"></label>
-        <textarea class="form-control" rows="10" id="inputText" name="content" placeholder="내용" maxlength="1000"></textarea>
+        <textarea class="form-control" rows="10" id="inputText" name="content" placeholder="내용"
+                  maxlength="1000"></textarea>
         <button class="btn btn-secondary mb-3 postArticle" type="button">작성</button>
     </form>
 </div>

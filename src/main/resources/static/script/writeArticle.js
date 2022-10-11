@@ -1,6 +1,7 @@
 const postArticle = window.document.querySelector('.postArticle');
 const title = window.document.querySelector('#title');
 const content = window.document.querySelector('#inputText');
+const docsType = window.document.querySelector('.docsType')
 
 let csrfToken = window.document.body.querySelector('[name="_csrf"]')
 
@@ -16,6 +17,7 @@ postArticle.addEventListener('click', (e) => {
     if (title.value !== "" && content.value !== "") {
         formData.append("title", title.value);
         formData.append("content", content.value)
+        formData.append("docsType", docsType.value)
     } else {
         alert("제목과 내용을 적어주세요.");
         return;
@@ -37,4 +39,3 @@ postArticle.addEventListener('click', (e) => {
     })
     e.preventDefault();
 })
-
