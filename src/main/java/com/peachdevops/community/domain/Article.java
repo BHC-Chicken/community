@@ -46,6 +46,10 @@ public class Article {
 
     @Setter
     @Column(nullable = false)
+    private String docsType;
+
+    @Setter
+    @Column(nullable = false)
     private Integer view = 0;
 
     @Setter
@@ -75,6 +79,7 @@ public class Article {
             String content,
             LocalDateTime writeAt,
             LocalDateTime modifyAt,
+            String docsType,
             Integer view,
             Boolean isDeleted,
             Boolean isNotice,
@@ -88,6 +93,7 @@ public class Article {
         this.content = content;
         this.writeAt = writeAt;
         this.modifyAt = modifyAt;
+        this.docsType = docsType;
         this.view = view;
         this.isDeleted = isDeleted;
         this.isNotice = isNotice;
@@ -103,6 +109,7 @@ public class Article {
             String content,
             LocalDateTime writeAt,
             LocalDateTime modifyAt,
+            String docsType,
             Integer view,
             Boolean isDeleted,
             Boolean isNotice,
@@ -117,6 +124,7 @@ public class Article {
                 content,
                 writeAt,
                 modifyAt,
+                docsType,
                 view,
                 isDeleted,
                 isNotice,
@@ -135,7 +143,7 @@ public class Article {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, nickname, boardCode, title, content, writeAt, modifyAt, view, isDeleted,
+        return Objects.hash(id, nickname, boardCode, title, content, writeAt, modifyAt, docsType, view, isDeleted,
                 isNotice, recommendCount, sentiment);
     }
 

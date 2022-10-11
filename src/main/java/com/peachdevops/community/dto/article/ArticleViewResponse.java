@@ -10,6 +10,7 @@ public record ArticleViewResponse(
         String content,
         LocalDateTime writeAt,
         LocalDateTime modifyAt,
+        String docsType,
         Integer view,
         Boolean isDeleted,
         Boolean isNotice,
@@ -23,6 +24,7 @@ public record ArticleViewResponse(
                                String content,
                                LocalDateTime writeAt,
                                LocalDateTime modifyAt,
+                               String docsType,
                                Integer view,
                                Boolean isDeleted,
                                Boolean isNotice,
@@ -36,6 +38,7 @@ public record ArticleViewResponse(
         this.content = content;
         this.writeAt = writeAt;
         this.modifyAt = modifyAt;
+        this.docsType = docsType;
         this.view = view;
         this.isDeleted = isDeleted;
         this.isNotice = isNotice;
@@ -51,6 +54,7 @@ public record ArticleViewResponse(
             String content,
             LocalDateTime writeAt,
             LocalDateTime modifyAt,
+            String docsType,
             Integer view,
             Boolean isDeleted,
             Boolean isNotice,
@@ -65,6 +69,7 @@ public record ArticleViewResponse(
                 content,
                 writeAt,
                 modifyAt,
+                docsType,
                 view,
                 isDeleted,
                 isNotice,
@@ -85,6 +90,7 @@ public record ArticleViewResponse(
                 articleDto.content(),
                 articleDto.writeAt(),
                 articleDto.modifyAt(),
+                articleDto.docsType(),
                 articleDto.view(),
                 articleDto.isDeleted(),
                 articleDto.isNotice(),
