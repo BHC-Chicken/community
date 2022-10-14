@@ -113,8 +113,6 @@ public class UserController {
             return jsonObject.toString();
         } catch (Exception e) {
             throw e;
-//            System.out.println(e.getMessage());
-//            model.addAttribute("exception", e.getMessage());
         }
     }
 
