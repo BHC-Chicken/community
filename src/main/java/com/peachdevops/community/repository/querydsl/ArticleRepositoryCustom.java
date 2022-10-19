@@ -10,6 +10,7 @@ public interface ArticleRepositoryCustom {
             String[] title,
             String[] content,
             String nickname,
+            String tag,
             Boolean is_deleted,
             String boardCode,
             Pageable pageable

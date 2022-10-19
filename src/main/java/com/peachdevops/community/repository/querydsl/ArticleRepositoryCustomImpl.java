@@ -25,6 +25,7 @@ public class ArticleRepositoryCustomImpl extends QuerydslRepositorySupport imple
             String [] title,
             String [] content,
             String nickname,
+            String tag,
             Boolean is_deleted,
             String boardCode,
             Pageable pageable
@@ -40,8 +41,10 @@ public class ArticleRepositoryCustomImpl extends QuerydslRepositorySupport imple
                          article.title,
                          article.nickname,
                          article.content,
+                         article.tag,
                          article.writeAt,
                          article.modifyAt,
+                         article.docsType,
                          article.view,
                          article.isDeleted,
                          article.isNotice,
@@ -61,6 +64,9 @@ public class ArticleRepositoryCustomImpl extends QuerydslRepositorySupport imple
          }
          if (nickname != null && !nickname.isBlank()) {
              query.where(article.nickname.contains(nickname));
+         }
+         if (tag != null && !tag.isBlank()) {
+             query.where(article.tag.contains(tag));
          }
          if (!is_deleted) {
              query.where(article.isDeleted.eq(false));

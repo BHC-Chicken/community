@@ -19,6 +19,7 @@ import lombok.RequiredArgsConstructor;
 import org.commonmark.node.Node;
 import org.commonmark.parser.Parser;
 import org.commonmark.renderer.html.HtmlRenderer;
+import org.commonmark.renderer.text.TextContentRenderer;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -58,7 +59,8 @@ public class BoardController {
     private void list(Model model, Map<String, Object> map, String boardCode, int page,
                       String[] titleParam,
                       String nickname,
-                      String[] contentParam) {
+                      String[] contentParam,
+                      String tagParam) {
         Pageable pageable;
 
         double pageNumber;
@@ -66,12 +68,13 @@ public class BoardController {
         int totalPages;
         int maxPage;
 
-        if (titleParam != null || nickname != null || contentParam != null) {
+        if (titleParam != null || nickname != null || contentParam != null || tagParam != null) {
             pageable = PageRequest.of(page, articleCount, Sort.by("id").descending());
             Page<ArticleViewResponse> articleViewResponses = boardService.getArticleViewResponse(
                     titleParam,
                     nickname,
                     contentParam,
+                    tagParam,
                     boardCode,
                     pageable
             );
@@ -81,6 +84,9 @@ public class BoardController {
             } else if (nickname != null) {
                 map.put("searchType", "nickname");
                 map.put("searchValue", nickname);
+            } else if (tagParam != null) {
+                map.put("searchType", "tag");
+                map.put("searchValue", tagParam);
             } else {
                 map.put("searchType", "content");
                 map.put("searchValue", String.join(" ", contentParam));
@@ -231,7 +237,7 @@ public class BoardController {
         }
 
         Map<String, Object> map = new HashMap<>();
-        list(model, map, boardCode, page, null, null, null);
+        list(model, map, boardCode, page, null, null, null, null);
 
         map.put("authority", authority);
         map.put("page", page + 1);
@@ -245,6 +251,7 @@ public class BoardController {
                                     @Size(min = 1) String title,
                                     @Size(min = 1) String content,
                                     @Size(min = 1) String nickname,
+                                    @Size(min = 1) String tag,
                                     Model model
     ) {
         Map<String, Object> map = new HashMap<>();
@@ -272,8 +279,13 @@ public class BoardController {
             map.put("searchValue", nickname);
         }
 
+        if (tag != null) {
+            map.put("searchType", "tag");
+            map.put("searchValue", tag);
+        }
 
-        list(model, map, boardCode, page, titleParam, nickname, contentParam);
+
+        list(model, map, boardCode, page, titleParam, nickname, contentParam, tag);
         map.put("page", page + 1);
 
 
@@ -287,6 +299,7 @@ public class BoardController {
                                       @Size(min = 1) String title,
                                       @Size(min = 1) String nickname,
                                       @Size(min = 1) String content,
+                                      @Size(min = 1) String tag,
                                       Model model,
                                       @QuerydslPredicate(root = Comment.class) Predicate predicate) throws Exception {
         Map<String, Object> map = new HashMap<>();
@@ -300,16 +313,18 @@ public class BoardController {
 
         Parser parser = Parser.builder().build();
         Node document = parser.parse(article.content());
-        HtmlRenderer renderer = HtmlRenderer.builder().escapeHtml(true).build();
+        TextContentRenderer textContentRenderer = TextContentRenderer.builder().build();
+        HtmlRenderer renderer = HtmlRenderer.builder().escapeHtml(true).sanitizeUrls(true).build();
 
         article1.setId(article.id());
         article1.setTitle(article.title());
         article1.setNickname(article.nickname());
         if (article.docsType().equals("text")) {
-            article1.setContent(article.content());
+            article1.setContent(textContentRenderer.render(document));
         } else if (article.docsType().equals("markdown")) {
             article1.setContent(renderer.render(document));
         }
+        article1.setTag(article.tag());
         article1.setModifyAt(article.modifyAt());
         article1.setView(article.view());
         article1.setBoardCode(article.boardCode());
@@ -336,7 +351,12 @@ public class BoardController {
             ifNickname = nickname;
         }
 
-        list(model, map, boardCode, page1, ifTitle, ifNickname, ifContent);
+        String ifTag = null;
+        if (tag != null) {
+            ifTag = tag;
+        }
+
+        list(model, map, boardCode, page1, ifTitle, ifNickname, ifContent, ifTag);
 
         map.put("article", article1);
         map.put("page", page1 + 1);

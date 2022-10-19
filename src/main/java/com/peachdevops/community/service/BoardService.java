@@ -8,6 +8,9 @@ import com.peachdevops.community.dto.comment.CommentDto;
 import com.peachdevops.community.exception.DataAccessErrorException;
 import com.peachdevops.community.repository.*;
 import lombok.RequiredArgsConstructor;
+import org.commonmark.node.Node;
+import org.commonmark.parser.Parser;
+import org.commonmark.renderer.html.HtmlRenderer;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -53,6 +56,9 @@ public class BoardService {
             Optional<Article> article = articleRepository.findById(articleId);
             if (article.isPresent()) {
                 Article article1 = article.get();
+                if (article1.getIsDeleted()) {
+                    throw new Exception();
+                }
                 article1.increaseViewCount();
                 articleRepository.save(article1);
             }
@@ -72,12 +78,13 @@ public class BoardService {
             String[] title,
             String nickname,
             String[] content,
+            String tag,
             String boardCode,
             Pageable pageable
     ) {
 
         return articleRepository.findArticleViewPageBySearchParams(
-                title, content, nickname, false, boardCode, pageable);
+                title, content, nickname, tag,false, boardCode, pageable);
 
     }
 
@@ -160,7 +167,9 @@ public class BoardService {
             }
             article2.setTitle(article.getTitle());
             article2.setContent(article.getContent());
+            article2.setDocsType(article.getDocsType());
             article2.setModifyAt(LocalDateTime.now());
+            System.out.println(article.getDocsType());
 
             String content = article.getContent();
 
