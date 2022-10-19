@@ -3,6 +3,7 @@ package com.peachdevops.community.domain;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.checkerframework.checker.units.qual.C;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
@@ -34,6 +35,10 @@ public class Article {
     @Setter
     @Column(nullable = false)
     private String content;
+
+    @Setter
+    @Column
+    private String tag;
 
     @CreatedDate
     @Setter
@@ -77,6 +82,7 @@ public class Article {
             String boardCode,
             String title,
             String content,
+            String tag,
             LocalDateTime writeAt,
             LocalDateTime modifyAt,
             String docsType,
@@ -91,6 +97,7 @@ public class Article {
         this.boardCode = boardCode;
         this.title = title;
         this.content = content;
+        this.tag = tag;
         this.writeAt = writeAt;
         this.modifyAt = modifyAt;
         this.docsType = docsType;
@@ -107,6 +114,7 @@ public class Article {
             String boardCode,
             String title,
             String content,
+            String tag,
             LocalDateTime writeAt,
             LocalDateTime modifyAt,
             String docsType,
@@ -122,6 +130,7 @@ public class Article {
                 boardCode,
                 title,
                 content,
+                tag,
                 writeAt,
                 modifyAt,
                 docsType,
@@ -143,7 +152,7 @@ public class Article {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, nickname, boardCode, title, content, writeAt, modifyAt, docsType, view, isDeleted,
+        return Objects.hash(id, nickname, boardCode, title, content, tag, writeAt, modifyAt, docsType, view, isDeleted,
                 isNotice, recommendCount, sentiment);
     }
 

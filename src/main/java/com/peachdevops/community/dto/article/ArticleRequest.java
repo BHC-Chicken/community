@@ -5,6 +5,7 @@ public record ArticleRequest(
         String title,
         String content,
         String docsType,
+        String tag,
         String nickname
 ) {
     public static ArticleRequest of(
@@ -12,6 +13,7 @@ public record ArticleRequest(
             String title,
             String content,
             String docsType,
+            String tag,
             String nickname
     ) {
         return new ArticleRequest(
@@ -19,6 +21,7 @@ public record ArticleRequest(
                 title,
                 content,
                 docsType,
+                tag,
                 nickname
         );
     }
@@ -30,6 +33,7 @@ public record ArticleRequest(
                 null,
                 this.title(),
                 this.content(),
+                this.tag(),
                 null,
                 null,
                 this.docsType(),

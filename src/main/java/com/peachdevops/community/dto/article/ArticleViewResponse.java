@@ -8,6 +8,7 @@ public record ArticleViewResponse(
         String title,
         String nickname,
         String content,
+        String tag,
         LocalDateTime writeAt,
         LocalDateTime modifyAt,
         String docsType,
@@ -22,6 +23,7 @@ public record ArticleViewResponse(
                                String title,
                                String nickname,
                                String content,
+                               String tag,
                                LocalDateTime writeAt,
                                LocalDateTime modifyAt,
                                String docsType,
@@ -36,6 +38,7 @@ public record ArticleViewResponse(
         this.title = title;
         this.nickname = nickname;
         this.content = content;
+        this.tag = tag;
         this.writeAt = writeAt;
         this.modifyAt = modifyAt;
         this.docsType = docsType;
@@ -52,6 +55,7 @@ public record ArticleViewResponse(
             String title,
             String nickname,
             String content,
+            String tag,
             LocalDateTime writeAt,
             LocalDateTime modifyAt,
             String docsType,
@@ -67,6 +71,7 @@ public record ArticleViewResponse(
                 title,
                 nickname,
                 content,
+                tag,
                 writeAt,
                 modifyAt,
                 docsType,
@@ -88,6 +93,7 @@ public record ArticleViewResponse(
                 articleDto.title(),
                 articleDto.nickname(),
                 articleDto.content(),
+                articleDto.tag(),
                 articleDto.writeAt(),
                 articleDto.modifyAt(),
                 articleDto.docsType(),
