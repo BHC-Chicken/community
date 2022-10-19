@@ -1,7 +1,7 @@
 const postArticle = window.document.querySelector('.postArticle');
 const title = window.document.querySelector('#title');
 const content = window.document.querySelector('#inputText');
-const docsType = window.document.querySelector('.docsType')
+const tag = window.document.querySelector('#tag');
 
 let csrfToken = window.document.body.querySelector('[name="_csrf"]')
 
@@ -10,14 +10,17 @@ if (csrfToken) {
 }
 
 postArticle.addEventListener('click', (e) => {
+    const docsType = window.document.querySelector("input[name='docsType']:checked")
     let formData = new FormData();
     if (csrfToken) {
         formData.append("_csrf", csrfToken);
     }
+
     if (title.value !== "" && content.value !== "") {
         formData.append("title", title.value);
         formData.append("content", content.value)
         formData.append("docsType", docsType.value)
+        formData.append("tag", tag.value);
     } else {
         alert("제목과 내용을 적어주세요.");
         return;

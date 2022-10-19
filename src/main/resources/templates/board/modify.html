@@ -13,14 +13,14 @@
             rel="stylesheet"
             href="https://use.fontawesome.com/releases/v5.0.6/css/all.css"
     >
+    <link rel="stylesheet" href="../../static/css/write.css">
     <script defer src="/script/jquery-3.6.0.min.js"></script>
     <script defer src="/script/modify.js"></script>
-    <title>Title</title>
+    <title>글 수정</title>
 </head>
 <body id="writeArticle">
 <div class="container">
-    <form method="post"
-          th:action="@{/board/modify/{boardCode}/{articleId} (boardCode=${boardCode}, articleId=${article.id})}">
+    <form method="post" th:action="@{/board/modify/{boardCode}/{articleId} (boardCode=${boardCode}, articleId=${article.id})}">
         <div>
             <label>
                 <input class="docsType" type="radio" name="docsType" value="text" checked> text
@@ -34,6 +34,11 @@
         <label for="inputText"></label>
         <textarea id="inputText" class="form-control" rows="10" name="content"
                   th:text="${article.content()}" maxlength="1000"></textarea>
+        <div class="tag">
+            <label>
+                <input type="text" class="form-control mt-4 mb-2" name="tag" id="tag" placeholder="태그" maxlength="100">
+            </label>
+        </div>
         <button class="btn btn-secondary mb-3 postArticle" type="button">작성</button>
     </form>
 </div>
