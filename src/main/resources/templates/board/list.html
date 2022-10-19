@@ -101,14 +101,6 @@
     </nav>
 </header>
 <div class="container" th:fragment="articles">
-    <div class="ui-autocomplete-category">
-        <button class="btn-default"> 질문 게시판
-
-        </button>
-        <button class="btn-default"> 자유 게시판
-
-        </button>
-    </div>
     <table class="table table-hover" id="articlesTable">
         <thead>
         <tr>
@@ -117,6 +109,7 @@
             <th>시간</th>
             <th>조회수</th>
             <th>추천수</th>
+            <th>태그</th>
         </tr>
         </thead>
         <tbody th:data-csrfToken="${_csrf.token}">
@@ -129,6 +122,7 @@
             <td th:text="${#temporals.format(article.modifyAt,'yyyy-MM-dd HH:mm')}" class="modifyAt">test</td>
             <td th:text="${article.view}" class="view">0</td>
             <td th:text="${article.recommendCount}" class="recommend">0</td>
+            <td th:text="${article.tag()}" class="tag">tag</td>
         </tr>
         </tbody>
     </table>
@@ -145,6 +139,7 @@
                 <option value="title">제목</option>
                 <option value="content">내용</option>
                 <option value="nickname">닉네임</option>
+                <option value="tag">태그</option>
             </select>
         </label>
         <label style="margin-bottom: 1rem">

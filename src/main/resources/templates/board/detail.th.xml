@@ -8,6 +8,7 @@
         <attr sel="#modifyAt" th:text="*{#temporals.format(modifyAt, 'yyyy-MM-dd HH:mm')} ?: _"/>
         <attr sel="#view" th:text="*{view} ?: _"/>
         <attr sel="#recommendCount" th:text="*{recommendCount} ?: _"/>
+        <attr sel="#tag" th:text="*{tag} ?: _"/>
     </attr>
     <attr sel="#recommend" th:href="@{/board/recommendation/{boardCode}/{articleId} (boardCode =${article.boardCode}, articleId=${article.id})}"/>
     <attr sel="#backToArticles" th:href="@{/board/{boardCode} (boardCode =${article.boardCode})}"/>
