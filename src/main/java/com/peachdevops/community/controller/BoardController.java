@@ -115,6 +115,9 @@ public class BoardController {
             map.put("articlePage", articleDtoPage);
         }
 
+        List<String> tagList = boardService.tagList();
+        map.put("tagList", tagList);
+
         int startPage = (int) (pageNumber - pageNumber % 10) + 1;
         int tempEndPage = startPage + 9;
         int endPage = Math.min(tempEndPage, totalPages);
@@ -307,9 +310,6 @@ public class BoardController {
                 .map(ArticleResponse::from)
                 .orElseThrow(DataAccessErrorException::new);
         Article article1 = new Article();
-//        if (article.isDeleted()) {
-//            throw new Exception();
-//        } // TODO : 게시글 삭제 여부는 서비스에서 확인해야함.
 
         Parser parser = Parser.builder().build();
         Node document = parser.parse(article.content());

@@ -8,9 +8,6 @@ import com.peachdevops.community.dto.comment.CommentDto;
 import com.peachdevops.community.exception.DataAccessErrorException;
 import com.peachdevops.community.repository.*;
 import lombok.RequiredArgsConstructor;
-import org.commonmark.node.Node;
-import org.commonmark.parser.Parser;
-import org.commonmark.renderer.html.HtmlRenderer;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -51,9 +48,9 @@ public class BoardService {
         return articleRepository.findByBoardCodeAndIsDeleted(boardCode, false, pageable);
     }
 
-    public Optional<ArticleDto> getArticle(Long articleId) {
+    public Optional<ArticleDto> getArticle(Long id) {
         try {
-            Optional<Article> article = articleRepository.findById(articleId);
+            Optional<Article> article = articleRepository.findById(id);
             if (article.isPresent()) {
                 Article article1 = article.get();
                 if (article1.getIsDeleted()) {
@@ -63,7 +60,7 @@ public class BoardService {
                 articleRepository.save(article1);
             }
 
-            return articleRepository.findById(articleId).map(ArticleDto::of);
+            return articleRepository.findById(id).map(ArticleDto::of);
         } catch (Exception e) {
             throw new DataAccessErrorException();
         }
@@ -288,5 +285,9 @@ public class BoardService {
             }
         }
         return true;
+    }
+
+    public List<String> tagList() {
+        return articleRepository.countByTagOrderByDescGroupByTag();
     }
 }
