@@ -1,9 +1,10 @@
 package com.peachdevops.community.repository.querydsl;
 
-import com.peachdevops.community.domain.User;
 import com.peachdevops.community.dto.article.ArticleViewResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+
+import java.util.List;
 
 public interface ArticleRepositoryCustom {
     Page<ArticleViewResponse> findArticleViewPageBySearchParams(
@@ -15,5 +16,7 @@ public interface ArticleRepositoryCustom {
             String boardCode,
             Pageable pageable
     );
+
+    List<String> countByTagOrderByDescGroupByTag();
 
 }

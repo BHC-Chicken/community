@@ -24,8 +24,6 @@ public interface ArticleRepository extends
     List<ArticleDto> findAllByBoardCodeAndIsDeleted(String boardCode, Boolean is_deleted, Pageable pageable);
     Page<ArticleDto> findByBoardCodeAndIsDeleted(String boardCode, Boolean is_deleted, Pageable pageable);
 
-    int countByTag(String tag);
-
     @Override
     default void customize(QuerydslBindings bindings, QArticle root) {
         bindings.excludeUnlistedProperties(true);
