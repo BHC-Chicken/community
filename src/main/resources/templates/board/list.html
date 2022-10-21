@@ -101,6 +101,9 @@
     </nav>
 </header>
 <div class="container" th:fragment="articles">
+    <span class="tag-item" th:each="tagList : ${tagList}">
+        <a th:text="${tagList}" th:href="${tagList} ? @{/board/{boardCode}/search (tag=${tagList}, page=${page}, boardCode=${boardCode})} : @{/board/{boardCode}(page=${page}, boardCode=${boardCode})}"></a>
+    </span>
     <table class="table table-hover" id="articlesTable">
         <thead>
         <tr>
