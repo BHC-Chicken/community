@@ -1,5 +1,6 @@
 package com.peachdevops.community.service;
 
+import com.peachdevops.community.config.RestPageImpl;
 import com.peachdevops.community.constant.ErrorCode;
 import com.peachdevops.community.domain.*;
 import com.peachdevops.community.dto.article.ArticleDto;
@@ -12,6 +13,8 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -45,9 +48,10 @@ public class BoardService {
     }
 
     public Page<ArticleDto> getTotalArticles(String boardCode, Pageable pageable) {
-        return articleRepository.findByBoardCodeAndIsDeleted(boardCode, false, pageable);
+        return new RestPageImpl<>(articleRepository.findByBoardCodeAndIsDeleted(boardCode, false, pageable));
     }
 
+    @Cacheable(value = "ArticleDto", key = "#id", cacheManager = "cacheManager", unless = "#id ==''")
     public Optional<ArticleDto> getArticle(Long id) {
         try {
             Optional<Article> article = articleRepository.findById(id);
@@ -80,8 +84,8 @@ public class BoardService {
             Pageable pageable
     ) {
 
-        return articleRepository.findArticleViewPageBySearchParams(
-                title, content, nickname, tag,false, boardCode, pageable);
+        return new RestPageImpl<>(articleRepository.findArticleViewPageBySearchParams(
+                title, content, nickname, tag,false, boardCode, pageable));
 
     }
 
@@ -148,15 +152,17 @@ public class BoardService {
         return ErrorCode.OK;
     }
 
-    public ErrorCode modifyArticle(Long articleId, Article article, User user) throws Exception {
+    @CacheEvict(value = "ArticleDto", key = "#id", cacheManager = "cacheManager")
+    public ErrorCode modifyArticle(Long id, Article article, User user) throws Exception {
         if (article.getTitle().isEmpty() || article.getContent().isEmpty()) {
             return ErrorCode.BAD_REQUEST;
         }
 
-        Optional<Article> article1 = articleRepository.findById(articleId);
+        Optional<Article> article1 = articleRepository.findById(id);
         if (article1.isPresent()) {
             Article article2 = article1.get();
             if (!article2.getNickname().equals(user.getNickname())) {
+                System.out.println();
                 return ErrorCode.BAD_REQUEST;
             }
             if (article2.getIsDeleted().equals(true)) {
@@ -166,7 +172,6 @@ public class BoardService {
             article2.setContent(article.getContent());
             article2.setDocsType(article.getDocsType());
             article2.setModifyAt(LocalDateTime.now());
-            System.out.println(article.getDocsType());
 
             String content = article.getContent();
 
@@ -189,8 +194,9 @@ public class BoardService {
         return ErrorCode.BAD_REQUEST;
     }
 
-    public boolean deleteArticle(Long articleId, User user) {
-        Optional<Article> article = articleRepository.findById(articleId);
+    @CacheEvict(value = "ArticleDto", key = "#id", cacheManager = "cacheManager")
+    public boolean deleteArticle(Long id, User user) {
+        Optional<Article> article = articleRepository.findById(id);
         if (article.isPresent()) {
             Article article1 = article.get();
             if (!article1.getNickname().equals(user.getNickname())) {
