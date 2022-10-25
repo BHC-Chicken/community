@@ -1,9 +1,16 @@
 package com.peachdevops.community.dto.article;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import com.peachdevops.community.domain.Article;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public record ArticleDto(
         Long id,
         String nickname,
@@ -11,7 +18,11 @@ public record ArticleDto(
         String title,
         String content,
         String tag,
+        @JsonSerialize(using = LocalDateTimeSerializer.class)
+        @JsonDeserialize(using = LocalDateTimeDeserializer.class)
         LocalDateTime writeAt,
+        @JsonSerialize(using = LocalDateTimeSerializer.class)
+        @JsonDeserialize(using = LocalDateTimeDeserializer.class)
         LocalDateTime modifyAt,
         String docsType,
         Integer view,
@@ -19,7 +30,11 @@ public record ArticleDto(
         Boolean isNotice,
         Long recommendCount,
         String sentiment
-) {
+) implements Serializable {
+
+    public ArticleDto {
+    }
+
     public static ArticleDto of(
             Long id,
             String nickname,

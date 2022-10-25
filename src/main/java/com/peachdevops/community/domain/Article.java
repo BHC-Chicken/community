@@ -1,20 +1,26 @@
 package com.peachdevops.community.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import org.checkerframework.checker.units.qual.C;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Getter
 @ToString
 @Entity
-public class Article {
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class Article implements Serializable {
     @Id
     @Setter
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -42,11 +48,15 @@ public class Article {
 
     @CreatedDate
     @Setter
+    @JsonSerialize(using = LocalDateTimeSerializer.class)
+    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     @Column(insertable = false, updatable = false)
     private LocalDateTime writeAt = LocalDateTime.now();
 
     @LastModifiedDate
     @Setter
+    @JsonSerialize(using = LocalDateTimeSerializer.class)
+    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     private LocalDateTime modifyAt = LocalDateTime.now();
 
     @Setter
