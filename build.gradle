@@ -31,7 +31,6 @@ dependencies {
     implementation 'org.commonmark:commonmark:0.19.0'
     implementation 'com.googlecode.json-simple:json-simple:1.1.1'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
-    implementation 'org.springframework.boot:spring-boot-starter-actuator'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.data:spring-data-rest-hal-explorer'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
@@ -71,6 +70,13 @@ dependencies {
 
     // web socket
     implementation 'org.springframework.boot:spring-boot-starter-websocket'
+
+    // redis
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+
+    // 직렬화 역직렬화 문제 해결
+    implementation 'com.fasterxml.jackson.core:jackson-databind'
+    implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
 }
 
 test {
