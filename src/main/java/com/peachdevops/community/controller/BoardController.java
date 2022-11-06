@@ -16,9 +16,14 @@ import com.peachdevops.community.exception.UserNotFoundException;
 import com.peachdevops.community.service.BoardService;
 import com.querydsl.core.types.Predicate;
 import lombok.RequiredArgsConstructor;
+import org.commonmark.node.IndentedCodeBlock;
 import org.commonmark.node.Node;
 import org.commonmark.parser.Parser;
+import org.commonmark.renderer.NodeRenderer;
+import org.commonmark.renderer.html.HtmlNodeRendererContext;
+import org.commonmark.renderer.html.HtmlNodeRendererFactory;
 import org.commonmark.renderer.html.HtmlRenderer;
+import org.commonmark.renderer.html.HtmlWriter;
 import org.commonmark.renderer.text.TextContentRenderer;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -31,12 +36,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.util.HtmlUtils;
 
 import javax.validation.constraints.Size;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Controller
 @RequiredArgsConstructor
@@ -47,6 +50,9 @@ public class BoardController {
     private final BoardService boardService;
 
     private boolean checkRole(User user, String boardCode) {
+        if (user.getAuthority().equals("ROLE_ADMIN")) {
+            return false;
+        }
         return user.getAuthorities().stream().noneMatch(r -> r.getAuthority().equals("ROLE_" + boardCode.toUpperCase()));
     }
 
@@ -115,7 +121,7 @@ public class BoardController {
             map.put("articlePage", articleDtoPage);
         }
 
-        List<String> tagList = boardService.tagList();
+        List<String> tagList = boardService.tagList(boardCode);
         map.put("tagList", tagList);
 
         int startPage = (int) (pageNumber - pageNumber % 10) + 1;
@@ -195,7 +201,6 @@ public class BoardController {
                                                     @PathVariable(name = "articleId") Long articleId,
                                                     @SessionAttribute(name = "user") User user,
                                                     Article article) throws Exception {
-
         if (boardService.modifyArticle(articleId, article, user) == ErrorCode.OK) {
             return new ResponseEntity<>(HttpStatus.OK);
         } else {
@@ -305,6 +310,31 @@ public class BoardController {
                                       @Size(min = 1) String tag,
                                       Model model,
                                       @QuerydslPredicate(root = Comment.class) Predicate predicate) throws Exception {
+        class IndentedCodeBlockNodeRenderer implements NodeRenderer {
+
+            private final HtmlWriter html;
+
+            IndentedCodeBlockNodeRenderer(HtmlNodeRendererContext context) {
+                this.html = context.getWriter();
+            }
+
+            @Override
+            public Set<Class<? extends Node>> getNodeTypes() {
+                // Return the node types we want to use this renderer for.
+                return Collections.<Class<? extends Node>>singleton(IndentedCodeBlock.class);
+            }
+
+            @Override
+            public void render(Node node) {
+                // We only handle one type as per getNodeTypes, so we can just cast it here.
+                IndentedCodeBlock codeBlock = (IndentedCodeBlock) node;
+                html.line();
+                html.tag("");
+                html.text(codeBlock.getLiteral());
+                html.tag("");
+                html.line();
+            }
+        }
         Map<String, Object> map = new HashMap<>();
         ArticleResponse article = boardService.getArticle(articleId)
                 .map(ArticleResponse::from)
@@ -314,13 +344,19 @@ public class BoardController {
         Parser parser = Parser.builder().build();
         Node document = parser.parse(article.content());
         TextContentRenderer textContentRenderer = TextContentRenderer.builder().build();
-        HtmlRenderer renderer = HtmlRenderer.builder().escapeHtml(true).sanitizeUrls(true).build();
+        HtmlRenderer renderer = HtmlRenderer.builder()
+                .nodeRendererFactory(new HtmlNodeRendererFactory() {
+                    public NodeRenderer create(HtmlNodeRendererContext context) {
+                        return new IndentedCodeBlockNodeRenderer(context);
+                    }
+                }).escapeHtml(true)
+                .build();
 
         article1.setId(article.id());
         article1.setTitle(article.title());
         article1.setNickname(article.nickname());
         if (article.docsType().equals("text")) {
-            article1.setContent(textContentRenderer.render(document));
+            article1.setContent(HtmlUtils.htmlEscape(article.content()));
         } else if (article.docsType().equals("markdown")) {
             article1.setContent(renderer.render(document));
         }
@@ -438,6 +474,7 @@ public class BoardController {
                                               @PathVariable(name = "boardCode") String boardCode,
                                               @SessionAttribute(name = "user") User user
     ) throws Exception {
+        System.out.println(user.getNickname());
         if (!boardCode.equals("free") && checkRole(user, boardCode)) {
             throw new Exception();
         }

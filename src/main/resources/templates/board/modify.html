@@ -23,10 +23,10 @@
     <form method="post" th:action="@{/board/modify/{boardCode}/{articleId} (boardCode=${boardCode}, articleId=${article.id})}">
         <div>
             <label>
-                <input class="docsType" type="radio" name="docsType" value="text" checked> text
+                <input class="docsType" type="radio" name="docsType" value="text" th:attr="checked=${article.docsType() == 'text' ? 'true' : 'false'}"> text
             </label>
             <label>
-                <input class="docsType" type="radio" name="docsType" value="markdown"> markdown
+                <input class="docsType" type="radio" name="docsType" value="markdown" th:attr="checked=${article.docsType() == 'markdown' ? 'true' : 'false'}"> markdown
             </label>
         </div>
         <label for="title"></label>

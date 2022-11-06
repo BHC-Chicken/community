@@ -17,6 +17,13 @@ if (csrfToken) {
     csrfToken = csrfToken.value;
 }
 
+let str = window.document.querySelector('#content').innerHTML;
+str = str.trim();
+
+str = str.replace(/(?:\r\n|\r|\n)/g, '<br/>');
+
+window.document.querySelector("#content").innerHTML = str;
+
 recommendArticle.addEventListener('click', (e) => {
     let formData = new FormData();
     if (csrfToken) {
