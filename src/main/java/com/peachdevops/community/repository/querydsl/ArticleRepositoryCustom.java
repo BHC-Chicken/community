@@ -17,6 +17,6 @@ public interface ArticleRepositoryCustom {
             Pageable pageable
     );
 
-    List<String> countByTagOrderByDescGroupByTag();
+    List<String> countByTagOrderByDescGroupByTag(String boardCode);
 
 }

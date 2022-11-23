@@ -172,6 +172,7 @@ public class BoardService {
             article2.setContent(article.getContent());
             article2.setDocsType(article.getDocsType());
             article2.setModifyAt(LocalDateTime.now());
+            article2.setTag(article.getTag());
 
             String content = article.getContent();
 
@@ -293,7 +294,7 @@ public class BoardService {
         return true;
     }
 
-    public List<String> tagList() {
-        return articleRepository.countByTagOrderByDescGroupByTag();
+    public List<String> tagList(String boardCode) {
+        return articleRepository.countByTagOrderByDescGroupByTag(boardCode);
     }
 }

@@ -86,12 +86,14 @@ public class ArticleRepositoryCustomImpl extends QuerydslRepositorySupport imple
     }
 
     @Override
-    public List<String> countByTagOrderByDescGroupByTag() {
+    public List<String> countByTagOrderByDescGroupByTag(String boardCode) {
         QArticle article = QArticle.article;
         JPAQueryFactory queryFactory = new JPAQueryFactory(em);
 
         return queryFactory.select(article.tag)
                 .from(article)
+                .where(article.boardCode.eq(boardCode))
+                .where(article.isDeleted.eq(false))
                 .groupBy(article.tag)
                 .orderBy(article.tag.count().desc())
                 .limit(10)
