@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="/css/bootstrap.css">
     <link rel="stylesheet" href="/css/login.css">
     <script defer src="/script/jquery-3.6.0.min.js"></script>
+    <script defer src="/script/login.js"></script>
     <title>로그인</title>
 </head>
 <body>
@@ -25,7 +26,7 @@
                 <input type="password" placeholder="Password" id="password" name="password">
             </label>
         </p>
-        <button type="submit">로그인</button>
+        <button type="submit" id="login">로그인</button>
         <a th:href="@{/signup}">
             <button type="button">회원가입</button>
         </a>

@@ -15,12 +15,7 @@ public class TextSentiment {
             Document doc = Document.newBuilder().setContent(text).setType(Document.Type.PLAIN_TEXT).build();
 
             // Detects the sentiment of the text
-            Sentiment sentiment = language.analyzeSentiment(doc).getDocumentSentiment();
-
-            System.out.printf("Text: %s%n", text);
-            System.out.printf("Sentiment: %s, %s%n", sentiment.getScore(), sentiment.getMagnitude());
-
-            return sentiment;
+            return language.analyzeSentiment(doc).getDocumentSentiment();
         }
     }
 }

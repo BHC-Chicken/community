@@ -156,11 +156,7 @@ public class UserService {
         user.setStdCardVerifiedFlag(true);
         userRepository.save(user);
 
-        String board = boardsRepository.findBoardNameByBoardCode(college.toLowerCase());
-
-        System.out.println(board);
-
-        return board;
+        return boardsRepository.findBoardNameByBoardCode(college.toLowerCase());
     }
 
     private String getUniversity(String input) {
@@ -235,7 +231,6 @@ public class UserService {
     public boolean findPassword(String code, ModifyPassword modifyPassword) {
 
         UserEmailVerificationCode userEmailVerificationCode = registerVerificationCodeRepository.findByVerificationCode(code);
-        System.out.println(userEmailVerificationCode.getUsername());
         User user = userRepository.findByUsername(userEmailVerificationCode.getUsername());
         user.setPassword(passwordEncoder.encode(modifyPassword.getModifyPassword()));
 

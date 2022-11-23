@@ -474,7 +474,6 @@ public class BoardController {
                                               @PathVariable(name = "boardCode") String boardCode,
                                               @SessionAttribute(name = "user") User user
     ) throws Exception {
-        System.out.println(user.getNickname());
         if (!boardCode.equals("free") && checkRole(user, boardCode)) {
             throw new Exception();
         }

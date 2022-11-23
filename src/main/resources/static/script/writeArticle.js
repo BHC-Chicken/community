@@ -36,8 +36,8 @@ postArticle.addEventListener('click', (e) => {
         success: function () {
             window.location.href = window.document.location.pathname.replace("/write/", "/");
         },
-        error: function (e) {
-            alert("제목과 내용을 적어주세요.");
+        error: function () {
+            alert("본문은 1000자 이내로 입력해주세요.");
         }
     })
     e.preventDefault();

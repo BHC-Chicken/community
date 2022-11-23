@@ -115,7 +115,6 @@ public class BoardService {
             }
 
             returnData = stringBuilder.toString();
-            System.out.println(returnData);
             JSONParser parser = new JSONParser();
             JSONObject object = null;
 
@@ -162,7 +161,6 @@ public class BoardService {
         if (article1.isPresent()) {
             Article article2 = article1.get();
             if (!article2.getNickname().equals(user.getNickname())) {
-                System.out.println();
                 return ErrorCode.BAD_REQUEST;
             }
             if (article2.getIsDeleted().equals(true)) {
