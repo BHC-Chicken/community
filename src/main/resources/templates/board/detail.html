@@ -170,7 +170,7 @@
         <button type="button" class="btn btn-secondary" id="reportButton">신고하기</button>
         <a id="backToArticles" type="button" class="btn btn-secondary">뒤로가기</a>
         <a th:href="@{/board/delete/{boardCode}/{id}(boardCode=${article.boardCode}, id=${article.id})}"
-           th:if="${article?.nickname} == ${session.user?.nickname}" class="delete btn btn-secondary">삭제</a>
+           th:if="${article?.nickname} == ${session.user?.nickname} or ${#strings.equals(session.user?.authority, 'ROLE_ADMIN')}" class="delete btn btn-secondary">삭제</a>
         <a th:href="@{/board/modify/{boardCode}/{id}(boardCode=${article.boardCode}, id=${article.id})}"
                th:if="${article?.nickname} == ${session.user?.nickname}" class="modify btn btn-secondary">수정</a>
         <div class="display-none" id="report">

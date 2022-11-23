@@ -198,7 +198,13 @@ public class BoardService {
         Optional<Article> article = articleRepository.findById(id);
         if (article.isPresent()) {
             Article article1 = article.get();
-            if (!article1.getNickname().equals(user.getNickname())) {
+            if (user.getAuthority().equals("ROLE_ADMIN")) {
+                article1.setIsDeleted(true);
+                articleRepository.save(article1);
+
+                return true;
+            }
+            else if (!article1.getNickname().equals(user.getNickname())) {
                 throw new RuntimeException();
             }
             article1.setIsDeleted(true);
